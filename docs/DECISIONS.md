@@ -373,9 +373,27 @@ and the thirteenth (tirzepatide's approval) was answered correctly from the
 row at rank 1 as well; the only miss was my own check string, which expected
 the date in one format.
 
-**Still open.** Hindi text set in legacy (non-Unicode) fonts extracts as
-mojibake; the right fix is to detect the garbage ratio per page and OCR that
-page. A figure on a page without raster images still costs one Opus call;
-cheap pre-classification (is this a chart, a photo, a logo?) would cut that.
-The question set is thirteen hand-written questions; a labelled set per
-document type is the next step before any number is quoted as a benchmark.
+**Legacy-font pages (fixed the same day).** The Hindi half of the NPPA
+notification is set in a Kruti Dev style font: the PDF has a text layer, but
+it is the font's private glyph codes, which PyMuPDF maps onto Latin Extended,
+IPA and combining characters ("राçĚȣय औषध मूãय"). No search can match that.
+The rule: count, per page, the share of letters that land on those code
+points (Latin Extended A/B, IPA, the combining-diacriticals block, Latin
+Extended Additional); above 8% the text layer is mojibake and the page is
+rendered and read with Tesseract's `hin+eng` models instead, exactly as a
+scanned page would be. Plain accented letters and a script's own marks
+(Devanagari virama, nukta) are not counted, so French or clean Unicode
+Hindi never trips it; across the seven samples and the six stress documents
+the rule flags exactly the two Hindi pages. Ruled-table and figure detection
+are skipped on such a page because they read the PDF's own text. After the
+change, "ऑक्सालिप्लैटिन इंजेक्शन की अधिकतम कीमत क्या है?" is answered in Hindi
+with Rs 4,979.68 from the Hindi table, and the English question still lands
+on the English row. Tesseract reads the digit 1 badly in that font (2023
+becomes 203), so quantities on such pages deserve a check against the
+English half when there is one.
+
+**Still open.** A figure on a page without raster images still costs one
+Opus call; cheap pre-classification (is this a chart, a photo, a logo?) would
+cut that. The question set is thirteen hand-written questions; a labelled
+set per document type is the next step before any number is quoted as a
+benchmark.

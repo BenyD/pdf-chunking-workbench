@@ -51,6 +51,9 @@ class Settings(BaseSettings):
 
     llm_concurrency: int = 6
     tesseract_cmd: str | None = None
+    ocr_lang: str = "eng"               # scanned pages
+    ocr_lang_garbled: str = "hin+eng"   # pages whose text layer is a legacy-font mojibake (needs the hin pack)
+    garbled_text_ratio: float = 0.08    # share of letters on Latin Extended / IPA / combining code points that marks a page as mojibake
 
 
 settings = Settings()

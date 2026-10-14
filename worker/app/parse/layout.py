@@ -16,9 +16,10 @@ from typing import Callable
 
 import pymupdf
 
+from ..config import settings
 from .figures import detect_figures
 from .model import BBox, Line, PageLayout, TableBlock, TextBlock
-from .ocr import looks_scanned, ocr_page
+from .ocr import looks_garbled, looks_scanned, ocr_page
 from .tables import find_aligned_tables, find_ruled_tables, merge_continuations, numbered_header_ids
 
 SECTION_START = re.compile(r"^\s*(?:(?P<pre>[A-Z][A-Za-z ,\-]{2,60}?)\s+)?(?P<num>\d{1,3}[A-Z]{0,2})\.\s*(?=[A-Z(“\"])")
@@ -127,6 +128,11 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
             scanned = ocr_applied = True
             lines, blocks = ocr_page(page)
             blocks = [((b.bbox), b.lines) for b in blocks]
+        elif looks_garbled(lines):
+            # a text layer exists but is a legacy font's glyph codes; read the page as an image instead
+            ocr_applied = True
+            lines, blocks = ocr_page(page, lang=settings.ocr_lang_garbled)
+            blocks = [((b.bbox), b.lines) for b in blocks]
 
         is_toc = any(TOC_MARK.search(l.text) for l in lines[:12]) or _looks_like_toc(lines)
         keep = numbered_header_ids(lines)          # "(1) (2) (3)" column rows are not page numbers
@@ -146,9 +152,11 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
                       and any(n.bbox[1] - 6 <= l.bbox[1] <= n.bbox[3] + 6 for n in normal)]
         content = [l for l in body_lines if l not in margin]
 
-        tables = find_ruled_tables(page) if not scanned else []
+        # ruled-table and figure detection read the PDF's own text and drawings, which
+        # an OCR'd page does not trust; the whitespace table detector runs on the OCR lines
+        tables = find_ruled_tables(page) if not ocr_applied else []
         excl = [t.bbox for t in tables]
-        figures = detect_figures(page, content, excl) if not scanned else []
+        figures = detect_figures(page, content, excl) if not ocr_applied else []
         excl += [f.bbox for f in figures]
         if not tables and not is_toc:
             tables = find_aligned_tables(page, content, excl, prior=prior_model)

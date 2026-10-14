@@ -36,7 +36,7 @@ scripts/   eval.py: recall@k on the built-in question sets, against a running de
 ## Run locally
 
 Prerequisites: Node 20+, pnpm, Python 3.12+, [uv](https://docs.astral.sh/uv/),
-Docker, the Supabase CLI, and Tesseract (`brew install tesseract`).
+Docker, the Supabase CLI, and Tesseract with its language packs (`brew install tesseract tesseract-lang`; the Hindi pack reads gazette pages set in legacy fonts).
 
 ```bash
 # 1. database + storage (local Supabase on ports 563xx)
@@ -67,7 +67,7 @@ Measure recall on the built-in question sets: `python3 scripts/eval.py [base-url
 ## Deploy
 
 1. **Supabase**: create a project, run the two files in `supabase/migrations` in the SQL editor (or `supabase db push`). The migration creates the public `chunklab` bucket.
-2. **Worker** (Railway, Fly.io, Render, or any Docker host): build `worker/Dockerfile`; set `DATABASE_URL` (the direct Postgres URL), `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `WORKER_SECRET`, `ANTHROPIC_API_KEY`, `VOYAGE_API_KEY`. Give it at least 1 GB RAM; a 300-page ingest takes a few minutes and runs in a background thread.
+2. **Worker** (Railway, Fly.io, Render, or any Docker host): build `worker/Dockerfile` (it installs the `eng` and `hin` Tesseract packs); set `DATABASE_URL` (the direct Postgres URL), `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `WORKER_SECRET`, `ANTHROPIC_API_KEY`, `VOYAGE_API_KEY`. Give it at least 1 GB RAM; a 300-page ingest takes a few minutes and runs in a background thread.
 3. **Web** (Vercel): import the repo with root directory `web`; set `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `WORKER_URL`, `WORKER_SECRET`, `VOYAGE_API_KEY`, `EMBEDDING_MODEL=voyage-4`, `ANTHROPIC_API_KEY`.
 4. Open the deployment, click **Load samples**.
 

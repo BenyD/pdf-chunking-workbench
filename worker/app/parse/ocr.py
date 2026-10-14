@@ -1,7 +1,17 @@
-"""Full-page OCR for scanned pages (no text layer). Produces the same Line /
-TextBlock structures as the PDF text extractor so everything downstream is
-identical."""
+"""Full-page OCR for pages whose text layer is missing or useless. Produces
+the same Line / TextBlock structures as the PDF text extractor so everything
+downstream is identical.
+
+Two cases call for it:
+  * scanned pages: an image and no text (looks_scanned)
+  * legacy-font pages: a text layer that is mojibake, because the PDF uses a
+    non-Unicode font (Indian gazettes set Hindi in Kruti Dev style fonts) and
+    the "text" is the font's private glyph codes mapped onto Latin Extended,
+    IPA and combining characters (looks_garbled)
+"""
 from __future__ import annotations
+
+import unicodedata
 
 import pymupdf
 import pytesseract
@@ -24,11 +34,33 @@ def looks_scanned(page: pymupdf.Page, lines: list[Line]) -> bool:
     return False
 
 
-def ocr_page(page: pymupdf.Page, dpi: int = 250) -> tuple[list[Line], list[TextBlock]]:
+def _suspicious(c: str) -> bool:
+    """Characters a legacy font mapping lands on and real text almost never
+    uses: Latin Extended A/B, IPA, spacing modifiers, the generic combining
+    diacriticals block, and Latin Extended Additional. Plain accented letters
+    (Latin-1) and a script's own marks (Devanagari virama, nukta) are not
+    counted."""
+    o = ord(c)
+    return 0x0100 <= o <= 0x036F or 0x1E00 <= o <= 0x1EFF
+
+
+def garbage_ratio(text: str) -> float:
+    letters = [c for c in text if c.isalpha() or unicodedata.combining(c)]
+    if len(letters) < 40:
+        return 0.0
+    return sum(1 for c in letters if _suspicious(c)) / len(letters)
+
+
+def looks_garbled(lines: list[Line]) -> bool:
+    """True when the page's text layer is mojibake from a non-Unicode font."""
+    return garbage_ratio("".join(l.text for l in lines)) >= settings.garbled_text_ratio
+
+
+def ocr_page(page: pymupdf.Page, dpi: int = 250, lang: str | None = None) -> tuple[list[Line], list[TextBlock]]:
     pix = page.get_pixmap(dpi=dpi, colorspace=pymupdf.csGRAY, alpha=False)
     import numpy as np
     img = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width)
-    data = pytesseract.image_to_data(img, output_type=pytesseract.Output.DICT, config="--psm 3")
+    data = pytesseract.image_to_data(img, lang=lang or settings.ocr_lang, output_type=pytesseract.Output.DICT, config="--psm 3")
     s = 72.0 / dpi
     groups: dict[tuple[int, int, int], list[tuple[str, float, float, float, float]]] = {}
     for i, txt in enumerate(data["text"]):

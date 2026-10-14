@@ -70,6 +70,7 @@ def ingest(document_id: str) -> None:
             c.image_png = None
         stats: dict = {
             "pages": n, "scanned_pages": sum(1 for l in layouts if l.is_scanned),
+            "ocr_pages": sum(1 for l in layouts if l.ocr_applied),     # scanned pages plus legacy-font pages read as images
             "chunks": len(chunks), "tokens": sum(c.token_count for c in chunks),
             "by_type": dict(Counter(c.chunk_type for c in chunks)),
             "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
