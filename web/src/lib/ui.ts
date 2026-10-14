@@ -10,9 +10,9 @@ export const TYPE_STYLE: Record<ChunkType, { chip: string; box: string; label: s
 };
 
 export const STRATEGY_INFO: Record<Strategy, { label: string; chip: string; blurb: string }> = {
-  naive:      { label: "Naive", chip: "bg-muted text-foreground", blurb: "Fixed ~450-token windows with overlap. No idea where tables, headings or figures are." },
-  structural: { label: "Structural", chip: "bg-indigo-100 text-indigo-900 dark:bg-indigo-950 dark:text-indigo-200", blurb: "Cuts follow headings, tables and figures. Breadcrumb prepended. Tables atomic plus one chunk per row. Zero model calls." },
-  contextual: { label: "Contextual", chip: "bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200", blurb: "Structural cuts plus a model-written situating sentence per chunk and a vision description per figure. Paid once at ingest." },
+  naive:      { label: "Naive", chip: "bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-100", blurb: "Fixed ~450-token windows with overlap. No idea where tables, headings or figures are." },
+  structural: { label: "Structural", chip: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200", blurb: "Cuts follow headings, tables and figures. Breadcrumb prepended. Tables atomic plus one chunk per row. Zero model calls." },
+  contextual: { label: "Contextual", chip: "bg-teal-100 text-teal-900 dark:bg-teal-950 dark:text-teal-200", blurb: "Structural cuts plus a model-written situating sentence per chunk and a vision description per figure. Paid once at ingest." },
 };
 
 export function fmtNum(n: number | undefined | null): string {

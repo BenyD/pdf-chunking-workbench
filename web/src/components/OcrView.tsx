@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Eraser, Loader2, Play, Save, ScanSearch, X } from "lucide-react";
+import Link from "next/link";
+import { Eraser, FileText, Loader2, Play, Save, ScanSearch, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 import { cn } from "@/lib/utils";
+import { EmptyState } from "./EmptyState";
 
 type Box = { x: number; y: number; w: number; h: number };
 type Word = { text: string; conf: number; box: Box };
@@ -25,7 +27,7 @@ const pageUrl = (p: Page) => p.image_url ?? publicAsset(p.image_path);
 const pct = (b: Box): React.CSSProperties => ({ left: `${b.x * 100}%`, top: `${b.y * 100}%`, width: `${b.w * 100}%`, height: `${b.h * 100}%` });
 
 export function OcrView() {
-  const [docs, setDocs] = useState<Document[]>([]);
+  const [docs, setDocs] = useState<Document[] | null>(null);
   const [templates, setTemplates] = useState<OcrTemplate[]>([]);
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
   const [srcPages, setSrcPages] = useState<Page[]>([]);
@@ -75,7 +77,7 @@ export function OcrView() {
     const t = templates.find((x) => x.id === id);
     if (!t) return;
     setName(t.name); setFields(t.fields); setAnchors(t.anchors);
-    if (t.document_id && docs.some((d) => d.id === t.document_id)) setSrcDoc(t.document_id);
+    if (t.document_id && (docs ?? []).some((d) => d.id === t.document_id)) setSrcDoc(t.document_id);
   }
 
   async function save() {
@@ -95,7 +97,18 @@ export function OcrView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(null); }
   }
 
-  const docItems = docs.map((d) => ({ value: d.id, label: d.name }));
+  if (docs && docs.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Zonal OCR</h1></div>
+        <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
+          <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+        </EmptyState>
+      </div>
+    );
+  }
+
+  const docItems = (docs ?? []).map((d) => ({ value: d.id, label: d.name }));
   const tplItems = templates.map((t) => ({ value: t.id, label: `${t.name} (${t.fields.length} fields, ${t.anchors.length} anchors)` }));
   const sp = srcPages.find((p) => p.page_number === srcPage);
   const tp = tgtPages.find((p) => p.page_number === tgtPage);
@@ -131,7 +144,7 @@ export function OcrView() {
             {sp ? (
               <DrawableViewer imageUrl={pageUrl(sp)} onDraw={onDraw}>
                 {showWords && (words ?? []).map((w, i) => <div key={i} title={`${w.text} (${w.conf})`} className="absolute border border-muted-foreground/40 bg-muted-foreground/5" style={pct(w.box)} />)}
-                {fields.filter((f) => f.page === srcPage).map((f, i) => <div key={`f${i}`} className="absolute border-2 border-indigo-600 bg-indigo-500/10" style={pct(f.box)}><span className="absolute -top-4 left-0 rounded bg-indigo-600 px-1 text-[10px] text-white">{f.name}</span></div>)}
+                {fields.filter((f) => f.page === srcPage).map((f, i) => <div key={`f${i}`} className="absolute border-2 border-primary bg-primary/10" style={pct(f.box)}><span className="absolute -top-4 left-0 rounded bg-primary px-1 text-[10px] text-primary-foreground">{f.name}</span></div>)}
                 {anchors.filter((a) => a.page === srcPage).map((a, i) => <div key={`a${i}`} className="absolute border-2 border-dashed border-emerald-600 bg-emerald-500/10" style={pct(a.box)}><span className="absolute -top-4 left-0 rounded bg-emerald-600 px-1 text-[10px] text-white">⚓ {a.text}</span></div>)}
               </DrawableViewer>
             ) : <p className="text-sm text-muted-foreground">No rendered page. Ingest a document first.</p>}
@@ -140,7 +153,7 @@ export function OcrView() {
               <div className="flex items-center gap-2"><Label className="w-24 text-xs text-muted-foreground">Template</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="h-8" /></div>
               {fields.map((f, i) => (
                 <div key={i} className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs text-indigo-600">▣</span>
+                  <span className="text-xs text-primary">▣</span>
                   <Input value={f.name} onChange={(e) => setFields(fields.map((x, j) => j === i ? { ...x, name: e.target.value.replace(/\s+/g, "_") } : x))} className="h-8 w-36" />
                   <Select value={f.type} onValueChange={(v) => setFields(fields.map((x, j) => j === i ? { ...x, type: v as OcrField["type"] } : x))} items={FIELD_TYPES.map((t) => ({ value: t, label: t }))}>
                     <SelectTrigger size="sm" className="w-28"><SelectValue /></SelectTrigger>
@@ -194,7 +207,7 @@ export function OcrView() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={pageUrl(tp)} alt="target page" className="block w-full" />
                 {tgtBoxes.map((b, i) => (
-                  <div key={i} className={cn("absolute border-2", result ? (b.ok ? "border-emerald-600 bg-emerald-500/10" : "border-amber-500 bg-amber-500/10") : "border-dashed border-indigo-400/70")} style={pct(b.box)}><span className="absolute -top-4 left-0 rounded bg-foreground px-1 text-[10px] text-background">{b.label}</span></div>
+                  <div key={i} className={cn("absolute border-2", result ? (b.ok ? "border-emerald-600 bg-emerald-500/10" : "border-amber-500 bg-amber-500/10") : "border-dashed border-primary/60")} style={pct(b.box)}><span className="absolute -top-4 left-0 rounded bg-foreground px-1 text-[10px] text-background">{b.label}</span></div>
                 ))}
               </div>
             )}
@@ -213,7 +226,7 @@ export function OcrView() {
                           <TableCell className="font-mono">{String(f.value ?? "")}</TableCell>
                           <TableCell className="hidden font-mono text-muted-foreground md:table-cell">{f.raw}{f.ocr_value !== undefined ? ` → ${String(f.ocr_value)}` : ""}</TableCell>
                           <TableCell>{f.confidence}</TableCell>
-                          <TableCell><Badge className={cn("border-transparent", f.source === "llm" ? "bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200" : f.valid ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200" : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200")}>{f.source}</Badge></TableCell>
+                          <TableCell><Badge className={cn("border-transparent", f.source === "llm" ? "bg-teal-100 text-teal-900 dark:bg-teal-950 dark:text-teal-200" : f.valid ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200" : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200")}>{f.source}</Badge></TableCell>
                           <TableCell className="hidden text-xs text-muted-foreground lg:table-cell">{f.note}</TableCell>
                         </TableRow>
                       ))}

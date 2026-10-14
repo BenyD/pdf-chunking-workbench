@@ -1,18 +1,19 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckCircle2, Database, Loader2, Orbit, RefreshCw, Trash2, Upload } from "lucide-react";
+import { Database, FileText, Loader2, Orbit, RefreshCw, Trash2, Upload } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { SAMPLES } from "@/lib/samples";
 import type { Document } from "@/lib/types";
 import { api, fmtNum } from "@/lib/ui";
 import { StatusBadge } from "./Chips";
 import { DocumentsSkeleton } from "./Skeletons";
+import { EmptyState } from "./EmptyState";
+import { SamplePicker } from "./SamplePicker";
 
 type Stats = { strategies?: Record<string, { chunks: number }>; seconds?: number; llm?: { context_calls: number; vision_calls: number } };
 
@@ -20,6 +21,7 @@ export function DocumentsHome() {
   const [docs, setDocs] = useState<Document[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [picker, setPicker] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -34,10 +36,10 @@ export function DocumentsHome() {
     return () => clearInterval(t);
   }, [docs, load]);
 
-  async function seed() {
+  async function seed(keys: string[]) {
     setBusy("Loading samples…"); setError(null);
     try {
-      const r = await api<{ errors: string[] }>("/api/samples", { method: "POST", body: "{}" });
+      const r = await api<{ errors: string[] }>("/api/samples", { method: "POST", body: JSON.stringify({ keys }) });
       if (r.errors.length) setError(r.errors.join("\n"));
       await load();
     } catch (e) { setError(String(e)); } finally { setBusy(null); }
@@ -63,21 +65,22 @@ export function DocumentsHome() {
     } catch (e) { setError(String(e)); }
   }
 
-  const loaded = new Set((docs ?? []).map((d) => d.sample_key).filter(Boolean));
+  const loaded = new Set((docs ?? []).map((d) => d.sample_key).filter((k): k is string => !!k));
 
   return (
     <div className="space-y-6">
       <section className="space-y-3">
         <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Documents</h1>
         <p className="text-sm text-muted-foreground sm:text-base">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={seed} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
+        {docs !== null && docs.length > 0 && <div className="flex flex-wrap items-center gap-2">
+          <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
           <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
             <Upload data-icon="inline-start" />Upload a PDF
             <input ref={fileRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           </Button>
           {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
-        </div>
+        </div>}
+        {docs !== null && docs.length === 0 && busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
         {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
       </section>
 
@@ -90,7 +93,15 @@ export function DocumentsHome() {
           {docs === null ? (
             <DocumentsSkeleton />
           ) : docs.length === 0 ? (
-            <p className="px-6 text-sm text-muted-foreground sm:px-0">Nothing yet. Load the samples or upload a PDF.</p>
+            <div className="px-6 sm:px-0">
+              <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
+                <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
+                <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
+                  <Upload data-icon="inline-start" />Upload a PDF
+                  <input type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+                </Button>
+              </EmptyState>
+            </div>
           ) : (
             <div className="overflow-x-auto">
               <Table>
@@ -145,22 +156,7 @@ export function DocumentsHome() {
         </CardContent>
       </Card>
 
-      <section className="space-y-3">
-        <div>
-          <h2 className="text-lg font-semibold">Sample documents</h2>
-          <p className="text-sm text-muted-foreground">Included with the app. Loaded ones are marked.</p>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {SAMPLES.map((s) => (
-            <Card key={s.key} size="sm" className={loaded.has(s.key) ? "border-emerald-200 dark:border-emerald-900" : ""}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-sm">{loaded.has(s.key) && <CheckCircle2 className="size-4 text-emerald-600" />}{s.name.replace(".pdf", "")}</CardTitle>
-                <CardDescription>{s.blurb}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </section>
+      <SamplePicker open={picker} onOpenChange={setPicker} loaded={loaded} onLoad={seed} />
     </div>
   );
 }

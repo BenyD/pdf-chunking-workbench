@@ -1,0 +1,30 @@
+{
+  "bns-2023": {
+    "pages": 102,
+    "size_kb": 1351
+  },
+  "bnss-2023": {
+    "pages": 297,
+    "size_kb": 1125
+  },
+  "inspection-report": {
+    "pages": 4,
+    "size_kb": 60
+  },
+  "pharmacy-bill-1": {
+    "pages": 1,
+    "size_kb": 13
+  },
+  "pharmacy-bill-2": {
+    "pages": 1,
+    "size_kb": 13
+  },
+  "pharmacy-bill-3-scan": {
+    "pages": 1,
+    "size_kb": 1923
+  },
+  "price-schedule": {
+    "pages": 151,
+    "size_kb": 6225
+  }
+}

@@ -1,7 +1,8 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Loader2, Play, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { FileText, ListChecks, Loader2, Play, Plus, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import type { Document, EvalQuestion, Strategy } from "@/lib/types";
 import { api, STRATEGY_INFO } from "@/lib/ui";
 import { StrategyChip } from "./Chips";
 import { EvalSkeleton } from "./Skeletons";
+import { EmptyState } from "./EmptyState";
 
 interface RunResult {
   k: number; embedded: boolean;
@@ -21,7 +23,7 @@ interface RunResult {
 
 export function EvalView() {
   const sp = useSearchParams();
-  const [docs, setDocs] = useState<Document[]>([]);
+  const [docs, setDocs] = useState<Document[] | null>(null);
   const [docId, setDocId] = useState<string | null>(sp.get("document_id"));
   const [questions, setQuestions] = useState<EvalQuestion[]>([]);
   const [k, setK] = useState(5);
@@ -56,7 +58,18 @@ export function EvalView() {
     catch (e) { setErr(String(e)); } finally { setBusy(false); }
   }
 
-  const docItems = docs.map((d) => ({ value: d.id, label: d.name }));
+  const docItems = (docs ?? []).map((d) => ({ value: d.id, label: d.name }));
+
+  if (docs && docs.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Evaluation</h1></div>
+        <EmptyState icon={<FileText />} title="Nothing to evaluate yet" hint="Add a document, then write a few questions with the phrase a correct answer must contain.">
+          <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+        </EmptyState>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -96,6 +109,11 @@ export function EvalView() {
       <Card>
         <CardHeader><CardTitle>Questions</CardTitle><CardDescription>A hit means a top result contains the expected phrase.</CardDescription></CardHeader>
         <CardContent className="px-0 sm:px-6">
+          {questions.length === 0 && (
+            <div className="px-6 pb-4 sm:px-0">
+              <EmptyState icon={<ListChecks />} title="No questions for this document" hint="Add one below. Sample documents come with a ready-made set." className="py-8" />
+            </div>
+          )}
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>

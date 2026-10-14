@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight, FlaskConical, Search, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, FlaskConical, Loader2, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChunkListSkeleton, ExplorerSkeleton } from "./Skeletons";
+import { EmptyState } from "./EmptyState";
+import { Progress } from "@/components/ui/progress";
 import type { Chunk, Document, Page, Strategy } from "@/lib/types";
 import { api, fmtNum, publicAsset, STRATEGY_INFO } from "@/lib/ui";
 import { cn } from "@/lib/utils";
@@ -102,6 +104,16 @@ export function Explorer({ id }: { id: string }) {
         </p>
       )}
 
+      {doc.status !== "ready" && doc.status !== "error" && (
+        <EmptyState icon={<Loader2 className="animate-spin" />} title="Processing this document" hint={`${doc.progress.stage ?? "queued"}${doc.progress.total ? `, ${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}. This page updates by itself.`}>
+          {doc.progress.total ? <Progress value={Math.round(((doc.progress.done ?? 0) / doc.progress.total) * 100)} className="w-64" /> : null}
+        </EmptyState>
+      )}
+      {doc.status === "error" && (
+        <EmptyState icon={<AlertCircle />} title="Processing failed" hint={doc.progress.message ?? "Unknown error"}>
+          <Button variant="outline" onClick={() => api(`/api/documents/${doc.id}/ingest`, { method: "POST" }).then(loadDoc)}>Try again</Button>
+        </EmptyState>
+      )}
       {doc.status === "ready" && (
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-2">
@@ -126,12 +138,13 @@ export function Explorer({ id }: { id: string }) {
           <div className="space-y-2 lg:max-h-[82vh] lg:overflow-y-auto lg:pr-1">
             {sel && <ChunkDetail chunk={sel} onClose={() => setSelected(null)} />}
             {chunks === null && <ChunkListSkeleton />}
+            {chunks !== null && visible.length === 0 && <EmptyState icon={<Search />} title="No chunks on this page" hint="This page has no text in this strategy, or only row chunks that are hidden." className="py-8" />}
             {visible.map((c) => (
               <button key={c.id} type="button" onClick={() => setSelected(c.id)} className={cn("block w-full rounded-xl border bg-card p-3 text-left text-sm transition hover:bg-muted/40", selected === c.id ? "border-foreground" : "border-border")}>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <TypeChip type={c.chunk_type} /><span>#{c.ordinal}</span><span>p.{c.page_start}{c.page_end !== c.page_start ? `–${c.page_end}` : ""}</span><span className="ml-auto">{c.token_count} tok</span>
                 </div>
-                {c.context && <div className="mt-1 truncate text-xs text-indigo-700 dark:text-indigo-300">{c.context.split("\n").slice(-1)[0]}</div>}
+                {c.context && <div className="mt-1 truncate text-xs text-primary">{c.context.split("\n").slice(-1)[0]}</div>}
                 <div className="mt-1 line-clamp-3 whitespace-pre-wrap text-foreground/90">{c.raw_text}</div>
               </button>
             ))}
@@ -157,8 +170,8 @@ function ChunkDetail({ chunk, onClose }: { chunk: Chunk; onClose: () => void }) 
           <img src={publicAsset(meta.image_path)} alt="figure" className="max-h-64 rounded-lg border" />
         )}
         {chunk.context && (
-          <div className="rounded-lg bg-indigo-50 p-2 text-xs text-indigo-950 dark:bg-indigo-950/40 dark:text-indigo-100">
-            <div className="mb-1 text-[10px] font-medium tracking-wide text-indigo-500 uppercase">context prepended before embedding</div>
+          <div className="rounded-lg bg-primary/5 p-2 text-xs text-foreground">
+            <div className="mb-1 text-[10px] font-medium tracking-wide text-primary uppercase">context prepended before embedding</div>
             <div className="whitespace-pre-wrap">{chunk.context}</div>
           </div>
         )}

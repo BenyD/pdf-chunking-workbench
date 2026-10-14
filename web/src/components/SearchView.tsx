@@ -1,7 +1,8 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Loader2, Search } from "lucide-react";
+import Link from "next/link";
+import { FileText, Loader2, Search, SearchX } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { StrategyChip, TypeChip } from "./Chips";
 import { StrategyMulti } from "./StrategyToggle";
 import { ResultsSkeleton } from "./Skeletons";
+import { EmptyState } from "./EmptyState";
 
 type Hit = SearchResult & { page_image_url: string };
 type Results = Record<string, Hit[]>;
@@ -29,7 +31,7 @@ const EXAMPLES = [
 
 export function SearchView() {
   const sp = useSearchParams();
-  const [docs, setDocs] = useState<Document[]>([]);
+  const [docs, setDocs] = useState<Document[] | null>(null);
   const [docId, setDocId] = useState<string | null>(sp.get("document_id"));
   const [q, setQ] = useState("");
   const [k, setK] = useState(6);
@@ -50,7 +52,19 @@ export function SearchView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(false); }
   }
 
-  const docItems = [{ value: null, label: "All documents" }, ...docs.map((d) => ({ value: d.id, label: d.name }))];
+  const docItems = [{ value: null, label: "All documents" }, ...(docs ?? []).map((d) => ({ value: d.id, label: d.name }))];
+  const noHits = res && selected.every((s) => (res.results[s] ?? []).length === 0);
+
+  if (docs && docs.length === 0) {
+    return (
+      <div className="space-y-4">
+        <div><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Search</h1></div>
+        <EmptyState icon={<FileText />} title="Nothing to search yet" hint="Add a document first. Once it finishes processing it shows up here.">
+          <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+        </EmptyState>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -82,7 +96,8 @@ export function SearchView() {
       {err && <p className="text-sm text-destructive">{err}</p>}
       {busy && <ResultsSkeleton columns={selected.length} />}
 
-      {res && !busy && (
+      {res && !busy && noHits && <EmptyState icon={<SearchX />} title="No matches" hint="Try different words, or widen the search to all documents." />}
+      {res && !busy && !noHits && (
         <>
           <p className="text-xs text-muted-foreground">{res.embedded ? `Embedded in ${res.embed_ms} ms, ` : "Full-text only, "}{res.total_ms} ms total</p>
           <div className={cn("grid gap-3", selected.length === 2 && "md:grid-cols-2", selected.length === 3 && "lg:grid-cols-3")}>
@@ -114,7 +129,7 @@ function ResultCard({ r, rank, open, onToggle }: { r: Hit; rank: number; open: b
           <span className="max-w-[40vw] truncate sm:max-w-[12rem]">{r.document_name}</span><span>p.{r.page_start}</span>
           <span className="ml-auto whitespace-nowrap" title="fused score, rank in full-text list, rank in vector list">rrf {r.rrf_score.toFixed(4)}, fts {r.fts_rank ?? "–"}, vec {r.vec_rank ?? "–"}</span>
         </div>
-        {r.context && <div className="mt-1 line-clamp-2 text-xs text-indigo-700 dark:text-indigo-300">{r.context}</div>}
+        {r.context && <div className="mt-1 line-clamp-2 text-xs text-primary">{r.context}</div>}
         <div className={cn("mt-1 whitespace-pre-wrap text-foreground/90", !open && "line-clamp-4")}>{r.raw_text}</div>
       </button>
       {open && (
@@ -127,7 +142,7 @@ function ResultCard({ r, rank, open, onToggle }: { r: Hit; rank: number; open: b
             <div className="relative overflow-hidden rounded-lg border bg-white">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={r.page_image_url} alt="page" className="block w-full" />
-              <div className="absolute border-2 border-indigo-600 bg-indigo-500/10" style={{ left: `${box.x0 * 100}%`, top: `${box.y0 * 100}%`, width: `${(box.x1 - box.x0) * 100}%`, height: `${(box.y1 - box.y0) * 100}%` }} />
+              <div className="absolute border-2 border-primary bg-primary/10" style={{ left: `${box.x0 * 100}%`, top: `${box.y0 * 100}%`, width: `${(box.x1 - box.x0) * 100}%`, height: `${(box.y1 - box.y0) * 100}%` }} />
             </div>
           )}
           {ctx?.parent && <div className="rounded-lg bg-amber-50 p-2 dark:bg-amber-950/40"><div className="mb-1 font-medium text-amber-800 dark:text-amber-200">parent table (retrieved small, expanded big)</div><pre className="max-h-48 overflow-auto font-mono text-[11px] whitespace-pre-wrap">{ctx.parent.raw_text}</pre></div>}

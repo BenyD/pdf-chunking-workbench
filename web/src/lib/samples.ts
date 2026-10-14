@@ -2,19 +2,19 @@ import type { OcrAnchor, OcrField } from "./types";
 
 /** Built-in sample documents. Files live in /public/samples so the seed route
  *  can fetch them from the deployment itself (no filesystem access needed on Vercel). */
-export const SAMPLES: { key: string; file: string; name: string; blurb: string }[] = [
+export const SAMPLES: { key: string; file: string; name: string; blurb: string; pages: number }[] = [
   { key: "bns-2023", file: "bns-2023.pdf", name: "Bharatiya Nyaya Sanhita 2023.pdf",
-    blurb: "102-page statute. Chapters, numbered sections, margin-note titles, illustrations. Tests hierarchy-aware chunking." },
+    blurb: "102-page statute. Chapters, numbered sections, margin-note titles, illustrations. Tests hierarchy-aware chunking." , pages: 102 },
   { key: "bnss-2023", file: "bnss-2023.pdf", name: "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
-    blurb: "297 pages. The First Schedule is a 30-page table with no ruling lines: section, offence, punishment, cognizable, bailable, court." },
+    blurb: "297 pages. The First Schedule is a 30-page table with no ruling lines: section, offence, punishment, cognizable, bailable, court." , pages: 297 },
   { key: "price-schedule", file: "price-schedule.pdf", name: "Pharma Price Schedule (synthetic).pdf",
-    blurb: "One ruled table of 4,500 rows running across 150 pages. Tests continuation merging and row-level chunks at scale." },
+    blurb: "One ruled table of 4,500 rows running across 150 pages. Tests continuation merging and row-level chunks at scale." , pages: 151 },
   { key: "inspection-report", file: "inspection-report.pdf", name: "QC Inspection Report (synthetic).pdf",
-    blurb: "Photos of steel utensils with red arrows and labels drawn on top. Tests figure chunks and arrow-aware descriptions." },
-  { key: "pharmacy-bill-1", file: "pharmacy-bill-1.pdf", name: "Pharmacy bill 1 (synthetic).pdf", blurb: "Clean digital invoice. Source for the zonal OCR template." },
-  { key: "pharmacy-bill-2", file: "pharmacy-bill-2.pdf", name: "Pharmacy bill 2 (synthetic).pdf", blurb: "Same layout, different data." },
+    blurb: "Photos of steel utensils with red arrows and labels drawn on top. Tests figure chunks and arrow-aware descriptions." , pages: 4 },
+  { key: "pharmacy-bill-1", file: "pharmacy-bill-1.pdf", name: "Pharmacy bill 1 (synthetic).pdf", blurb: "Clean digital invoice. Source for the zonal OCR template." , pages: 1 },
+  { key: "pharmacy-bill-2", file: "pharmacy-bill-2.pdf", name: "Pharmacy bill 2 (synthetic).pdf", blurb: "Same layout, different data." , pages: 1 },
   { key: "pharmacy-bill-3-scan", file: "pharmacy-bill-3-scan.pdf", name: "Pharmacy bill 3 scanned (synthetic).pdf",
-    blurb: "Image-only scan, rotated 1.6 degrees and shifted. Tests OCR, deskew and anchor registration." },
+    blurb: "Image-only scan, rotated 1.6 degrees and shifted. Tests OCR, deskew and anchor registration." , pages: 1 },
 ];
 
 // A4 is 595 x 842 pt. Boxes are fractions of the page. Values printed at x=120 (labels at 50).
