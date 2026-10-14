@@ -124,14 +124,6 @@ export function DocumentsHome() {
                             {d.status === "error" && <span className="max-w-[40vw] truncate text-xs text-destructive sm:max-w-xs" title={d.progress?.message}>{d.progress?.message}</span>}
                           </div>
                         </TableCell>
-                        <TableCell className="hidden text-muted-foreground md:table-cell">
-                          {st.strategies ? `${fmtNum(st.strategies.naive?.chunks)}, ${fmtNum(st.strategies.structural?.chunks)}, ${fmtNum(st.strategies.contextual?.chunks)}` : "–"}
-                        </TableCell>
-                        <TableCell className="hidden text-xs text-muted-foreground lg:table-cell">
-                          {d.status === "ready" && st.seconds ? (
-                            <Tooltip><TooltipTrigger render={<span className="cursor-default" />}>{Math.round(st.seconds)} s</TooltipTrigger><TooltipContent>{st.llm ? `${st.llm.context_calls} context calls, ${st.llm.vision_calls} vision calls` : "no model calls"}</TooltipContent></Tooltip>
-                          ) : "–"}
-                        </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">
                             <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "ingest")} />}>{pending[d.id] === "ingest" ? <Loader2 className="animate-spin" /> : <RefreshCw />}</TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
