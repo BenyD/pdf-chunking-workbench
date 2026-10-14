@@ -3,4 +3,4 @@ shared-layer	done		layout, top bar; theme, skills, lint installed
 documents	verified		pilot; report 2026-10-15-documents.md
 document	verified		report 2026-10-15-document.md; should-fix 1 (header wrap at 390)
 search	verified		report 2026-10-15-search.md
-forms	queued		template, run, results table
+forms	verified		report 2026-10-15-forms.md
