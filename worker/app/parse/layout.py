@@ -19,7 +19,7 @@ import pymupdf
 from .figures import detect_figures
 from .model import BBox, Line, PageLayout, TableBlock, TextBlock
 from .ocr import looks_scanned, ocr_page
-from .tables import find_aligned_tables, find_ruled_tables, merge_continuations
+from .tables import find_aligned_tables, find_ruled_tables, merge_continuations, numbered_header_ids
 
 SECTION_START = re.compile(r"^\s*(?:(?P<pre>[A-Z][A-Za-z ,\-]{2,60}?)\s+)?(?P<num>\d{1,3}[A-Z]{0,2})\.\s*(?=[A-Z(“\"])")
 CHAPTER = re.compile(r"^\s*(CHAPTER|PART|BOOK|TITLE|ARTICLE)\s+[IVXLC\d]+\b|^\s*THE\s+\w+\s+SCHEDULE\b|^\s*SCHEDULE\s+[IVXLC\d]+\b", re.I)
@@ -67,21 +67,38 @@ class DocStats:
         x1s = sorted(l.bbox[2] for l in body_lines) or [1e9]
         self.body_left = x0s[len(x0s) // 10]
         self.body_right = x1s[-1 - len(x1s) // 10]
-        # repeated lines in header/footer zones
+        # repeated lines in header/footer zones (running headers and footers).
+        # Bare numbers and "(1) (2) (3)" rows are left out: folios have their
+        # own rule and column numbers are table content.
         n = len(pages)
         zone: Counter = Counter()
         for lines, w, h in pages:
             seen = set()
+            nh = numbered_header_ids(lines)
             for l in lines:
+                if id(l) in nh or PAGE_NO.match(l.text):
+                    continue
                 if l.bbox[1] < 0.09 * h or l.bbox[3] > 0.92 * h:
                     seen.add(_norm(l.text))
             zone.update(seen)
         self.repeated = {t for t, c in zone.items() if c >= max(3, 0.3 * n)}
         self.page_count = n
 
-    def is_boilerplate(self, l: Line, h: float) -> bool:
+    def is_boilerplate(self, l: Line, h: float, edge: bool = False, mates: list[Line] = ()) -> bool:
+        """Running headers, footers and page numbers. `edge` marks the top-most
+        or bottom-most baseline of the page; `mates` are the other lines on the
+        line's baseline.
+
+        A bare number is a folio when it sits on the page's outermost baseline
+        (wherever that is: gazettes print it at 86% of the height), or in the
+        header/footer zone with nothing but running-header text beside it. A
+        number beside table text ("57" under the column numbers) is a key.
+        A repeated text is a running header only on a short baseline: a table
+        row that happens to start in the zone has many cells beside it."""
         in_zone = l.bbox[1] < 0.09 * h or l.bbox[3] > 0.92 * h
-        return in_zone and (_norm(l.text) in self.repeated or PAGE_NO.match(l.text) is not None)
+        if PAGE_NO.match(l.text) is not None:
+            return edge or (in_zone and all(_norm(m.text) in self.repeated for m in mates))
+        return in_zone and len(mates) <= 2 and _norm(l.text) in self.repeated
 
     def is_margin_note(self, l: Line) -> bool:
         return l.size < self.body_size * 0.92 and (l.bbox[0] < self.body_left - 15 or l.bbox[0] > self.body_right + 4)
@@ -112,7 +129,12 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
             blocks = [((b.bbox), b.lines) for b in blocks]
 
         is_toc = any(TOC_MARK.search(l.text) for l in lines[:12]) or _looks_like_toc(lines)
-        body_lines = [l for l in lines if not stats.is_boilerplate(l, H)]
+        keep = numbered_header_ids(lines)          # "(1) (2) (3)" column rows are not page numbers
+        edge = _edge_line_ids(lines)
+        drop = _line_number_ids(lines, stats)      # gazette line numbering in the margin
+        mates = _baseline_mates(lines)
+        body_lines = [l for l in lines if id(l) not in drop
+                      and (id(l) in keep or not stats.is_boilerplate(l, H, edge=id(l) in edge, mates=mates[id(l)]))]
         # Margin notes only exist on pages set in the body font. A page that is
         # mostly smaller text (a schedule, an appendix table) has no margin column.
         small = sum(1 for l in body_lines if l.size < stats.body_size * 0.92)
@@ -135,7 +157,7 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
             _attach_table_caption(tb, content)
         tables_by_page[pno] = tables
         prior_model = None
-        if tables and getattr(tables[-1], "column_model", None) is not None and tables[-1].bbox[3] > 0.70 * H:
+        if tables and getattr(tables[-1], "column_model", None) is not None and tables[-1].bbox[3] > 0.60 * H:
             prior_model = tables[-1].column_model  # type: ignore[attr-defined]
 
         consumed: set[int] = set()
@@ -167,6 +189,50 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
         blocks.sort(key=lambda b: (round(b.bbox[1] / 4), b.bbox[0]))
         lay.blocks = blocks
     return layouts
+
+
+def _edge_line_ids(lines: list[Line]) -> set[int]:
+    """The top-most and bottom-most lines of a page (within a couple of points)."""
+    if not lines:
+        return set()
+    top = min(l.bbox[1] for l in lines)
+    bottom = max(l.bbox[3] for l in lines)
+    return {id(l) for l in lines if l.bbox[1] <= top + 2 or l.bbox[3] >= bottom - 2}
+
+
+_INT = re.compile(r"^\d{1,4}$")
+
+
+def _line_number_ids(lines: list[Line], stats: "DocStats") -> set[int]:
+    """Gazettes print 5, 10, 15... in the margin every five lines. Those numbers
+    are not content and, left in, read as the key column of a three-column
+    table made of prose."""
+    cands = [l for l in lines if _INT.match(l.text.strip()) and l.size < stats.body_size * 0.92
+             and (l.bbox[2] <= stats.body_left - 3 or l.bbox[0] >= stats.body_right + 3)]
+    if len(cands) < 3:
+        return set()
+    cands.sort(key=lambda l: l.bbox[1])
+    vals = [int(l.text.strip()) for l in cands]
+    steps = {b - a for a, b in zip(vals, vals[1:])}
+    if len(steps) == 1 and steps.pop() in (1, 5, 10) and vals[0] <= 10:
+        return {id(l) for l in cands}
+    return set()
+
+
+def _baseline_mates(lines: list[Line]) -> dict[int, list[Line]]:
+    """For each line, the other lines that share its baseline."""
+    by_y = sorted(lines, key=lambda l: l.bbox[1])
+    out: dict[int, list[Line]] = {}
+    for i, l in enumerate(by_y):
+        m: list[Line] = []
+        j = i - 1
+        while j >= 0 and l.bbox[1] - by_y[j].bbox[1] <= 3:
+            m.append(by_y[j]); j -= 1
+        j = i + 1
+        while j < len(by_y) and by_y[j].bbox[1] - l.bbox[1] <= 3:
+            m.append(by_y[j]); j += 1
+        out[id(l)] = m
+    return out
 
 
 def _looks_like_toc(lines: list[Line]) -> bool:

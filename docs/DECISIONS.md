@@ -80,11 +80,15 @@ This is where generic tools break, so the rules are explicit.
    values look like codes or numbers) gets a value, or when the vertical gap is
    clearly larger than a line. Wrapped cells therefore stay in one row.
 3. **Continuation across pages.** A table at the top of page N+1 whose
-   columns match the table at the bottom of page N is the same table. Column
-   models are carried forward, repeated header rows are dropped, and keyless
-   rows at the top of a page are appended to the previous row (they are its
-   wrapped tail). This is how a 150-page ruled table comes out as one table
-   with 4,500 rows.
+   columns match the table at the bottom of page N is the same table. A page
+   that prints its own `(1) (2) (3)` row defines its columns exactly, so two
+   such pages match on column count alone; pages without one borrow the
+   previous page's model, and otherwise the cuts may drift by 5% of the page
+   width (gazette typesetting shifts columns a little on every page).
+   Repeated header rows are dropped, and keyless rows at the top of a page are
+   appended to the previous row (they are its wrapped tail). This is how a
+   150-page ruled table comes out as one table with 4,500 rows and the 30-page
+   BNSS First Schedule as one table with 377 rows.
 4. **Chunking.** A table is one chunk. If it is bigger than ~900 tokens it is
    split by rows and the header is repeated in every part, so no row is ever
    separated from its column names. Every row is also its own chunk, flattened
@@ -96,10 +100,46 @@ theft, not on a 900-token slab of table. The flattened row is semantically
 self-contained, so both full-text and vector search find it. The parent link
 lets the UI expand back to the whole table.
 
-**Known limit.** The BNSS First Schedule in the Gazette PDF has cells that
-span columns and pages without the numbered header; the detector still splits
-it into several tables. The fix is a model-based layout analyser in front of
-the same row logic, not a different chunker.
+**What it took to keep the BNSS First Schedule in one piece.** The first
+version split it into eight tables and skipped eleven pages. None of the
+causes was a layout problem a model would be needed for; they were small
+things the deterministic rules got wrong, and every fix is generic:
+
+- A `1 2 3 4 5 6` row at the top of a page looks like six page numbers, and
+  page-number filtering removed it. Column-number rows are now recognised
+  before that filter runs.
+- The real page number sits at 86% of the page height, outside the footer
+  zone, and became a one-cell row. The top-most and bottom-most line of a
+  page is now treated as a folio when it is only a number.
+- Keys such as `109(2)` were not keys, and PyMuPDF sometimes glues the key to
+  its cell (`109(2)For commission of...`). Both forms are accepted; a glued
+  line is split at the first column boundary.
+- Gazettes print `5, 10, 15...` line numbers in the margin; with prose beside
+  them they passed as a three-column table. An arithmetic run of small
+  numbers in the margin is dropped before layout.
+- Column cuts were snapped to the left edge of whatever line began inside the
+  column, including centred titles; snapping now anchors on clean cells, and
+  the refinement pass keeps lines that straddle one cut so a wrong cut can
+  move.
+- A centred title in the middle of the table region (the heading of part II)
+  ends the table instead of being absorbed into the last row.
+- A section key at the top of a page (`57` just under the column numbers) sat
+  in the header zone and looked like a folio. A number is a folio only when
+  nothing but a running header shares its baseline. The same rule applies
+  when learning which lines repeat across pages, otherwise a document that is
+  mostly one table reports "Ditto" as a running header.
+- Sub-cases of one section ("(i) if the offence be committed", "(ii) if not")
+  carry no key and used to merge into one row with "Ditto Ditto" cells.
+  Vertical gaps do not separate them reliably (two leadings on one page), so
+  the rule is about content: a baseline that fills several cells starts a
+  new row when, in some column, its text cannot continue the cell above (a
+  second "Ditto", or a new sentence after a full stop). Those rows inherit
+  the section number, so the flattened row still says which section it is;
+  a single-cell keyless row is a wrapped tail and is glued back.
+
+Result: one table, 454 rows, 350 distinct section keys, and no row with two
+values in one cell. The other samples are unchanged (4,500-row price schedule,
+the inspection and bill tables).
 
 ## 6. Figures with arrows
 

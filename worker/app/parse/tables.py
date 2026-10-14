@@ -39,7 +39,9 @@ from .model import BBox, Line, TableBlock
 # ---------------------------------------------------------------------------
 
 _NUM_HEADER = re.compile(r"^\(?(\d{1,2}|[ivxIVX]{1,4})\)?\.?$")
-_KEYISH = re.compile(r"^[\(\[]?[0-9]{1,4}[A-Za-z]?[\)\]\.]?$|^[A-Z]{1,4}-?\d{1,5}$|^\d+(\.\d+)+$")
+_KEYISH = re.compile(r"^[\(\[]?[0-9]{1,4}[A-Za-z]{0,2}(\s?\(\d{1,2}\))?[\)\]\.,]?$|^[A-Z]{1,4}-?\d{1,5}$|^\d+(\.\d+)+$")
+# "109(2)For commission of..." : a key glued to its cell text in one extracted line
+_GLUED_KEY = re.compile(r"^(\d{1,4}[A-Z]{0,2}(?:\s?\(\d{1,2}\))?\.?)\s*(?=[A-Za-z(])(.*\S.*)$")
 
 
 def clean(cell: str | None) -> str:
@@ -135,6 +137,9 @@ class ColumnModel:
     def crosses(self, bbox: BBox) -> bool:
         return any(bbox[0] < c - 1.5 < bbox[2] for c in self.cuts)
 
+    def crossed(self, bbox: BBox) -> int:
+        return sum(1 for c in self.cuts if bbox[0] < c - 1.5 < bbox[2])
+
     def similar(self, other: "ColumnModel", tol: float) -> bool:
         if self.n != other.n:
             return False
@@ -166,6 +171,18 @@ def _header_token_centers(lines: list[Line]) -> list[float] | None:
     return None
 
 
+def numbered_header_ids(lines: list[Line]) -> set[int]:
+    """ids of the lines that form a "(1) (2) (3)" or "1 2 3" column-number row.
+    The layout pass keeps these even where a lone digit would be a page number."""
+    out: set[int] = set()
+    for b in _baseline_buckets(lines):
+        toks = [l for l in b if l.text.strip()]
+        hits = [t for t in toks if _NUM_HEADER.match(t.text.strip())]
+        if len(hits) >= 3 and len(hits) >= len(toks) - 1:
+            out |= {id(t) for t in hits}
+    return out
+
+
 def infer_columns(lines: list[Line], page_width: float, min_gap: float = 5.0) -> ColumnModel | None:
     """Vertical whitespace gutters = column boundaries.
 
@@ -178,7 +195,9 @@ def infer_columns(lines: list[Line], page_width: float, min_gap: float = 5.0) ->
     model = _infer_once(lines, page_width, min_gap)
     if model is None:
         return None
-    fitting = [l for l in lines if not model.crosses(l.bbox)]
+    # Lines crossing several cuts are prose; a line crossing exactly one is a
+    # cell the first pass mis-cut and must stay in so the cut can move.
+    fitting = [l for l in lines if model.crossed(l.bbox) <= 1]
     refined = _infer_once(fitting, page_width, min_gap)
     return refined or model
 
@@ -240,7 +259,8 @@ def _infer_once(lines: list[Line], page_width: float, min_gap: float) -> ColumnM
     model = ColumnModel(cuts=cuts, left=float(x_min), right=float(x_max))
     snapped: list[float] = []
     for i, c in enumerate(model.cuts):
-        starts = [l.bbox[0] for l in narrow if model.col_of(l.bbox[0] + 1.0) == i + 1]
+        # anchor on clean cells only: a centred title that happens to begin inside the column is not a column start
+        starts = [l.bbox[0] for l in narrow if model.col_of(l.bbox[0] + 1.0) == i + 1 and not model.crosses(l.bbox)]
         new = min(starts) - 1.0 if starts else c
         if snapped and new <= snapped[-1] + 2:
             new = c
@@ -264,12 +284,25 @@ def _group_rows(lines: list[Line], model: ColumnModel, key_col: int) -> list[tup
     for b in _baseline_buckets(lines):
         cells = [""] * model.n
         for l in sorted(b, key=lambda l: l.bbox[0]):
-            ci = model.col_of(l.bbox[0] + 1.0)
+            x = l.bbox[0] + 1.0 if not model.crosses(l.bbox) else (l.bbox[0] + l.bbox[2]) / 2
+            ci = model.col_of(x)
             cells[ci] = (cells[ci] + " " + l.text).strip()
         y0 = min(l.bbox[1] for l in b)
         y1 = max(l.bbox[3] for l in b)
-        big_gap = last_y1 is not None and (y0 - last_y1) > line_h * 1.4
-        if bool(cells[key_col]) or cur is None or big_gap:
+        gap = (y0 - last_y1) if last_y1 is not None else 0.0
+        if _is_numbered_header(cells):
+            if cur is not None:
+                rows.append(([" ".join(c).strip() for c in cur], tuple(cur_box)))
+            rows.append((cells, (min(l.bbox[0] for l in b), y0, max(l.bbox[2] for l in b), y1)))
+            cur, last_y1 = None, y1
+            continue
+        big_gap = last_y1 is not None and gap > line_h * 1.4
+        # a keyless sub-case ("(2) if the offence be not committed...") fills
+        # several cells at once and, in at least one of them, cannot continue
+        # the text already there (a second "Ditto", or a new sentence)
+        sub_row = cur is not None and sum(1 for c in cells if c) >= 2 and any(
+            _breaks_cell(" ".join(cur[i]), cells[i]) for i in range(model.n) if i != key_col)
+        if bool(cells[key_col]) or cur is None or big_gap or sub_row:
             if cur is not None:
                 rows.append(([" ".join(c).strip() for c in cur], tuple(cur_box)))
             cur = [[c] if c else [] for c in cells]
@@ -285,6 +318,18 @@ def _group_rows(lines: list[Line], model: ColumnModel, key_col: int) -> list[tup
     if cur is not None:
         rows.append(([" ".join(c).strip() for c in cur], tuple(cur_box)))
     return rows
+
+
+_DITTO = re.compile(r"^(ditto|do)\.?$", re.I)
+
+
+def _breaks_cell(prev: str, new: str) -> bool:
+    """True when `new` cannot be the continuation of the cell text `prev`."""
+    if not prev or not new:
+        return False
+    if _DITTO.match(prev.strip()):
+        return True                    # a ditto is a whole cell; nothing continues it
+    return prev.rstrip().endswith((".", ";", ":")) and re.match(r"[A-Z(\d]", new.strip()) is not None
 
 
 def _pick_key_column(rows: list[list[str]], n: int) -> int:
@@ -335,9 +380,12 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
     body = [l for l in lines if not any(_inside(l.bbox, e) for e in exclude)]
     if len(body) < 8:
         return []
+    centers = _header_token_centers(body)
     own = infer_columns(body, W)
     model = own
-    if prior is not None:
+    # A page that prints its own "(1) (2) (3)" row says exactly where its columns are;
+    # only a page without one borrows the previous page's model.
+    if prior is not None and not (centers and own is not None and own.n == len(centers)):
         narrow = [l for l in body if (l.bbox[2] - l.bbox[0]) < 0.5 * W]
         cross_prior = sum(1 for l in narrow if prior.crosses(l.bbox))
         cross_own = sum(1 for l in narrow if own.crosses(l.bbox)) if own else len(narrow)
@@ -346,7 +394,31 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
             model = prior
     if model is None:
         return []
-    fitting = [l for l in body if not model.crosses(l.bbox) and l.bbox[0] >= model.left - 10]
+    body = _split_glued_keys(body, model)
+    # Header cells are centred over left-aligned columns, so they straddle the
+    # boundary; keep a line that crosses exactly one cut when it sits above the
+    # first keyed line.
+    first_key_y = min((l.bbox[1] for l in body if _KEYISH.match(l.text.strip()) and not model.crosses(l.bbox)), default=None)
+
+    def _fits(l: Line) -> bool:
+        if l.bbox[0] < model.left - 10:
+            return False
+        if not model.crosses(l.bbox):
+            return True
+        return model.crossed(l.bbox) == 1 and first_key_y is not None and l.bbox[1] < first_key_y
+
+    fitting = [l for l in body if _fits(l)]
+    # A centred title inside the table region (the heading of the next part)
+    # ends this table; what follows is left to the text pass.
+    if first_key_y is not None:
+        ys = sorted(l.bbox[1] for l in body)
+        def _alone(l: Line) -> bool:
+            return sum(1 for y in ys if abs(y - l.bbox[1]) <= 3) == 1
+        titles = [l for l in body if l.bbox[1] > first_key_y and model.crossed(l.bbox) >= 2
+                  and abs((l.bbox[0] + l.bbox[2]) / 2 - W / 2) < 0.1 * W and _alone(l)]
+        if titles:
+            cutoff = min(l.bbox[1] for l in titles)
+            fitting = [l for l in fitting if l.bbox[3] <= cutoff + 1]
     if len(fitting) < 8 or len(fitting) < 0.5 * len(body):
         return []
 
@@ -358,7 +430,7 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
     leading: list[tuple[list[str], BBox]] = []      # keyless rows before the first keyed row
     data: list[tuple[list[str], BBox]] = []
     for cells, box in rows:
-        if not data and _is_numbered_header(cells):
+        if _is_numbered_header(cells):
             continue
         keyed = bool(cells[key_col]) and _KEYISH.match(cells[key_col]) is not None
         if not data and not keyed:
@@ -369,6 +441,27 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
         return []
     if statistics.mean(sum(1 for c in r if c) for r, _ in data) < 2.0:
         return []
+    # A keyless row with a single cell is the tail of the row above it, pushed
+    # down by a gap; glue it back. A keyless row with more cells is a sub-case
+    # of the same key ("if the offence be not committed..." under section 59);
+    # fill the key down so the row stands on its own when flattened.
+    merged: list[tuple[list[str], BBox]] = []
+    for cells, box in data:
+        filled = [i for i, c in enumerate(cells) if c]
+        if merged and not cells[key_col] and len(filled) == 1 and filled[0] != key_col:
+            prev_cells, prev_box = merged[-1]
+            i = filled[0]
+            prev_cells[i] = (prev_cells[i] + " " + cells[i]).strip()
+            merged[-1] = (prev_cells, (min(prev_box[0], box[0]), prev_box[1], max(prev_box[2], box[2]), box[3]))
+            continue
+        merged.append((cells, box))
+    data = merged
+    last_key = ""
+    for cells, _ in data:
+        if cells[key_col]:
+            last_key = cells[key_col]
+        elif last_key:
+            cells[key_col] = last_key
 
     has_header_text = False
     leading = [(c, b) for c, b in leading if sum(1 for x in c if x) >= 2]   # drop titles like "I." or "Part A"
@@ -386,7 +479,31 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
     tb.column_model = model                                  # type: ignore[attr-defined]
     tb.has_header_text = has_header_text                     # type: ignore[attr-defined]
     tb.leading_rows = [c for c, _ in leading]                # type: ignore[attr-defined]
+    tb.leading_boxes = [b for _, b in leading]               # type: ignore[attr-defined]
+    tb.numbered_header = centers is not None                 # type: ignore[attr-defined]
+    tb.key_col = key_col                                     # type: ignore[attr-defined]
     return [tb]
+
+
+def _split_glued_keys(lines: list[Line], model: ColumnModel) -> list[Line]:
+    """PyMuPDF sometimes returns "109(2)For commission of..." as one line that
+    runs from the key column into the next. Split it at the first boundary so
+    the key starts its row and the text lands in its own column."""
+    if not model.cuts:
+        return lines
+    c0 = model.cuts[0]
+    out: list[Line] = []
+    for l in lines:
+        x0, y0, x1, y1 = l.bbox
+        m = _GLUED_KEY.match(l.text.strip()) if x0 < c0 - 1.5 < x1 and model.col_of(x0 + 1.0) == 0 else None
+        if not m:
+            out.append(l)
+            continue
+        key, rest = m.group(1), m.group(2)
+        kx1 = min(c0 - 1.0, x0 + (x1 - x0) * len(key) / max(1, len(l.text.strip())))
+        out.append(Line(key, (x0, y0, kx1, y1), l.size, l.bold))
+        out.append(Line(rest, (c0 + 1.0, y0, x1, y1), l.size, l.bold))
+    return out
 
 
 def _inside(b: BBox, e: BBox) -> bool:
@@ -412,24 +529,40 @@ def merge_continuations(tables_by_page: dict[int, list[TableBlock]], page_height
         if open_tbl is not None and tbls:
             cand = tbls[0]
             if _continues(open_tbl, cand, page_heights, page_width):
-                rows = cand.rows
-                for lead in getattr(cand, "leading_rows", []):
-                    last = open_tbl.rows[-1]
+                rows = list(cand.rows)
+                boxes = list(getattr(cand, "row_bboxes", None) or [])
+                key_col = getattr(open_tbl, "key_col", 0)
+                extra: list[list[str]] = []
+                extra_boxes: list[BBox] = []
+                lead_boxes = getattr(cand, "leading_boxes", [])
+                for li, lead in enumerate(getattr(cand, "leading_rows", [])):
+                    last = (extra or open_tbl.rows)[-1]
+                    if sum(1 for c in lead if c) >= 3:
+                        # several cells at once: a sub-case row continuing the last key
+                        lead = list(lead)
+                        if key_col < len(lead) and key_col < len(last) and not lead[key_col]:
+                            lead[key_col] = last[key_col]
+                        extra.append(lead)
+                        if li < len(lead_boxes):
+                            extra_boxes.append(lead_boxes[li])
+                        continue
                     for i, c in enumerate(lead):
                         if c and i < len(last):
                             last[i] = (last[i] + " " + c).strip()
                 if rows and _norm_row(rows[0]) == _norm_row(open_tbl.header):
-                    rows = rows[1:]
+                    rows, boxes = rows[1:], boxes[1:]
                 # A continuation page usually has no header text; if the detector
                 # mistook the first data row for a header, put it back.
                 if any(cand.header) and _norm_row(cand.header) != _norm_row(open_tbl.header) and not getattr(cand, "has_header_text", False):
                     rows = [cand.header] + rows
+                    boxes = [cand.bbox] + boxes
+                rows = extra + rows
+                boxes = extra_boxes + boxes
                 open_tbl.rows.extend(rows)
                 open_tbl.bboxes.append((p, cand.bbox))
                 rb_prev = getattr(open_tbl, "row_bboxes", None)
-                rb_next = getattr(cand, "row_bboxes", None)
-                if rb_prev is not None and rb_next is not None:
-                    rb_prev.extend(rb_next[-len(rows):] if rows else [])
+                if rb_prev is not None and len(boxes) == len(rows):
+                    rb_prev.extend(boxes)
                 tbls = tbls[1:]
                 tables_by_page[p] = tbls
                 if not tbls:
@@ -447,11 +580,15 @@ def _continues(prev: TableBlock, nxt: TableBlock, page_heights: dict[int, float]
         return False
     cm_prev = getattr(prev, "column_model", None)
     cm_next = getattr(nxt, "column_model", None)
-    if cm_prev and cm_next and not cm_prev.similar(cm_next, tol=page_width * 0.03):
+    # Pages that each print a "(1) (2) (3)" row are the same table when the count
+    # matches; the columns themselves drift by up to 5% of the width in gazette
+    # typesetting, so the position check is loose.
+    both_numbered = getattr(prev, "numbered_header", False) and getattr(nxt, "numbered_header", False)
+    if cm_prev and cm_next and not both_numbered and not cm_prev.similar(cm_next, tol=page_width * 0.05):
         return False
     prev_bottom = prev.bboxes[-1][1][3]
-    if prev_bottom < 0.70 * page_heights[p_prev]:
+    if prev_bottom < 0.60 * page_heights[p_prev]:
         return False
-    if nxt.bbox[1] > 0.30 * page_heights[p_next]:
+    if nxt.bbox[1] > 0.35 * page_heights[p_next]:
         return False
     return True
