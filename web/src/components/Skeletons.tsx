@@ -4,17 +4,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function DocumentsSkeleton({ rows = 4 }: { rows?: number }) {
   return (
-    <div className="divide-y">
+    <ul className="space-y-2">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="flex items-center gap-4 px-6 py-3 sm:px-0">
-          <div className="flex-1 space-y-1.5"><Skeleton className="h-4 w-2/3 max-w-xs" /><Skeleton className="h-3 w-12" /></div>
-          <Skeleton className="hidden h-4 w-10 sm:block" />
-          <Skeleton className="h-5 w-20 rounded-full" />
-          <Skeleton className="hidden h-4 w-24 md:block" />
-          <Skeleton className="h-6 w-20" />
-        </div>
+        <li key={i} className="flex items-center gap-3 rounded-[1.25rem] bg-card px-4 py-3 ring-1 ring-black/5">
+          <div className="flex-1 space-y-1.5"><Skeleton className="h-4 w-2/3 max-w-xs" /><Skeleton className="h-3 w-24" /></div>
+          <Skeleton className="h-6 w-20 rounded-full" />
+          <Skeleton className="hidden h-7 w-24 sm:block" />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 

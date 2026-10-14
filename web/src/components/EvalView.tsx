@@ -80,7 +80,7 @@ export function EvalView() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
           <SelectTrigger className="w-full bg-card sm:w-80"><SelectValue placeholder="Pick a document" /></SelectTrigger>
-          <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+          <SelectContent className="min-w-[18rem]">{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
         </Select>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">k</span>

@@ -130,7 +130,7 @@ export function OcrView() {
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={srcDoc} onValueChange={(v) => setSrcDoc(v as string | null)} items={docItems}>
                 <SelectTrigger className="w-full bg-card sm:w-64"><SelectValue placeholder="Source document" /></SelectTrigger>
-                <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+                <SelectContent className="min-w-[18rem]">{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={srcPages.length || 1} value={srcPage} onChange={(e) => setSrcPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />
@@ -156,7 +156,7 @@ export function OcrView() {
                   <Input value={f.name} onChange={(e) => setFields(fields.map((x, j) => j === i ? { ...x, name: e.target.value.replace(/\s+/g, "_") } : x))} className="h-8 w-36" />
                   <Select value={f.type} onValueChange={(v) => setFields(fields.map((x, j) => j === i ? { ...x, type: v as OcrField["type"] } : x))} items={FIELD_TYPES.map((t) => ({ value: t, label: t }))}>
                     <SelectTrigger size="sm" className="w-28"><SelectValue /></SelectTrigger>
-                    <SelectContent>{FIELD_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                    <SelectContent className="min-w-[18rem]">{FIELD_TYPES.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
                   </Select>
                   <Input value={f.pattern ?? ""} onChange={(e) => setFields(fields.map((x, j) => j === i ? { ...x, pattern: e.target.value || undefined } : x))} placeholder="regex (optional)" className="h-8 min-w-32 flex-1 font-mono text-xs" />
                   <Button variant="ghost" size="icon-xs" className="text-destructive" onClick={() => setFields(fields.filter((_, j) => j !== i))} aria-label="remove"><X /></Button>
@@ -175,7 +175,7 @@ export function OcrView() {
                 {templates.length > 0 && (
                   <Select value={null} onValueChange={(v) => loadTemplate(v as string | null)} items={tplItems}>
                     <SelectTrigger size="sm" className="w-full bg-card sm:w-64"><SelectValue placeholder="Load saved template" /></SelectTrigger>
-                    <SelectContent>{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+                    <SelectContent className="min-w-[18rem]">{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
                   </Select>
                 )}
                 {busy && <span className="flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="size-3 animate-spin" />{busy}</span>}
@@ -189,7 +189,7 @@ export function OcrView() {
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={tgtDoc} onValueChange={(v) => setTgtDoc(v as string | null)} items={docItems}>
                 <SelectTrigger className="w-full bg-card sm:w-64"><SelectValue placeholder="Target document" /></SelectTrigger>
-                <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+                <SelectContent className="min-w-[18rem]">{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={tgtPages.length || 1} value={tgtPage} onChange={(e) => setTgtPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ArrowUp, FileText, Loader2, Search, SearchX, SlidersHorizontal } from "lucide-react";
+import { FileText, Loader2, Search, SearchX, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
@@ -73,17 +73,22 @@ export function SearchView() {
     <div className="space-y-5">
       <p className="text-sm text-muted-foreground">Ask a question and compare what each strategy returns.</p>
 
-      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex items-center gap-2 bg-card p-1.5 pl-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/40">
-        <Search className="size-4 shrink-0 text-muted-foreground" />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask something about the documents" className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground" />
-        <Button type="submit" size="icon-lg" disabled={busy || !q.trim()} aria-label="search">{busy ? <Loader2 className="animate-spin" /> : <ArrowUp />}</Button>
+      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex flex-col gap-2 rounded-2xl bg-card p-2 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/30 sm:flex-row sm:items-center">
+        <div className="flex min-w-0 flex-1 items-center gap-2 pl-2">
+          <Search className="size-4 shrink-0 text-muted-foreground" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask something about the documents" className="h-10 min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground" />
+        </div>
+        <div className="flex items-center gap-2 sm:border-l sm:pl-2">
+          <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
+            <SelectTrigger className="h-10 max-w-[55vw] border-0 bg-muted/70 sm:max-w-[16rem]" aria-label="search in"><SelectValue placeholder="All documents" /></SelectTrigger>
+            <SelectContent className="min-w-[18rem]">{docItems.map((it) => <SelectItem key={it.value ?? "all"} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+          </Select>
+          <Button type="submit" size="lg" className="h-10 px-4" disabled={busy || !q.trim()}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : null}Search</Button>
+        </div>
       </form>
 
       <div className="flex flex-wrap items-center gap-2">
-        <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
-          <SelectTrigger size="sm" className="max-w-[60vw] bg-card sm:max-w-xs"><SelectValue placeholder="All documents" /></SelectTrigger>
-          <SelectContent>{docItems.map((it) => <SelectItem key={it.value ?? "all"} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
-        </Select>
+        <span className="text-xs text-muted-foreground">Compare</span>
         <StrategyMulti selected={selected} onChange={setSelected} />
         <button type="button" onClick={() => setShowOptions((o) => !o)} aria-pressed={showOptions} className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ring-1 ring-inset transition-colors", showOptions ? "bg-foreground text-background ring-foreground" : "bg-card text-muted-foreground ring-border hover:text-foreground")}>
           <SlidersHorizontal className="size-3.5" />Options
@@ -97,8 +102,11 @@ export function SearchView() {
         </div>
       )}
       {!res && !busy && (
-        <div className="flex flex-wrap gap-1.5">
-          {EXAMPLES.map((ex) => <button key={ex} type="button" onClick={() => { setQ(ex); run(ex); }} className="rounded-full bg-muted px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground">{ex}</button>)}
+        <div className="space-y-1.5">
+          <span className="px-1 text-xs text-muted-foreground">Try one of these</span>
+          <div className="flex flex-wrap gap-1.5">
+            {EXAMPLES.map((ex) => <button key={ex} type="button" onClick={() => { setQ(ex); run(ex); }} className="rounded-full bg-muted px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground">{ex}</button>)}
+          </div>
         </div>
       )}
       {err && <p className="text-sm text-destructive">{err}</p>}

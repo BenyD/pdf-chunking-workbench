@@ -4,14 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Database, FileText, Loader2, Orbit, RefreshCw, Trash2, Upload } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Document } from "@/lib/types";
 import { api, fmtNum, stageLabel } from "@/lib/ui";
 import { StatusBadge } from "./Chips";
 import { DocumentsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
-import { Panel } from "./Panel";
 import { SamplePicker } from "./SamplePicker";
 
 export function DocumentsHome() {
@@ -83,63 +81,47 @@ export function DocumentsHome() {
         {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
       </section>
 
-      <Panel title="Library" bodyClassName="p-0 sm:px-2">
-        <div>
-          {docs === null ? (
-            <DocumentsSkeleton />
-          ) : docs.length === 0 ? (
-            <div>
-              <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
-                <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
-                <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
-                  <Upload data-icon="inline-start" />Upload a PDF
-                  <input type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
-                </Button>
-              </EmptyState>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Document</TableHead>
-                    <TableHead className="hidden sm:table-cell">Pages</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {docs.map((d) => {
-                    const pct = d.progress?.total ? Math.round(((d.progress.done ?? 0) / d.progress.total) * 100) : null;
-                    return (
-                      <TableRow key={d.id}>
-                        <TableCell className="max-w-[46vw] sm:max-w-xs">
-                          <Link href={`/documents/${d.id}`} className="block truncate font-medium hover:underline">{d.name.replace(/\.pdf$/i, "")}</Link>
-                          {d.kind === "sample" && <span className="text-[11px] text-muted-foreground">sample</span>}
-                        </TableCell>
-                        <TableCell className="hidden text-muted-foreground sm:table-cell">{fmtNum(d.page_count)}</TableCell>
-                        <TableCell>
-                          <div className="inline-flex flex-col items-start gap-1">
-                            <StatusBadge status={d.status} progress={pct} detail={d.status === "processing" ? stageLabel(d.progress.stage) : undefined} />
-                            {d.status === "error" && <span className="max-w-[40vw] truncate text-xs text-destructive sm:max-w-xs" title={d.progress?.message}>{d.progress?.message}</span>}
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="inline-flex gap-0.5">
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "ingest")} />}>{pending[d.id] === "ingest" ? <Loader2 className="animate-spin" /> : <RefreshCw />}</TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "embed")} />}>{pending[d.id] === "embed" ? <Loader2 className="animate-spin" /> : <Orbit />}</TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" disabled={!!pending[d.id]} onClick={() => act(d, "delete")} />}>{pending[d.id] === "delete" ? <Loader2 className="animate-spin" /> : <Trash2 />}</TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-          )}
-        </div>
-      </Panel>
+      <section className="space-y-2">
+        <h2 className="px-1 text-sm font-medium text-muted-foreground">Library</h2>
+        {docs === null ? (
+          <DocumentsSkeleton />
+        ) : docs.length === 0 ? (
+          <div className="rounded-[1.25rem] bg-card ring-1 ring-black/5">
+            <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
+              <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
+              <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
+                <Upload data-icon="inline-start" />Upload a PDF
+                <input type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+              </Button>
+            </EmptyState>
+          </div>
+        ) : (
+          <ul className="space-y-2">
+            {docs.map((d) => {
+              const pct = d.progress?.total ? Math.round(((d.progress.done ?? 0) / d.progress.total) * 100) : null;
+              return (
+                <li key={d.id} className="flex items-center gap-3 rounded-[1.25rem] bg-card px-4 py-3 shadow-[0_1px_2px_rgba(16,24,40,0.04)] ring-1 ring-black/5">
+                  <div className="min-w-0 flex-1">
+                    <Link href={`/documents/${d.id}`} className="block truncate font-medium hover:underline">{d.name.replace(/\.pdf$/i, "")}</Link>
+                    <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                      {d.page_count ? <span>{fmtNum(d.page_count)} {d.page_count === 1 ? "page" : "pages"}</span> : null}
+                      {d.kind === "sample" && <span>sample</span>}
+                      {d.status === "error" && <span className="truncate text-destructive" title={d.progress?.message}>{d.progress?.message}</span>}
+                    </div>
+                  </div>
+                  <StatusBadge status={d.status} progress={pct} detail={d.status === "processing" ? stageLabel(d.progress.stage) : undefined} />
+                  <div className="hidden items-center gap-0.5 sm:inline-flex">
+                    <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "ingest")} />}>{pending[d.id] === "ingest" ? <Loader2 className="animate-spin" /> : <RefreshCw />}</TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "embed")} />}>{pending[d.id] === "embed" ? <Loader2 className="animate-spin" /> : <Orbit />}</TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
+                    <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" disabled={!!pending[d.id]} onClick={() => act(d, "delete")} />}>{pending[d.id] === "delete" ? <Loader2 className="animate-spin" /> : <Trash2 />}</TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
+                  </div>
+                  <Button variant="ghost" size="icon-sm" className="text-destructive sm:hidden" disabled={!!pending[d.id]} onClick={() => act(d, "delete")} aria-label="delete">{pending[d.id] === "delete" ? <Loader2 className="animate-spin" /> : <Trash2 />}</Button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
 
       <SamplePicker open={picker} onOpenChange={setPicker} loaded={loaded} onLoad={seed} />
     </div>
