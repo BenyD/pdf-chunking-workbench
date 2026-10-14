@@ -407,13 +407,12 @@
 
 /* frame-foot: the one footer of a framed component, 44px (--control-lg) with the text 16px from the start edge and
    actions at sm (28px, wrap in ButtonSize sm) 8px from the end edge. Content sits at the start; add justify-end where it
-   holds only actions. On a coarse pointer every button in it grows to the 44px touch target. The rule above is the
-   caller's (rule-top). */
+   holds only actions. Buttons keep their size on a touch screen too: the 44px footer already gives them room, and a
+   footer of 44px-tall buttons reads as a phone form, not the card. The rule above is the caller's (rule-top). */
 @utility frame-foot {
   display: flex; align-items: center; gap: var(--space-2); min-width: 0;
   min-height: var(--control-lg); padding: var(--space-2) var(--space-4);
   &:has(button) { padding-inline-end: var(--space-2); }
-  @media (pointer: coarse) { & button { min-height: var(--control-lg); } }
 }
 
 /* The one list recipe. Every popup that lists things (dropdown menu, select, combobox, command, the table's menus, breadcrumb,
