@@ -106,9 +106,9 @@ export function Explorer({ id }: { id: string }) {
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Page {pageNo} of {total}</CardTitle>
+                    <CardTitle>Page {pageNo}</CardTitle>
+                    <CardMeta>of {fmtNum(total)}</CardMeta>
                     <CardAction>
-                      <Label className="flex items-center gap-2"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</Label>
                       <Button variant="ghost" size="icon-xs" aria-label="Previous page" disabled={pageNo <= 1} onClick={() => go(pageNo - 1)}><Icon icon={ChevronLeft} /></Button>
                       <Input mode="number" size="sm" aria-label="Page number" min={1} max={total} value={pageNo} onValueChange={(v) => { if (v !== null) go(v); }} className="w-20" />
                       <Button variant="ghost" size="icon-xs" aria-label="Next page" disabled={pageNo >= total} onClick={() => go(pageNo + 1)}><Icon icon={ChevronRight} /></Button>
@@ -123,9 +123,12 @@ export function Explorer({ id }: { id: string }) {
                   <CardHeader>
                     <CardTitle>Passages</CardTitle>
                     <CardMeta>{chunks === null ? "Loading" : `${visible.length} on this page`}</CardMeta>
+                    <CardAction>
+                      <Label className="flex items-center gap-2"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</Label>
+                    </CardAction>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex flex-col gap-4 lg:max-h-(--field-max-height) lg:overflow-y-auto">
+                    <div className="flex flex-col gap-4">
                       {sel && <PassageDetail chunk={sel} onClose={() => setSelected(null)} />}
                       <SkeletonSwap
                         loading={chunks === null}

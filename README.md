@@ -25,7 +25,7 @@ Read [docs/DECISIONS.md](docs/DECISIONS.md) for why each choice was made
 ## Layout
 
 ```
-web/       Next.js 16 app (UI + API routes). Deploys to Vercel.
+web/       Next.js 16 app (UI + API routes) on the Quartz design system (design.how). Deploys to Vercel.
 worker/    FastAPI + PyMuPDF + Tesseract + OpenCV. Parsing, chunking, model calls, embeddings, zonal OCR. Deploys as a Docker container.
 supabase/  Postgres schema (pgvector + full text + hybrid_search function) and local stack config.
 samples/   Generator for the synthetic sample PDFs. Output lands in web/public/samples.
@@ -63,6 +63,7 @@ then works on keywords only).
 
 Regenerate the synthetic samples: `uv run --project worker python samples/generate/make_samples.py`.
 Measure recall on the built-in question sets: `python3 scripts/eval.py [base-url] [k]`.
+UI work follows the Quartz skill in `web/.claude/skills/quartz/SKILL.md`; check a screen with `npx eslint -c quartz.eslint.config.mjs .` from `web/`.
 
 ## Deploy
 

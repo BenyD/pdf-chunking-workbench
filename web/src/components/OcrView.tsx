@@ -5,10 +5,12 @@ import { Close, Icon } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
+import { ButtonGroup } from "@/components/quartz/ui/button-group";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
+import { Dialog, DialogAction, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
-import { Label } from "@/components/quartz/ui/field";
+import { Field, FieldLabel, Label } from "@/components/quartz/ui/field";
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Input } from "@/components/quartz/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
@@ -51,6 +53,7 @@ export function OcrView() {
   const [result, setResult] = useState<RunResult | null>(null);
   const [busy, setBusy] = useState<"words" | "save" | "run" | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [anchorDraft, setAnchorDraft] = useState<{ box: Box; text: string } | null>(null);
 
   const loadTemplates = useCallback(() => api<{ templates: OcrTemplate[] }>("/api/ocr/templates").then((r) => setTemplates(r.templates)).catch(() => {}), []);
   useEffect(() => {
@@ -75,8 +78,9 @@ export function OcrView() {
     if (box.w < 0.005 || box.h < 0.004) return;
     if (mode === "field") { setFields((f) => [...f, { name: `field_${f.length + 1}`, type: "text", page: srcPage, box }]); return; }
     const inside = (words ?? []).filter((w) => w.box.x >= box.x - 0.005 && w.box.y >= box.y - 0.005 && w.box.x + w.box.w <= box.x + box.w + 0.005 && w.box.y + w.box.h <= box.y + box.h + 0.005);
-    const text = inside.map((w) => w.text).join(" ") || prompt("Anchor text (the word printed inside this box):") || "";
+    const text = inside.map((w) => w.text).join(" ");
     if (text) setAnchors((a) => [...a, { text, page: srcPage, box }]);
+    else setAnchorDraft({ box, text: "" });   // no detected word in the box: ask for the printed word
   }
 
   function loadTemplate(id: string | null) {
@@ -154,8 +158,10 @@ export function OcrView() {
                     <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
                   </Select>
                   <Input mode="number" size="sm" aria-label="Page" min={1} max={srcPages.length || 1} value={srcPage} onValueChange={(v) => { if (v !== null) setSrcPage(Math.max(1, v)); }} className="w-20" />
-                  <Button variant="secondary" size="sm" pressed={mode === "field"} onPressedChange={() => setMode("field")}>Draw field</Button>
-                  <Button variant="secondary" size="sm" pressed={mode === "anchor"} onPressedChange={() => setMode("anchor")}>Draw anchor</Button>
+                  <ButtonGroup aria-label="What a drawn box becomes">
+                    <Button variant="secondary" size="sm" pressed={mode === "field"} onPressedChange={() => setMode("field")}>Draw field</Button>
+                    <Button variant="secondary" size="sm" pressed={mode === "anchor"} onPressedChange={() => setMode("anchor")}>Draw anchor</Button>
+                  </ButtonGroup>
                   <Button variant="secondary" size="sm" onClick={detectWords} pending={busy === "words"} pendingLabel="Detecting">Detect words</Button>
                   {words && <Label className="flex items-center gap-2"><Checkbox checked={showWords} onCheckedChange={(c) => setShowWords(!!c)} />Show words</Label>}
                 </div>
@@ -224,7 +230,8 @@ export function OcrView() {
                   </Select>
                   <Input mode="number" size="sm" aria-label="Page" min={1} max={tgtPages.length || 1} value={tgtPage} onValueChange={(v) => { if (v !== null) setTgtPage(Math.max(1, v)); }} className="w-20" />
                   <Label className="flex items-center gap-2"><Checkbox checked={fallback} onCheckedChange={(c) => setFallback(!!c)} />Model fallback</Label>
-                  <Button size="sm" onClick={run} pending={busy === "run"} pendingLabel="Reading fields" disabled={!fields.length}>Run template</Button>
+                  <Button size="sm" onClick={run} pending={busy === "run"} pendingLabel="Reading fields" disabled={!fields.length} focusableWhenDisabled aria-describedby={fields.length ? undefined : "run-hint"}>Run template</Button>
+                  {!fields.length && <p id="run-hint" className="type-body-sm text-text-2">Draw a field or load a saved template first.</p>}
                 </div>
                 {busy === "run" && <Status status="running" live>Reading fields</Status>}
 
@@ -281,6 +288,25 @@ export function OcrView() {
           </Card>
         </div>
       </SkeletonSwap>
+
+      <Dialog open={anchorDraft !== null} onOpenChange={(open) => { if (!open) setAnchorDraft(null); }}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>Name the anchor word</DialogTitle>
+            <DialogDescription>No detected word sits in that box. Type the word printed there; the boxes are placed by finding it on each scan.</DialogDescription>
+          </DialogHeader>
+          <DialogBody>
+            <Field>
+              <FieldLabel>Printed word</FieldLabel>
+              <Input value={anchorDraft?.text ?? ""} onValueChange={(v) => setAnchorDraft((d) => (d ? { ...d, text: v } : d))} placeholder="For example INVOICE" data-autofocus />
+            </Field>
+          </DialogBody>
+          <DialogFooter>
+            <DialogClose>Cancel</DialogClose>
+            <DialogAction disabled={!anchorDraft?.text.trim()} onAction={() => { if (anchorDraft?.text.trim()) setAnchors((a) => [...a, { text: anchorDraft.text.trim(), page: srcPage, box: anchorDraft.box }]); setAnchorDraft(null); }}>Add anchor</DialogAction>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -1,6 +1,6 @@
 surface	status	commit	notes
 shared-layer	done		layout, top bar; theme, skills, lint installed
 documents	verified		pilot; report 2026-10-15-documents.md
-document	verified		report 2026-10-15-document.md; should-fix 1 (header wrap at 390)
+document	verified		report 2026-10-15-document.md; header wrap at 390 fixed in the full pass
 search	verified		report 2026-10-15-search.md
 forms	verified		report 2026-10-15-forms.md
