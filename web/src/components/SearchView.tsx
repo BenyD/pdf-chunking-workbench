@@ -61,7 +61,7 @@ export function SearchView() {
         <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="Nothing to search yet" hint="Add a document first. Once it finishes processing it shows up here.">
-            <Button className="rounded-full" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+            <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
           </EmptyState>
         </Panel>
       </div>
@@ -75,15 +75,15 @@ export function SearchView() {
         <p className="mt-1 text-sm text-muted-foreground">Ask a question and compare what each strategy returns.</p>
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex items-center gap-2 rounded-full bg-card p-1.5 pl-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/40">
+      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex items-center gap-2 bg-card p-1.5 pl-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/40">
         <Search className="size-4 shrink-0 text-muted-foreground" />
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask something about the documents" className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground" />
-        <Button type="submit" size="icon-lg" className="rounded-full" disabled={busy || !q.trim()} aria-label="search">{busy ? <Loader2 className="animate-spin" /> : <ArrowUp />}</Button>
+        <Button type="submit" size="icon-lg" disabled={busy || !q.trim()} aria-label="search">{busy ? <Loader2 className="animate-spin" /> : <ArrowUp />}</Button>
       </form>
 
       <div className="flex flex-wrap items-center gap-2">
         <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
-          <SelectTrigger size="sm" className="max-w-[60vw] rounded-full bg-card sm:max-w-xs"><SelectValue placeholder="All documents" /></SelectTrigger>
+          <SelectTrigger size="sm" className="max-w-[60vw] bg-card sm:max-w-xs"><SelectValue placeholder="All documents" /></SelectTrigger>
           <SelectContent>{docItems.map((it) => <SelectItem key={it.value ?? "all"} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
         </Select>
         <StrategyMulti selected={selected} onChange={setSelected} />
@@ -93,7 +93,7 @@ export function SearchView() {
       </div>
       {showOptions && (
         <div className="grid gap-3 rounded-[1.25rem] bg-muted/80 p-4 sm:grid-cols-3">
-          <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Results</span><input type="number" min={1} max={30} value={k} onChange={(e) => setK(Number(e.target.value))} className="h-8 w-16 rounded-full bg-card text-center ring-1 ring-border" /></label>
+          <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Results</span><input type="number" min={1} max={30} value={k} onChange={(e) => setK(Number(e.target.value))} className="h-8 w-16 bg-card text-center ring-1 ring-border" /></label>
           <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Keyword</span><Slider min={0} max={2} step={0.25} value={[weights.fts]} onValueChange={(v) => setWeights({ ...weights, fts: Array.isArray(v) ? v[0] : v })} /><span className="w-8 text-right text-xs">{weights.fts}</span></label>
           <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Meaning</span><Slider min={0} max={2} step={0.25} value={[weights.vec]} onValueChange={(v) => setWeights({ ...weights, vec: Array.isArray(v) ? v[0] : v })} /><span className="w-8 text-right text-xs">{weights.vec}</span></label>
         </div>

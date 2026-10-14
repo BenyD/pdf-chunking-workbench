@@ -65,7 +65,7 @@ export function EvalView() {
         <h1 className="text-2xl font-semibold tracking-tight">Evaluation</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="Nothing to evaluate yet" hint="Add a document, then write a few questions with the phrase a correct answer must contain.">
-            <Button className="rounded-full" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+            <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
           </EmptyState>
         </Panel>
       </div>
@@ -80,13 +80,13 @@ export function EvalView() {
       </div>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
-          <SelectTrigger className="w-full rounded-full bg-card sm:w-80"><SelectValue placeholder="Pick a document" /></SelectTrigger>
+          <SelectTrigger className="w-full bg-card sm:w-80"><SelectValue placeholder="Pick a document" /></SelectTrigger>
           <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
         </Select>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">k</span>
-          <Input type="number" min={1} max={20} value={k} onChange={(e) => setK(Number(e.target.value))} className="w-16 rounded-full bg-card text-center" />
-          <Button className="rounded-full" onClick={run} disabled={busy || !questions.length}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : <Play data-icon="inline-start" />}Run {questions.length} questions</Button>
+          <Input type="number" min={1} max={20} value={k} onChange={(e) => setK(Number(e.target.value))} className="w-16 bg-card text-center" />
+          <Button onClick={run} disabled={busy || !questions.length}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : <Play data-icon="inline-start" />}Run {questions.length} questions</Button>
         </div>
       </div>
       {err && <p className="text-sm text-destructive">{err}</p>}
@@ -139,7 +139,7 @@ export function EvalView() {
                   <TableCell><Input value={draft.question} onChange={(e) => setDraft({ ...draft, question: e.target.value })} placeholder="New question" className="h-7" /></TableCell>
                   <TableCell className="hidden md:table-cell"><Input value={draft.must_contain} onChange={(e) => setDraft({ ...draft, must_contain: e.target.value })} placeholder="phrase the right chunk contains" className="h-7" /></TableCell>
                   <TableCell className="hidden lg:table-cell"><Input value={draft.expected_page} onChange={(e) => setDraft({ ...draft, expected_page: e.target.value })} placeholder="opt." className="h-7 w-16" /></TableCell>
-                  <TableCell colSpan={(result?.summary.length ?? 0) + 1} className="text-right"><Button variant="outline" size="sm" className="rounded-full" onClick={add}><Plus data-icon="inline-start" />Add</Button></TableCell>
+                  <TableCell colSpan={(result?.summary.length ?? 0) + 1} className="text-right"><Button variant="outline" size="sm" onClick={add}><Plus data-icon="inline-start" />Add</Button></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

@@ -75,11 +75,11 @@ export function DocumentsHome() {
         </div>
         {docs !== null && docs.length > 0 && <div className="flex flex-wrap items-center gap-2">
           {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
-          <Button variant="outline" className="rounded-full" disabled={!!busy} nativeButton={false} render={<label />}>
+          <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
             <Upload data-icon="inline-start" />Upload a PDF
             <input ref={fileRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           </Button>
-          <Button className="rounded-full" onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load samples</Button>
+          <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load samples</Button>
         </div>}
         {docs !== null && docs.length === 0 && busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
         {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
@@ -92,8 +92,8 @@ export function DocumentsHome() {
           ) : docs.length === 0 ? (
             <div>
               <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
-                <Button className="rounded-full" onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
-                <Button variant="outline" className="rounded-full" disabled={!!busy} nativeButton={false} render={<label />}>
+                <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
+                <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
                   <Upload data-icon="inline-start" />Upload a PDF
                   <input type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
                 </Button>
@@ -139,9 +139,9 @@ export function DocumentsHome() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => act(d, "ingest")} />}><RefreshCw /></TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => act(d, "embed")} />}><Orbit /></TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full text-destructive" onClick={() => act(d, "delete")} />}><Trash2 /></TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "ingest")} />}><RefreshCw /></TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "embed")} />}><Orbit /></TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" onClick={() => act(d, "delete")} />}><Trash2 /></TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
                           </div>
                         </TableCell>
                       </TableRow>

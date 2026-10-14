@@ -103,7 +103,7 @@ export function OcrView() {
         <h1 className="text-2xl font-semibold tracking-tight">Zonal OCR</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
-            <Button className="rounded-full" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+            <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
           </EmptyState>
         </Panel>
       </div>
@@ -129,13 +129,13 @@ export function OcrView() {
           <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={srcDoc} onValueChange={(v) => setSrcDoc(v as string | null)} items={docItems}>
-                <SelectTrigger className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Source document" /></SelectTrigger>
+                <SelectTrigger className="w-full bg-card sm:w-64"><SelectValue placeholder="Source document" /></SelectTrigger>
                 <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={srcPages.length || 1} value={srcPage} onChange={(e) => setSrcPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />
-                <Tabs value={mode} onValueChange={(v) => setMode(v as "field" | "anchor")}><TabsList className="rounded-full"><TabsTrigger value="field" className="rounded-full">draw field</TabsTrigger><TabsTrigger value="anchor" className="rounded-full">draw anchor</TabsTrigger></TabsList></Tabs>
-                <Button variant="outline" size="sm" className="rounded-full" onClick={detectWords} disabled={!!busy}><ScanSearch data-icon="inline-start" />detect words</Button>
+                <Tabs value={mode} onValueChange={(v) => setMode(v as "field" | "anchor")}><TabsList><TabsTrigger value="field">draw field</TabsTrigger><TabsTrigger value="anchor">draw anchor</TabsTrigger></TabsList></Tabs>
+                <Button variant="outline" size="sm" onClick={detectWords} disabled={!!busy}><ScanSearch data-icon="inline-start" />detect words</Button>
               </div>
               {words && <Label className="flex items-center gap-1.5 text-xs"><Checkbox checked={showWords} onCheckedChange={(c) => setShowWords(!!c)} /> show words</Label>}
             </div>
@@ -169,11 +169,11 @@ export function OcrView() {
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <Button size="sm" className="rounded-full" onClick={save} disabled={!!busy}><Save data-icon="inline-start" />Save template</Button>
-                <Button variant="outline" size="sm" className="rounded-full" onClick={() => { setFields([]); setAnchors([]); setName("New template"); }}><Eraser data-icon="inline-start" />Clear</Button>
+                <Button size="sm" onClick={save} disabled={!!busy}><Save data-icon="inline-start" />Save template</Button>
+                <Button variant="outline" size="sm" onClick={() => { setFields([]); setAnchors([]); setName("New template"); }}><Eraser data-icon="inline-start" />Clear</Button>
                 {templates.length > 0 && (
                   <Select value={null} onValueChange={(v) => loadTemplate(v as string | null)} items={tplItems}>
-                    <SelectTrigger size="sm" className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Load saved template" /></SelectTrigger>
+                    <SelectTrigger size="sm" className="w-full bg-card sm:w-64"><SelectValue placeholder="Load saved template" /></SelectTrigger>
                     <SelectContent>{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
                   </Select>
                 )}
@@ -187,13 +187,13 @@ export function OcrView() {
           <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={tgtDoc} onValueChange={(v) => setTgtDoc(v as string | null)} items={docItems}>
-                <SelectTrigger className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Target document" /></SelectTrigger>
+                <SelectTrigger className="w-full bg-card sm:w-64"><SelectValue placeholder="Target document" /></SelectTrigger>
                 <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={tgtPages.length || 1} value={tgtPage} onChange={(e) => setTgtPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />
                 <Label className="flex items-center gap-1.5 text-xs"><Checkbox checked={fallback} onCheckedChange={(c) => setFallback(!!c)} /> model fallback</Label>
-                <Button size="sm" className="rounded-full" onClick={run} disabled={!!busy || !fields.length}><Play data-icon="inline-start" />Run template</Button>
+                <Button size="sm" onClick={run} disabled={!!busy || !fields.length}><Play data-icon="inline-start" />Run template</Button>
               </div>
             </div>
             {tp && (

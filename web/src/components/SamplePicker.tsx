@@ -64,8 +64,8 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad }: {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" className="rounded-full" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
-          <Button className="rounded-full" onClick={load} disabled={busy || selected.size === 0}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : null}Load {selected.size} {selected.size === 1 ? "document" : "documents"}</Button>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
+          <Button onClick={load} disabled={busy || selected.size === 0}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : null}Load {selected.size} {selected.size === 1 ? "document" : "documents"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

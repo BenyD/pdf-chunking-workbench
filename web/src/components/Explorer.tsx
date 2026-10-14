@@ -66,12 +66,12 @@ export function Explorer({ id }: { id: string }) {
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
-        <Button variant="ghost" size="sm" className="-ml-2 rounded-full" nativeButton={false} render={<Link href="/" />}><ArrowLeft data-icon="inline-start" />Documents</Button>
+        <Button variant="ghost" size="sm" className="-ml-2" nativeButton={false} render={<Link href="/" />}><ArrowLeft data-icon="inline-start" />Documents</Button>
         <h1 className="min-w-0 flex-1 truncate text-xl font-semibold tracking-tight">{doc.name.replace(/\.pdf$/i, "")}</h1>
         <StatusBadge status={doc.status} detail={doc.status === "processing" ? stageLabel(doc.progress.stage) : undefined} progress={doc.progress.total ? Math.round(((doc.progress.done ?? 0) / doc.progress.total) * 100) : null} />
         <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
-          <Button variant="outline" size="sm" className="rounded-full" nativeButton={false} render={<Link href={`/search?document_id=${doc.id}`} />}><Search data-icon="inline-start" />Search</Button>
-          <Button variant="outline" size="sm" className="rounded-full" nativeButton={false} render={<Link href={`/eval?document_id=${doc.id}`} />}><FlaskConical data-icon="inline-start" />Evaluate</Button>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/search?document_id=${doc.id}`} />}><Search data-icon="inline-start" />Search</Button>
+          <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/eval?document_id=${doc.id}`} />}><FlaskConical data-icon="inline-start" />Evaluate</Button>
         </div>
       </div>
 
@@ -110,7 +110,7 @@ export function Explorer({ id }: { id: string }) {
       {doc.status === "error" && (
         <Panel>
           <EmptyState icon={<AlertCircle />} title="Processing failed" hint={doc.progress.message ?? "Unknown error"}>
-            <Button variant="outline" className="rounded-full" onClick={() => api(`/api/documents/${doc.id}/ingest`, { method: "POST" }).then(loadDoc)}>Try again</Button>
+            <Button variant="outline" onClick={() => api(`/api/documents/${doc.id}/ingest`, { method: "POST" }).then(loadDoc)}>Try again</Button>
           </EmptyState>
         </Panel>
       )}
@@ -122,9 +122,9 @@ export function Explorer({ id }: { id: string }) {
             description={page?.is_scanned ? "Scanned page, text from OCR" : undefined}
             action={
               <div className="flex items-center gap-1">
-                <Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => setPageNo((p) => Math.max(1, p - 1))} aria-label="previous page"><ChevronLeft /></Button>
-                <Input type="number" min={1} max={total} value={pageNo} onChange={(e) => setPageNo(Math.min(Math.max(1, Number(e.target.value) || 1), total))} className="h-7 w-14 rounded-full bg-card text-center" />
-                <Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => setPageNo((p) => Math.min(total, p + 1))} aria-label="next page"><ChevronRight /></Button>
+                <Button variant="ghost" size="icon-sm" onClick={() => setPageNo((p) => Math.max(1, p - 1))} aria-label="previous page"><ChevronLeft /></Button>
+                <Input type="number" min={1} max={total} value={pageNo} onChange={(e) => setPageNo(Math.min(Math.max(1, Number(e.target.value) || 1), total))} className="h-7 w-14 bg-card text-center" />
+                <Button variant="ghost" size="icon-sm" onClick={() => setPageNo((p) => Math.min(total, p + 1))} aria-label="next page"><ChevronRight /></Button>
               </div>
             }
             bodyClassName="p-2"
@@ -163,7 +163,7 @@ function ChunkDetail({ chunk, onClose }: { chunk: Chunk; onClose: () => void }) 
   return (
     <div className="relative rounded-[1.25rem] bg-card p-4 text-sm shadow-[0_1px_2px_rgba(16,24,40,0.04)] ring-2 ring-inset ring-foreground">
       <div className="flex items-center gap-2 text-xs text-muted-foreground"><TypeChip type={chunk.chunk_type} /><span>#{chunk.ordinal}</span><span>{chunk.token_count} tokens</span></div>
-      <Button variant="ghost" size="icon-xs" className="absolute top-3 right-3 rounded-full" onClick={onClose} aria-label="close"><X /></Button>
+      <Button variant="ghost" size="icon-xs" className="absolute top-3 right-3" onClick={onClose} aria-label="close"><X /></Button>
       <div className="mt-3 space-y-2">
         {meta.image_path && (
           // eslint-disable-next-line @next/next/no-img-element
