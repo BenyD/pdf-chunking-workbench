@@ -1,31 +1,43 @@
 "use client";
-import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { BBox } from "@/lib/types";
-import { TYPE_STYLE } from "@/lib/ui";
-import { cn } from "@/lib/utils";
+import { useState, type CSSProperties } from "react";
+import { ItemLink } from "@/components/quartz/ui/item";
+import { Skeleton } from "@/components/quartz/ui/skeleton";
+import type { Kind } from "@/lib/quartz/kind";
+import { cn } from "@/lib/quartz/utils";
+import type { BBox, ChunkType } from "@/lib/types";
 
-export interface Overlay { id: string; type: keyof typeof TYPE_STYLE; box: BBox; label?: string; selected?: boolean }
+/** Each passage type borrows one of the system's kind hues, so a row's label and its box on the page match. */
+export const chunkKind: Record<ChunkType, Kind> = { text: "agent", table: "key", table_row: "key", figure: "model", record: "deploy" };
+export const typeLabel: Record<ChunkType, string> = { text: "Text", table: "Table", table_row: "Table row", figure: "Figure", record: "Form" };
 
-/** A rendered page with boxes on top. Boxes are fractions of the page, so CSS percentages scale them to any width. */
-export function PageViewer({ imageUrl, overlays, onSelect, children, className }: {
-  imageUrl: string; overlays: Overlay[]; onSelect?: (id: string) => void; children?: React.ReactNode; className?: string;
+export interface Overlay { id: string; type: ChunkType; box: BBox; label: string; selected?: boolean }
+
+/**
+ * A rendered page with the passages drawn on it. Boxes are fractions of the page, so percentages place
+ * them at any width. Quartz has no hotspot component; each box is a kind-lined region holding a stretched
+ * ItemLink to the selected passage, which brings the focus ring, the name and the keyboard press.
+ */
+export function PageViewer({ imageUrl, alt, overlays, onSelect, className }: {
+  imageUrl: string; alt: string; overlays: Overlay[]; onSelect?: (id: string) => void; className?: string;
 }) {
   const [loaded, setLoaded] = useState(false);
+  // SkeletonSwap renders only its fallback while loading, which would keep the image out of the DOM and
+  // it would never load; so the image is always mounted and a Skeleton covers it until it has.
   return (
-    <div className={cn("relative overflow-hidden rounded-xl border bg-white shadow-sm select-none", className)}>
-      {!loaded && <Skeleton className="absolute inset-0 rounded-none" />}
+    <div className={cn("frame relative min-h-96 bg-paper select-none", className)}>
+      {!loaded && <Skeleton className="absolute inset-0" />}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={imageUrl} alt="page" className={cn("block w-full transition-opacity", loaded ? "opacity-100" : "opacity-0")} draggable={false} onLoad={() => setLoaded(true)} style={loaded ? undefined : { aspectRatio: "1 / 1.41" }} />
-      {loaded && overlays.map((o) => {
-        const s = TYPE_STYLE[o.type] ?? TYPE_STYLE.text;
-        return (
-          <button key={o.id} type="button" title={o.label} onClick={() => onSelect?.(o.id)}
-            className={cn("absolute border transition", s.box, o.selected && "z-10 ring-2 ring-foreground ring-offset-1")}
-            style={{ left: `${o.box.x0 * 100}%`, top: `${o.box.y0 * 100}%`, width: `${(o.box.x1 - o.box.x0) * 100}%`, height: `${(o.box.y1 - o.box.y0) * 100}%` }} />
-        );
-      })}
-      {children}
+      <img src={imageUrl} alt={alt} className={cn("block w-full", !loaded && "invisible")} draggable={false} onLoad={() => setLoaded(true)} />
+      {loaded && overlays.map((o) => (
+        <div
+          key={o.id}
+          data-kind={chunkKind[o.type]}
+          className={cn("absolute top-(--y) left-(--x) h-(--h) w-(--w) border border-accent-mark", o.selected && "border-2 bg-accent-wash/50")}
+          style={{ "--x": `${o.box.x0 * 100}%`, "--y": `${o.box.y0 * 100}%`, "--w": `${(o.box.x1 - o.box.x0) * 100}%`, "--h": `${(o.box.y1 - o.box.y0) * 100}%` } as CSSProperties}
+        >
+          <ItemLink href="#passage" aria-label={o.label} aria-current={o.selected ? "true" : undefined} onClick={(e) => { e.preventDefault(); onSelect?.(o.id); }} />
+        </div>
+      ))}
     </div>
   );
 }
