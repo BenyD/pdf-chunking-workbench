@@ -1,4 +1,5 @@
-import { AlertCircle, AlignLeft, BookText, CheckCircle2, Clock, FileSpreadsheet, Grid2x2, Image as ImageIcon, ListTree, Loader2, Rows3, Table2, Upload } from "lucide-react";
+import { AlertCircle, AlignLeft, BookText, CheckCircle2, Clock, FileSpreadsheet, Grid2x2, Image as ImageIcon, ListTree, Rows3, Table2, Upload } from "lucide-react";
+import { Donut } from "./Donut";
 import type { ChunkType, Strategy } from "@/lib/types";
 import { STRATEGY_INFO, TYPE_STYLE } from "@/lib/ui";
 import { cn } from "@/lib/utils";
@@ -32,14 +33,16 @@ export function StrategyChip({ strategy, className }: { strategy: Strategy; clas
   );
 }
 
-export function StatusBadge({ status, detail }: { status: string; detail?: string }) {
+export function StatusBadge({ status, detail, progress }: { status: string; detail?: string; progress?: number | null }) {
   const map: Record<string, { icon: React.ReactNode; cls: string; label: string }> = {
     ready: { icon: <CheckCircle2 className="size-3" />, cls: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200", label: "Ready" },
     error: { icon: <AlertCircle className="size-3" />, cls: "border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200", label: "Failed" },
-    processing: { icon: <Loader2 className="size-3 animate-spin" />, cls: "border-amber-200 bg-amber-50 text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-200", label: "Processing" },
+    processing: { icon: <Donut value={progress} size={12} stroke={2.2} />, cls: "border-primary/20 bg-primary/10 text-primary", label: "Processing" },
     queued: { icon: <Clock className="size-3" />, cls: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200", label: "Queued" },
     uploading: { icon: <Upload className="size-3" />, cls: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200", label: "Uploading" },
   };
   const m = map[status] ?? map.queued;
-  return <span className={cn(base, m.cls)}>{m.icon}{m.label}{detail ? <span className="font-normal opacity-80">{detail}</span> : null}</span>;
+  // While processing, the label is the stage itself ("Embedding"); the donut shows how far along it is.
+  const label = status === "processing" && detail ? detail : m.label;
+  return <span className={cn(base, m.cls)}>{m.icon}{label}</span>;
 }

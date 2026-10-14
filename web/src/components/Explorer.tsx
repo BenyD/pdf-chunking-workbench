@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, FlaskConical, Loader2, Search, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, ChevronLeft, ChevronRight, FlaskConical, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,9 +10,9 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChunkListSkeleton, ExplorerSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
-import { Progress } from "@/components/ui/progress";
+import { Donut } from "./Donut";
 import type { Chunk, Document, Page, Strategy } from "@/lib/types";
-import { api, fmtNum, publicAsset, STRATEGY_INFO } from "@/lib/ui";
+import { api, fmtNum, publicAsset, stageLabel, STRATEGY_INFO } from "@/lib/ui";
 import { cn } from "@/lib/utils";
 import { StatusBadge, TypeChip } from "./Chips";
 import { PageViewer, type Overlay } from "./PageViewer";
@@ -70,7 +70,7 @@ export function Explorer({ id }: { id: string }) {
         <Button variant="ghost" size="sm" nativeButton={false} render={<Link href="/" />}><ArrowLeft data-icon="inline-start" />Documents</Button>
         <h1 className="min-w-0 flex-1 truncate text-lg font-semibold sm:text-xl">{doc.name}</h1>
         <StatusBadge status={doc.status} />
-        {doc.status === "processing" && <span className="text-xs text-muted-foreground">{doc.progress.stage} {doc.progress.total ? `${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}</span>}
+        {doc.status === "processing" && <span className="text-xs text-muted-foreground">{stageLabel(doc.progress.stage)}{doc.progress.total ? `, ${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}</span>}
         {doc.status === "error" && <span className="text-xs text-destructive">{doc.progress.message}</span>}
         <div className="flex w-full gap-2 sm:ml-auto sm:w-auto">
           <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/search?document_id=${doc.id}`} />}><Search data-icon="inline-start" />Search</Button>
@@ -105,9 +105,7 @@ export function Explorer({ id }: { id: string }) {
       )}
 
       {doc.status !== "ready" && doc.status !== "error" && (
-        <EmptyState icon={<Loader2 className="animate-spin" />} title="Processing this document" hint={`${doc.progress.stage ?? "queued"}${doc.progress.total ? `, ${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}. This page updates by itself.`}>
-          {doc.progress.total ? <Progress value={Math.round(((doc.progress.done ?? 0) / doc.progress.total) * 100)} className="w-64" /> : null}
-        </EmptyState>
+        <EmptyState icon={<Donut value={doc.progress.total ? Math.round(((doc.progress.done ?? 0) / doc.progress.total) * 100) : null} size={24} stroke={3} />} title="Processing this document" hint={`${stageLabel(doc.progress.stage)}${doc.progress.total ? `, ${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}. This page updates by itself.`} />
       )}
       {doc.status === "error" && (
         <EmptyState icon={<AlertCircle />} title="Processing failed" hint={doc.progress.message ?? "Unknown error"}>

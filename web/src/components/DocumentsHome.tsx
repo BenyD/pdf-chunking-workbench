@@ -5,11 +5,10 @@ import { Database, FileText, Loader2, Orbit, RefreshCw, Trash2, Upload } from "l
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Document } from "@/lib/types";
-import { api, fmtNum } from "@/lib/ui";
+import { api, fmtNum, stageLabel } from "@/lib/ui";
 import { StatusBadge } from "./Chips";
 import { DocumentsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
@@ -127,9 +126,8 @@ export function DocumentsHome() {
                         </TableCell>
                         <TableCell className="hidden text-muted-foreground sm:table-cell">{fmtNum(d.page_count)}</TableCell>
                         <TableCell>
-                          <div className="flex flex-col gap-1">
-                            <div className="flex items-center gap-2"><StatusBadge status={d.status} detail={d.status === "processing" ? `${d.progress.stage}${pct !== null ? ` ${pct}%` : ""}` : undefined} /></div>
-                            {d.status === "processing" && pct !== null && <Progress value={pct} className="w-28" />}
+                          <div className="inline-flex flex-col items-start gap-1">
+                            <StatusBadge status={d.status} progress={pct} detail={d.status === "processing" ? stageLabel(d.progress.stage) : undefined} />
                             {d.status === "error" && <span className="max-w-[40vw] truncate text-xs text-destructive sm:max-w-xs" title={d.progress?.message}>{d.progress?.message}</span>}
                           </div>
                         </TableCell>
@@ -137,7 +135,7 @@ export function DocumentsHome() {
                           {st.strategies ? `${fmtNum(st.strategies.naive?.chunks)}, ${fmtNum(st.strategies.structural?.chunks)}, ${fmtNum(st.strategies.contextual?.chunks)}` : "–"}
                         </TableCell>
                         <TableCell className="hidden text-xs text-muted-foreground lg:table-cell">
-                          {st.seconds ? `${st.seconds}s` : "–"}{st.llm ? `, ${st.llm.context_calls + st.llm.vision_calls} model calls` : ""}
+                          {d.status === "ready" && st.seconds ? `${st.seconds}s${st.llm ? `, ${st.llm.context_calls + st.llm.vision_calls} model calls` : ""}` : "–"}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">

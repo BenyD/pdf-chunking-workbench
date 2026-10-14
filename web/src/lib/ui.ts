@@ -15,6 +15,17 @@ export const STRATEGY_INFO: Record<Strategy, { label: string; chip: string; blur
   contextual: { label: "Contextual", chip: "bg-teal-100 text-teal-900 dark:bg-teal-950 dark:text-teal-200", blurb: "Structural cuts plus a model-written situating sentence per chunk and a vision description per figure. Paid once at ingest." },
 };
 
+/** Human labels for the worker's pipeline stages. */
+export function stageLabel(stage?: string | null): string {
+  const map: Record<string, string> = {
+    queued: "Queued", download: "Downloading", render: "Rendering pages", parse: "Parsing layout", chunk: "Chunking",
+    context: "Writing context", store: "Storing chunks", embed: "Embedding", done: "Done", error: "Failed",
+  };
+  if (!stage) return "Queued";
+  if (stage.startsWith("embed")) return "Embedding";
+  return map[stage] ?? stage;
+}
+
 export function fmtNum(n: number | undefined | null): string {
   if (n == null) return "–";
   return n.toLocaleString();
