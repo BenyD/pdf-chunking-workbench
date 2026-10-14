@@ -70,7 +70,7 @@ export function DocumentsHome() {
     <div className="space-y-6">
       <PageHeader
         title="Documents"
-        subtitle="Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes."
+        subtitle="Upload a PDF or load the samples. Each document is read, split into passages and searchable within minutes."
         actions={docs !== null && docs.length > 0 ? (
           <>
             {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
@@ -90,7 +90,7 @@ export function DocumentsHome() {
           <DocumentsSkeleton />
         ) : docs.length === 0 ? (
           <div className="rounded-[1.25rem] bg-card ring-1 ring-black/5">
-            <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
+            <EmptyState icon={<FileText />} title="No documents yet" hint="Load the samples to see it working, or upload your own PDF.">
               <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
               <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
                 <Upload data-icon="inline-start" />Upload a PDF

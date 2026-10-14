@@ -136,7 +136,7 @@ def _store_record(doc: dict, req: OcrRunRequest, result: dict) -> str | None:
     )
     record.embedding = voyage.embed([record.content], input_type="document")[0]
     rows = []
-    for strategy in ("structural", "contextual"):
+    for strategy in ("contextual",):
         r = record.to_row(doc["id"], strategy)
         r["id"] = str(uuid.uuid4())
         r["ordinal"] = db.next_ordinal(doc["id"], strategy)

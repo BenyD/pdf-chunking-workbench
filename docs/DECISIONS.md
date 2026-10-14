@@ -27,11 +27,14 @@ which is how you prove a cut happened for a reason.
   production upgrade for messy scans; both are drop-in at the block level.
   The chunking logic above the parser would not change.
 
-## 3. Three strategies, stored side by side
+## 3. Three strategies, compared; one shipped
 
-Every document is chunked three ways and all three live in the same table
-with a `strategy` column. The UI can therefore show the same page or the
-same query under each strategy. The point of the project is the comparison.
+During development every document was chunked three ways and all three lived
+in the same table with a `strategy` column, so the same page or the same
+query could be shown under each. That comparison is what chose the pipeline.
+The product ships only the winner (the `strategy` column still says
+"contextual" on every row, a leftover of the comparison), because a user of
+the product wants one answer, not three columns to compare; see section 13.
 
 | Strategy | What it does | Model calls | What it proves |
 |---|---|---|---|
@@ -39,9 +42,10 @@ same query under each strategy. The point of the project is the comparison.
 | structural | cuts at headings; tables atomic + one chunk per row; figures as chunks; breadcrumb prepended | 0 | Most of the quality gain is deterministic and free |
 | contextual | structural + a model-written situating sentence per chunk + a vision description per figure | 1 per chunk, 1 per figure, once at ingest | The last mile, and what it costs |
 
-**Why keep naive at all?** Because the evaluation page needs a baseline, and
-because showing a naive chunk slicing straight through a table is the fastest
-way to explain the problem to a non-engineer.
+**Why naive was kept during development.** The evaluation needed a baseline,
+and showing a naive chunk slicing straight through a table is the fastest way
+to explain the problem to a non-engineer. It is gone from the code now; the
+numbers it produced are kept below.
 
 ## 4. Headings and breadcrumbs
 
@@ -222,9 +226,19 @@ the same SDK code runs on Bedrock, Vertex and Foundry for data residency.
 ## 10. Evaluation
 
 Each sample ships with questions and a phrase the right chunk must contain.
-Recall@k and mean reciprocal rank are computed per strategy with the same
-search. This is the difference between a preference and a measurement, and
-it is what should be shown before any claim about chunk size.
+Recall@k and mean reciprocal rank are computed with the same search. This is
+the difference between a preference and a measurement, and it is what should
+be shown before any claim about chunk size. The evaluation page was removed
+with the product pivot (section 13); `scripts/eval.py` runs the same
+measurement against a deployment, and the numbers from the three-way
+comparison are these (2026-10-15, recall@5 / MRR):
+
+| Document | naive | structural | contextual |
+|---|---|---|---|
+| QC inspection report | 100% / 0.90 | 100% / 1.00 | 100% / 1.00 |
+| Bharatiya Nyaya Sanhita | 100% / 0.78 | 100% / 0.96 | 100% / 0.94 |
+| Bharatiya Nagarik Suraksha Sanhita | 86% / 0.79 | 86% / 0.75 | 100% / 0.86 |
+| Price schedule, 4,500 rows | 50% / 0.50 | 100% / 0.52 | 100% / 0.80 |
 
 ## 11. Architecture and hosting
 
@@ -256,3 +270,27 @@ search.
 4. Add a reranker (cross-encoder) over the fused top 50 when latency allows.
 5. Per-template OCR evaluation: a labelled set of scans with known values,
    reporting field accuracy per source (Tesseract vs model).
+
+## 13. From comparison to product
+
+**Decision (2026-10-15).** The app stopped being a side-by-side demo of three
+chunking strategies and became one product: Documents, Search, Forms.
+
+- One pipeline is stored per document (the one that won the comparison in
+  section 10). Ingest is three times cheaper and faster than storing three.
+- Search returns one list and, on top, a short answer written by Haiku from
+  the passages found, with numbered citations that jump to the source and
+  open the page. A business reader asked "is theft bailable?" wants the
+  sentence, not six passages to read.
+- The evaluation and documentation pages are gone from the UI; the
+  measurement lives in `scripts/eval.py` and this file.
+- Plain words everywhere: passages, not chunks; "Finding tables and figures",
+  not "parsing layout"; no scores, token counts or model names on screen.
+- Guard rails for a public URL: per-client rate limits on every paid route,
+  size and length caps, resumable embedding, model fallbacks (README,
+  "Guard rails"). No login: the demo is meant to be opened from a link.
+
+**Why not keep the comparison as an "advanced" view?** Because every extra
+concept on screen is a question in the interview that is not about the
+problem being solved. The comparison is the story of how the pipeline was
+chosen; it belongs in the conversation and in these notes, not in the product.

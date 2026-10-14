@@ -101,7 +101,7 @@ export function OcrView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(null); }
   }
 
-  const header = <PageHeader title="Zonal OCR" subtitle="Draw the fields once on a sample form, then run the template on any scan of the same form." />;
+  const header = <PageHeader title="Forms" subtitle="Mark the fields once on a sample form, then read any scan of the same form." />;
   if (docs === null) return <div className="space-y-5">{header}<PageSkeleton panels={2} /></div>;
   if (docs.length === 0) {
     return (
@@ -128,7 +128,7 @@ export function OcrView() {
       {err && <Alert variant="destructive"><AlertDescription>{err}</AlertDescription></Alert>}
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Panel title="Template" description="Draw a box for each value. Add two or three anchor words.">
+        <Panel title="Template" description="Draw a box around each value you want read. Add two or three words that always appear on the form.">
           <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={srcDoc} onValueChange={(v) => setSrcDoc(v as string | null)} items={docItems}>
@@ -187,7 +187,7 @@ export function OcrView() {
           </div>
         </Panel>
 
-        <Panel title="Run" description="Boxes move to where the anchors find the form on the target page.">
+        <Panel title="Run" description="The boxes follow the form wherever it sits on the scan.">
           <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={tgtDoc} onValueChange={(v) => setTgtDoc(v as string | null)} items={docItems}>
@@ -218,7 +218,7 @@ export function OcrView() {
                 </p>
                 <div className="overflow-x-auto rounded-xl ring-1 ring-black/5">
                   <Table>
-                    <TableHeader><TableRow><TableHead>Field</TableHead><TableHead>Value</TableHead><TableHead className="hidden md:table-cell">Raw OCR</TableHead><TableHead>Conf.</TableHead><TableHead>Source</TableHead><TableHead className="hidden lg:table-cell">Note</TableHead></TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Field</TableHead><TableHead>Value</TableHead><TableHead className="hidden md:table-cell">As read</TableHead><TableHead>Confidence</TableHead><TableHead>Source</TableHead><TableHead className="hidden lg:table-cell">Note</TableHead></TableRow></TableHeader>
                     <TableBody>
                       {result.fields.map((f) => (
                         <TableRow key={f.name}>

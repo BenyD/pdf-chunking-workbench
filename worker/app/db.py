@@ -131,11 +131,11 @@ def set_embeddings(pairs: list[tuple[str, list[float]]]) -> None:
 
 
 def sample_chunks(document_id: str, n: int = 12) -> list[dict]:
-    """A spread of structural chunks for writing question suggestions."""
+    """A spread of chunks for writing question suggestions."""
     with conn() as c:
         return c.execute(
             """select raw_text, chunk_type from chunks
-               where document_id = %s and strategy = 'structural' and chunk_type in ('text','table_row','figure')
+               where document_id = %s and strategy = 'contextual' and chunk_type in ('text','table_row','figure')
                order by random() limit %s""",
             (document_id, n),
         ).fetchall()

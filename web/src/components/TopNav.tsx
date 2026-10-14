@@ -1,15 +1,13 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpenText, FileText, FlaskConical, ScanText, Search } from "lucide-react";
+import { FileText, ScanText, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Documents", icon: FileText },
   { href: "/search", label: "Search", icon: Search },
-  { href: "/ocr", label: "Zonal OCR", icon: ScanText },
-  { href: "/eval", label: "Evaluation", icon: FlaskConical },
-  { href: "/docs", label: "Documentation", icon: BookOpenText },
+  { href: "/forms", label: "Forms", icon: ScanText },
 ];
 
 /** Slim top bar with the segmented navigation. Scrolls sideways on narrow screens. */

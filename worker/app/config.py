@@ -42,7 +42,6 @@ class Settings(BaseSettings):
 
     # Chunk sizing (tokens, approximate)
     chunk_max_tokens: int = 450
-    chunk_overlap_tokens: int = 60      # naive strategy only
     table_max_tokens: int = 900
 
     # Dev switches. Both default off; they exist so the pipeline can be tested

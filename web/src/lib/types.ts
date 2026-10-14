@@ -1,5 +1,7 @@
-export type Strategy = "naive" | "structural" | "contextual";
-export const STRATEGIES: Strategy[] = ["naive", "structural", "contextual"];
+/** The one index the product ships. The name is a leftover of the comparison that chose it. */
+export type Strategy = "contextual";
+export const STRATEGY: Strategy = "contextual";
+export const STRATEGIES: Strategy[] = [STRATEGY];
 
 export type ChunkType = "text" | "table" | "table_row" | "figure" | "record";
 

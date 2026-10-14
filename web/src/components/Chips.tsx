@@ -1,6 +1,5 @@
-import { AlertCircle, AlignLeft, BookText, CheckCircle2, Clock, FileSpreadsheet, Grid2x2, Image as ImageIcon, ListTree, Rows3, Table2, Upload } from "lucide-react";
-import type { ChunkType, Strategy } from "@/lib/types";
-import { STRATEGY_INFO } from "@/lib/ui";
+import { AlertCircle, AlignLeft, CheckCircle2, Clock, FileSpreadsheet, Image as ImageIcon, Rows3, Table2, Upload } from "lucide-react";
+import type { ChunkType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Donut } from "./Donut";
 
@@ -24,23 +23,16 @@ export function Pill({ tone = "gray", icon, children, className }: { tone?: keyo
 }
 
 const TYPE: Record<ChunkType, { tone: keyof typeof TONES; icon: React.ReactNode; label: string }> = {
-  text:      { tone: "blue",   icon: <AlignLeft />, label: "text" },
-  table:     { tone: "amber",  icon: <Table2 />, label: "table" },
-  table_row: { tone: "orange", icon: <Rows3 />, label: "row" },
-  figure:    { tone: "purple", icon: <ImageIcon />, label: "figure" },
-  record:    { tone: "green",  icon: <FileSpreadsheet />, label: "record" },
-};
-const STRAT: Record<Strategy, { tone: keyof typeof TONES; icon: React.ReactNode }> = {
-  naive: { tone: "gray", icon: <Grid2x2 /> }, structural: { tone: "navy", icon: <ListTree /> }, contextual: { tone: "teal", icon: <BookText /> },
+  text:      { tone: "blue",   icon: <AlignLeft />, label: "Text" },
+  table:     { tone: "amber",  icon: <Table2 />, label: "Table" },
+  table_row: { tone: "orange", icon: <Rows3 />, label: "Table row" },
+  figure:    { tone: "purple", icon: <ImageIcon />, label: "Figure" },
+  record:    { tone: "green",  icon: <FileSpreadsheet />, label: "Form" },
 };
 
 export function TypeChip({ type, count, className }: { type: ChunkType; count?: number; className?: string }) {
   const t = TYPE[type] ?? TYPE.text;
   return <Pill tone={t.tone} icon={t.icon} className={className}>{count !== undefined ? `${count.toLocaleString()} ` : ""}{t.label}</Pill>;
-}
-
-export function StrategyChip({ strategy, className }: { strategy: Strategy; className?: string }) {
-  return <Pill tone={STRAT[strategy].tone} icon={STRAT[strategy].icon} className={className}>{STRATEGY_INFO[strategy].label}</Pill>;
 }
 
 export function StatusBadge({ status, detail, progress }: { status: string; detail?: string; progress?: number | null }) {

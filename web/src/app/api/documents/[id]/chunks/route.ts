@@ -13,7 +13,7 @@ const COLS = "id,document_id,strategy,chunk_type,ordinal,raw_text,context,page_s
 export async function GET(req: Request, { params }: Ctx) {
   const { id } = await params;
   const url = new URL(req.url);
-  const strategy = url.searchParams.get("strategy") ?? "structural";
+  const strategy = url.searchParams.get("strategy") ?? "contextual";
   const page = url.searchParams.get("page");
   const offset = Number(url.searchParams.get("offset") ?? 0);
   const limit = Math.min(Number(url.searchParams.get("limit") ?? 200), 1000);

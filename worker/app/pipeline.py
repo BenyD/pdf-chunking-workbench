@@ -1,8 +1,11 @@
 """Ingest one document end to end.
 
-download -> render pages -> parse layout -> chunk (3 strategies) -> model
-context (strategy 3 only) -> embed -> store. Progress is written to the
-documents row after every stage so the UI can show it.
+download -> render pages -> parse layout -> cut passages at headings, tables
+and figures -> model-written context per passage -> store -> embed. Progress
+is written to the documents row after every stage so the UI can show it.
+
+One index is kept per document. The chunks table still carries a `strategy`
+column from the comparison that chose this pipeline; every row is "contextual".
 """
 from __future__ import annotations
 
@@ -17,13 +20,14 @@ import pymupdf
 from . import db, storage
 from .chunk.contextual import chunk_contextual
 from .chunk.model import ChunkDraft
-from .chunk.naive import chunk_naive
 from .chunk.structural import chunk_structural
 from .config import settings
 from .llm import voyage
 from .parse.layout import parse_document
 
 log = logging.getLogger(__name__)
+
+STRATEGY = "contextual"
 
 
 def ingest(document_id: str) -> None:
@@ -50,35 +54,30 @@ def ingest(document_id: str) -> None:
         db.replace_pages(document_id, page_rows)
 
         db.set_progress(document_id, "chunk")
-        naive = chunk_naive(layouts, title)
-        structural = chunk_structural(layouts, title)
-        _upload_figures(structural, document_id)
+        drafts = chunk_structural(layouts, title)          # cuts at headings, tables (and their rows) and figures
+        _upload_figures(drafts, document_id)
 
-        db.set_progress(document_id, "context", 0, len(structural))
-        contextual, llm_usage = asyncio.run(
-            chunk_contextual(structural, title, on_progress=lambda d, t: db.set_progress(document_id, "context", d, t))
+        db.set_progress(document_id, "context", 0, len(drafts))
+        chunks, llm_usage = asyncio.run(
+            chunk_contextual(drafts, title, on_progress=lambda d, t: db.set_progress(document_id, "context", d, t))
         )
 
         # Store chunks first (embedding null), then embed in a separate, resumable
         # stage. If the embedding provider throttles or fails, the chunks and the
         # paid model context survive and `embed_missing` picks up where it stopped.
         db.set_progress(document_id, "store")
-        stats: dict = {"pages": n, "scanned_pages": sum(1 for l in layouts if l.is_scanned), "strategies": {}}
-        all_rows = []
-        for strategy, chunks in (("naive", naive), ("structural", structural), ("contextual", contextual)):
-            for c in chunks:
-                c.image_png = None
-            all_rows.extend(c.to_row(document_id, strategy) for c in chunks)
-            stats["strategies"][strategy] = {
-                "chunks": len(chunks),
-                "tokens": sum(c.token_count for c in chunks),
-                "by_type": dict(Counter(c.chunk_type for c in chunks)),
-                "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
-            }
+        for c in chunks:
+            c.image_png = None
+        stats: dict = {
+            "pages": n, "scanned_pages": sum(1 for l in layouts if l.is_scanned),
+            "chunks": len(chunks), "tokens": sum(c.token_count for c in chunks),
+            "by_type": dict(Counter(c.chunk_type for c in chunks)),
+            "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
+        }
         db.delete_chunks(document_id)
-        db.insert_chunks(all_rows)
+        db.insert_chunks([c.to_row(document_id, STRATEGY) for c in chunks])
         stats["llm"] = llm_usage
-        stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(structural)])
+        stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)])
         stats["embedding_model"] = settings.embedding_model if not settings.fake_embeddings else "fake (dev)"
         stats["parse_seconds"] = round(time.time() - t0, 1)
         db.update_document(document_id, stats=stats)
