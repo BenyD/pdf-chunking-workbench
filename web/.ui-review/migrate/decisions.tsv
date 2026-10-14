@@ -1,0 +1,11 @@
+id	decision	evidence
+D1	No sidebar in the Quartz registry; the shell is the top bar with three text links and a PageHeader per page	registry.json has 83 items and none is a sidebar; project-home block imports none
+D2	Three row actions become two icon buttons plus a menu (re-process; menu: finish indexing, delete)	item-actions-two
+D3	Delete asks in an alertdialog with a written destructive button instead of window.confirm	quartz-ask-before-destructive
+D4	Boxes on the page image are kind-lined regions holding a stretched ItemLink to the passage detail; Quartz has no hotspot component	coverage gap rule, SKILL step 4
+D5	Passage types borrow the five kind hues so the row badge and its box match: text agent, table and row key, figure model, form deploy	quartz-kind-is-a-word
+D6	The composer is PromptInput with the document scope Select in its tools slot; Stop ignores the late response	quartz page shell, chat layout
+D7	The answer is Response; an inline tag turns [n] into a Badge link to #source-n	Response inlineTags
+D8	DrawableViewer stays as the one custom region: Quartz has no pointer-drawing surface	coverage gap rule
+D9	Field boxes use the strong line, anchors the key hue dashed with a kind badge, a doubtful read the warn line and badge	quartz-warm-is-trouble, kind-is-a-word
+D10	Save template is secondary so Run template is the one primary on the view	button-one-primary

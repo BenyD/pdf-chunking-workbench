@@ -397,3 +397,35 @@ Opus call; cheap pre-classification (is this a chart, a photo, a logo?) would
 cut that. The question set is thirteen hand-written questions; a labelled
 set per document type is the next step before any number is quoted as a
 benchmark.
+
+## 15. The Quartz design system
+
+**Decision (2026-10-15).** The UI moved onto Quartz from design.how
+(https://design.how/systems/quartz), installed through its shadcn registry:
+tokens and scoped base styles, the components the screens need, the Quartz
+skill for coding agents and the Quartz lint. Every screen was ported one at a
+time on a run branch, verified at 390 and 1280 against the skill's rules and
+the lint, and landed as its own commit; the reviews and the decision ledger
+are in `web/.ui-review`.
+
+What changed in the product's look: one framed list of rows instead of grey
+cards per document, status as a word with a small arc while running instead
+of a tinted pill, ink for exactly one primary button per view, kind hues only
+in labels and selected rows, and no shadows, glass or pills anywhere. What
+did not change: behaviour and copy.
+
+Three places needed a judgement, each logged in the ledger:
+
+- Quartz's page shell names a sidebar, but the registry ships none, so the
+  shell is a top bar with the three places as text links and a PageHeader
+  per screen.
+- Quartz has no hotspot or drawing surface. A passage drawn on a page is a
+  kind-lined region holding a stretched ItemLink to the passage, and the
+  forms canvas keeps its pointer handler as the one custom region.
+- Passage types borrow the five kind hues (text, table, figure, form) so a
+  row's badge and its box on the page match.
+
+The installed design-system code under `web/src/components/quartz` and
+`web/src/lib/quartz` is kept as the registry ships it and excluded from the
+project lint; the Quartz lint (`npx eslint -c quartz.eslint.config.mjs .` in
+`web/`) reports nothing.

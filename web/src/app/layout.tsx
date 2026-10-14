@@ -1,12 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
+import "@/components/quartz/styles.css";
 import { TopNav } from "@/components/TopNav";
-import { TooltipProvider } from "@/components/ui/tooltip";
-
-const inter = Inter({ variable: "--font-sans", subsets: ["latin"] });
-const mono = JetBrains_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+import { QuartzPortalProvider } from "@/lib/quartz/portal";
 
 export const metadata: Metadata = {
   title: { default: "Documents", template: "%s" },
@@ -17,14 +14,14 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${mono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
-        <TooltipProvider>
-          <Suspense fallback={<div className="h-12" />}>
+    <html lang="en" className="h-full">
+      <body className="quartz flex min-h-full flex-col">
+        <QuartzPortalProvider>
+          <Suspense fallback={<div className="h-(--topbar)" />}>
             <TopNav />
           </Suspense>
-          <main className="mx-auto flex w-full max-w-[1440px] flex-1 flex-col px-4 py-4 sm:px-6 sm:py-5">{children}</main>
-        </TooltipProvider>
+          <main className="mx-auto flex min-h-0 w-full max-w-(--container) flex-1 flex-col gap-6 px-(--gutter-sm) py-6 sm:px-(--gutter)">{children}</main>
+        </QuartzPortalProvider>
       </body>
     </html>
   );
