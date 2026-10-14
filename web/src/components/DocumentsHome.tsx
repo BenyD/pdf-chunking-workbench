@@ -110,7 +110,7 @@ export function DocumentsHome() {
                     <TableHead className="hidden sm:table-cell">Pages</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="hidden md:table-cell">Chunks</TableHead>
-                    <TableHead className="hidden lg:table-cell">Ingest</TableHead>
+                    <TableHead className="hidden lg:table-cell">Processed in</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -135,7 +135,9 @@ export function DocumentsHome() {
                           {st.strategies ? `${fmtNum(st.strategies.naive?.chunks)}, ${fmtNum(st.strategies.structural?.chunks)}, ${fmtNum(st.strategies.contextual?.chunks)}` : "–"}
                         </TableCell>
                         <TableCell className="hidden text-xs text-muted-foreground lg:table-cell">
-                          {d.status === "ready" && st.seconds ? `${st.seconds}s${st.llm ? `, ${st.llm.context_calls + st.llm.vision_calls} model calls` : ""}` : "–"}
+                          {d.status === "ready" && st.seconds ? (
+                            <Tooltip><TooltipTrigger render={<span className="cursor-default" />}>{Math.round(st.seconds)} s</TooltipTrigger><TooltipContent>{st.llm ? `${st.llm.context_calls} context calls, ${st.llm.vision_calls} vision calls` : "no model calls"}</TooltipContent></Tooltip>
+                          ) : "–"}
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">
