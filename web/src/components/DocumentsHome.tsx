@@ -11,6 +11,7 @@ import { StatusBadge } from "./Chips";
 import { DocumentsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
 import { SamplePicker } from "./SamplePicker";
+import { PageHeader } from "./PageHeader";
 
 export function DocumentsHome() {
   const [docs, setDocs] = useState<Document[] | null>(null);
@@ -67,19 +68,21 @@ export function DocumentsHome() {
 
   return (
     <div className="space-y-6">
-      <section className="flex flex-wrap items-end justify-between gap-3">
-        <p className="text-sm text-muted-foreground">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
-        {docs !== null && docs.length > 0 && <div className="flex flex-wrap items-center gap-2">
-          {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
-          <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
-            <Upload data-icon="inline-start" />Upload a PDF
-            <input ref={fileRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
-          </Button>
-          <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load samples</Button>
-        </div>}
-        {docs !== null && docs.length === 0 && busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
-        {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
-      </section>
+      <PageHeader
+        title="Documents"
+        subtitle="Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes."
+        actions={docs !== null && docs.length > 0 ? (
+          <>
+            {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
+            <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
+              <Upload data-icon="inline-start" />Upload a PDF
+              <input ref={fileRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+            </Button>
+            <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load samples</Button>
+          </>
+        ) : busy ? <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span> : undefined}
+      />
+      {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
 
       <section className="space-y-2">
         <h2 className="px-1 text-sm font-medium text-muted-foreground">Library</h2>

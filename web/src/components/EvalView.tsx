@@ -12,6 +12,7 @@ import { api, STRATEGY_INFO } from "@/lib/ui";
 import { Pill, StrategyChip } from "./Chips";
 import { EvalSkeleton, PageSkeleton, RowsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
+import { PageHeader } from "./PageHeader";
 import { Panel } from "./Panel";
 
 interface RunResult {
@@ -61,10 +62,12 @@ export function EvalView() {
 
   const docItems = (docs ?? []).map((d) => ({ value: d.id, label: d.name }));
 
-  if (docs === null) return <PageSkeleton />;
+  const header = <PageHeader title="Evaluation" subtitle="Recall@k for each strategy on the same questions." />;
+  if (docs === null) return <div className="space-y-5">{header}<PageSkeleton /></div>;
   if (docs.length === 0) {
     return (
       <div className="space-y-5">
+        {header}
         <Panel>
           <EmptyState icon={<FileText />} title="Nothing to evaluate yet" hint="Add a document, then write a few questions with the phrase a correct answer must contain.">
             <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
@@ -76,7 +79,7 @@ export function EvalView() {
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-muted-foreground">Recall@k for each strategy on the same questions.</p>
+      {header}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
           <SelectTrigger className="w-full bg-card sm:w-80"><SelectValue placeholder="Pick a document" /></SelectTrigger>

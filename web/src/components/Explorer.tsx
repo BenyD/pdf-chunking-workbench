@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { StatusBadge, TypeChip } from "./Chips";
 import { Donut } from "./Donut";
 import { EmptyState } from "./EmptyState";
-import { useCrumbs } from "./HeaderContext";
+import { PageHeader } from "./PageHeader";
 import { PageViewer, type Overlay } from "./PageViewer";
 import { Panel } from "./Panel";
 import { ChunkListSkeleton, ExplorerSkeleton } from "./Skeletons";
@@ -30,8 +30,6 @@ export function Explorer({ id }: { id: string }) {
   const [showRows, setShowRows] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const title = doc ? doc.name.replace(/\.pdf$/i, "") : "…";
-  useCrumbs([{ label: "Documents", href: "/" }, { label: title }]);
 
   const loadDoc = useCallback(async () => {
     const r = await api<{ document: Document; pages: Page[] }>(`/api/documents/${id}`);
@@ -68,16 +66,20 @@ export function Explorer({ id }: { id: string }) {
 
   return (
     <div className="space-y-4">
+      <PageHeader
+        parent={{ label: "Documents", href: "/" }}
+        title={doc.name.replace(/\.pdf$/i, "")}
+        subtitle={<span className="flex flex-wrap items-center gap-2">{doc.page_count ? `${fmtNum(doc.page_count)} pages` : null}{doc.status !== "ready" && <StatusBadge status={doc.status} detail={doc.status === "processing" ? stageLabel(doc.progress.stage) : undefined} progress={pct} />}</span>}
+        actions={<>
+          <Button variant="outline" nativeButton={false} render={<Link href={`/search?document_id=${doc.id}`} />}><Search data-icon="inline-start" />Search</Button>
+          <Button variant="outline" nativeButton={false} render={<Link href={`/eval?document_id=${doc.id}`} />}><FlaskConical data-icon="inline-start" />Evaluate</Button>
+        </>}
+      />
       <div className="flex flex-wrap items-center gap-3">
         <StrategyTabs value={strategy} onChange={setStrategy} />
         {st && <span className="text-sm text-muted-foreground">{fmtNum(st.chunks)} chunks</span>}
-        <div className="ml-auto flex items-center gap-2">
-          {doc.status !== "ready" && <StatusBadge status={doc.status} detail={doc.status === "processing" ? stageLabel(doc.progress.stage) : undefined} progress={pct} />}
-          <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/search?document_id=${doc.id}`} />}><Search data-icon="inline-start" />Search</Button>
-          <Button variant="outline" size="sm" nativeButton={false} render={<Link href={`/eval?document_id=${doc.id}`} />}><FlaskConical data-icon="inline-start" />Evaluate</Button>
-        </div>
+        <span className="hidden text-sm text-muted-foreground md:inline">{STRATEGY_INFO[strategy].blurb}</span>
       </div>
-      <p className="px-1 text-sm text-muted-foreground">{STRATEGY_INFO[strategy].blurb}</p>
 
       {doc.status !== "ready" && doc.status !== "error" && (
         <Panel>

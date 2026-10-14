@@ -14,6 +14,7 @@ import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/typ
 import { api, publicAsset } from "@/lib/ui";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "./EmptyState";
+import { PageHeader } from "./PageHeader";
 import { ImageSkeleton, PageSkeleton } from "./Skeletons";
 import { Panel } from "./Panel";
 import { Pill } from "./Chips";
@@ -100,10 +101,12 @@ export function OcrView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(null); }
   }
 
-  if (docs === null) return <PageSkeleton panels={2} />;
+  const header = <PageHeader title="Zonal OCR" subtitle="Draw the fields once on a sample form, then run the template on any scan of the same form." />;
+  if (docs === null) return <div className="space-y-5">{header}<PageSkeleton panels={2} /></div>;
   if (docs.length === 0) {
     return (
       <div className="space-y-5">
+        {header}
         <Panel>
           <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
             <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
@@ -121,7 +124,7 @@ export function OcrView() {
 
   return (
     <div className="space-y-5">
-      <p className="text-sm text-muted-foreground">Draw the fields once on a sample form, then run the template on any scan of the same form.</p>
+      {header}
       {err && <Alert variant="destructive"><AlertDescription>{err}</AlertDescription></Alert>}
 
       <div className="grid gap-4 lg:grid-cols-2">
