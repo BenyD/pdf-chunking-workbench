@@ -85,7 +85,7 @@ export function DocumentsHome() {
         {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
       </section>
 
-      <Panel title="Library" description="Status updates automatically while a document is processing." bodyClassName="p-0 sm:px-2">
+      <Panel title="Library" bodyClassName="p-0 sm:px-2">
         <div>
           {docs === null ? (
             <DocumentsSkeleton />
