@@ -238,6 +238,9 @@ def _bboxes_for_rows(tb: TableBlock, idxs: list[int], row_bboxes, dims: dict) ->
 def _page_for_row(tb: TableBlock, i: int, total: int) -> int:
     """Rows are stored in order across pages; map an index to the page whose
     table bbox contains the row's y. Falls back to proportional placement."""
+    rp = getattr(tb, "row_pages", None)
+    if rp and i < len(rp):
+        return rp[i]                      # recorded by the parser while merging pages
     rb = getattr(tb, "row_bboxes", None)
     if rb and i < len(rb):
         y = (rb[i][1] + rb[i][3]) / 2

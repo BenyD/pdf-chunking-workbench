@@ -108,6 +108,7 @@ def find_ruled_tables(page: pymupdf.Page) -> list[TableBlock]:
         if t.header is not None and not t.header.external and row_objs:
             row_objs = row_objs[1:]
         tb.row_bboxes = [tuple(r.bbox) for r in row_objs][: len(rows)]   # type: ignore[attr-defined]
+        tb.row_pages = [pno] * len(rows)                                  # type: ignore[attr-defined]
         tb.has_header_text = any(header)                                  # type: ignore[attr-defined]
         out.append(tb)
     return out
@@ -429,8 +430,10 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
     header = [""] * model.n
     leading: list[tuple[list[str], BBox]] = []      # keyless rows before the first keyed row
     data: list[tuple[list[str], BBox]] = []
+    number_rows: list[BBox] = []                    # "(1) (2) (3)" rows: part of the table, not text
     for cells, box in rows:
         if _is_numbered_header(cells):
+            number_rows.append(box)
             continue
         keyed = bool(cells[key_col]) and _KEYISH.match(cells[key_col]) is not None
         if not data and not keyed:
@@ -474,8 +477,15 @@ def find_aligned_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBo
 
     pno = page.number + 1
     bbox = (min(b[0] for _, b in data), min(b[1] for _, b in data), max(b[2] for _, b in data), max(b[3] for _, b in data))
+    # the column-number row just above the first data row belongs to the table
+    above = [b for b in number_rows if b[3] <= bbox[1] + 2 and bbox[1] - b[1] < 40]
+    if above:
+        top = min(b[1] for b in above)
+        bbox = (min(bbox[0], min(b[0] for b in above)), top, max(bbox[2], max(b[2] for b in above)), bbox[3])
     tb = TableBlock(page=pno, bbox=bbox, header=header, rows=[r for r, _ in data], bboxes=[(pno, bbox)])
+    tb.consumed_lines = {id(l) for l in fitting if any(b[1] - 1 <= l.bbox[1] <= b[3] + 1 and _NUM_HEADER.match(l.text.strip()) for b in number_rows)}  # type: ignore[attr-defined]
     tb.row_bboxes = [b for _, b in data]                    # type: ignore[attr-defined]
+    tb.row_pages = [pno] * len(data)                         # type: ignore[attr-defined]
     tb.column_model = model                                  # type: ignore[attr-defined]
     tb.has_header_text = has_header_text                     # type: ignore[attr-defined]
     tb.leading_rows = [c for c, _ in leading]                # type: ignore[attr-defined]
@@ -559,6 +569,9 @@ def merge_continuations(tables_by_page: dict[int, list[TableBlock]], page_height
                 rows = extra + rows
                 boxes = extra_boxes + boxes
                 open_tbl.rows.extend(rows)
+                rp = getattr(open_tbl, "row_pages", None)
+                if rp is not None:
+                    rp.extend([p] * len(rows))          # the page each row sits on, in row order
                 open_tbl.bboxes.append((p, cand.bbox))
                 rb_prev = getattr(open_tbl, "row_bboxes", None)
                 if rb_prev is not None and len(boxes) == len(rows):

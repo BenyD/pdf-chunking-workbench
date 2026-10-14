@@ -349,4 +349,4 @@ def _attach_table_caption(tb: TableBlock, lines: list[Line]) -> None:
         if 0 <= l.bbox[1] - used[-1].bbox[3] <= 6 and abs(l.bbox[0] - cap.bbox[0]) < 20 and not _TABLE_CAPTION.match(l.text):
             used.append(l)
     tb.caption = " ".join(l.text for l in used).strip()
-    tb.consumed_lines = set(id(l) for l in used)  # type: ignore[attr-defined]
+    tb.consumed_lines = getattr(tb, "consumed_lines", set()) | set(id(l) for l in used)  # type: ignore[attr-defined]
