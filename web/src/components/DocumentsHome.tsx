@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Database, FileText, Loader2, Orbit, RefreshCw, Trash2, Upload } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Document } from "@/lib/types";
@@ -12,6 +11,7 @@ import { api, fmtNum, stageLabel } from "@/lib/ui";
 import { StatusBadge } from "./Chips";
 import { DocumentsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
+import { Panel } from "./Panel";
 import { SamplePicker } from "./SamplePicker";
 
 type Stats = { strategies?: Record<string, { chunks: number }>; seconds?: number; llm?: { context_calls: number; vision_calls: number } };
@@ -68,34 +68,32 @@ export function DocumentsHome() {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Documents</h1>
-        <p className="text-sm text-muted-foreground sm:text-base">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
+      <section className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold tracking-tight">Documents</h1>
+          <p className="mt-1 text-sm text-muted-foreground">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
+        </div>
         {docs !== null && docs.length > 0 && <div className="flex flex-wrap items-center gap-2">
-          <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
-          <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
+          {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
+          <Button variant="outline" className="rounded-full" disabled={!!busy} nativeButton={false} render={<label />}>
             <Upload data-icon="inline-start" />Upload a PDF
             <input ref={fileRef} type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
           </Button>
-          {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
+          <Button className="rounded-full" onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load samples</Button>
         </div>}
         {docs !== null && docs.length === 0 && busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
         {error && <Alert variant="destructive"><AlertTitle>Something failed</AlertTitle><AlertDescription className="whitespace-pre-wrap">{error}</AlertDescription></Alert>}
       </section>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Library</CardTitle>
-          <CardDescription>Status updates automatically while a document is processing.</CardDescription>
-        </CardHeader>
-        <CardContent className="px-0 sm:px-6">
+      <Panel title="Library" description="Status updates automatically while a document is processing." bodyClassName="p-0 sm:px-2">
+        <div>
           {docs === null ? (
             <DocumentsSkeleton />
           ) : docs.length === 0 ? (
-            <div className="px-6 sm:px-0">
+            <div>
               <EmptyState icon={<FileText />} title="No documents yet" hint="Load the sample set to see every feature working, or upload your own PDF.">
-                <Button onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
-                <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
+                <Button className="rounded-full" onClick={() => setPicker(true)} disabled={!!busy}><Database data-icon="inline-start" />Load sample documents</Button>
+                <Button variant="outline" className="rounded-full" disabled={!!busy} nativeButton={false} render={<label />}>
                   <Upload data-icon="inline-start" />Upload a PDF
                   <input type="file" accept="application/pdf" className="hidden" onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
                 </Button>
@@ -121,7 +119,7 @@ export function DocumentsHome() {
                     return (
                       <TableRow key={d.id}>
                         <TableCell className="max-w-[46vw] sm:max-w-xs">
-                          <Link href={`/documents/${d.id}`} className="block truncate font-medium hover:underline">{d.name}</Link>
+                          <Link href={`/documents/${d.id}`} className="block truncate font-medium hover:underline">{d.name.replace(/\.pdf$/i, "")}</Link>
                           {d.kind === "sample" && <span className="text-[11px] text-muted-foreground">sample</span>}
                         </TableCell>
                         <TableCell className="hidden text-muted-foreground sm:table-cell">{fmtNum(d.page_count)}</TableCell>
@@ -141,9 +139,9 @@ export function DocumentsHome() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "ingest")} />}><RefreshCw /></TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "embed")} />}><Orbit /></TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" onClick={() => act(d, "delete")} />}><Trash2 /></TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => act(d, "ingest")} />}><RefreshCw /></TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full" onClick={() => act(d, "embed")} />}><Orbit /></TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="rounded-full text-destructive" onClick={() => act(d, "delete")} />}><Trash2 /></TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
                           </div>
                         </TableCell>
                       </TableRow>
@@ -153,8 +151,8 @@ export function DocumentsHome() {
               </Table>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </Panel>
 
       <SamplePicker open={picker} onOpenChange={setPicker} loaded={loaded} onLoad={seed} />
     </div>

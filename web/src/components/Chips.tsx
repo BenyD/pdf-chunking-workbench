@@ -1,48 +1,52 @@
 import { AlertCircle, AlignLeft, BookText, CheckCircle2, Clock, FileSpreadsheet, Grid2x2, Image as ImageIcon, ListTree, Rows3, Table2, Upload } from "lucide-react";
-import { Donut } from "./Donut";
 import type { ChunkType, Strategy } from "@/lib/types";
-import { STRATEGY_INFO, TYPE_STYLE } from "@/lib/ui";
+import { STRATEGY_INFO } from "@/lib/ui";
 import { cn } from "@/lib/utils";
+import { Donut } from "./Donut";
 
-const TYPE_ICON: Record<ChunkType, React.ComponentType<{ className?: string }>> = {
-  text: AlignLeft, table: Table2, table_row: Rows3, figure: ImageIcon, record: FileSpreadsheet,
+/** Pill: soft tint, matching text, hairline ring, icon first. */
+const pill = "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium leading-4 whitespace-nowrap ring-1 ring-inset";
+
+export const TONES = {
+  gray:    "bg-zinc-100 text-zinc-700 ring-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:ring-zinc-700",
+  blue:    "bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-950 dark:text-sky-200 dark:ring-sky-900",
+  green:   "bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-950 dark:text-emerald-200 dark:ring-emerald-900",
+  amber:   "bg-amber-50 text-amber-700 ring-amber-200 dark:bg-amber-950 dark:text-amber-200 dark:ring-amber-900",
+  orange:  "bg-orange-50 text-orange-600 ring-orange-200 dark:bg-orange-950 dark:text-orange-200 dark:ring-orange-900",
+  red:     "bg-red-50 text-red-700 ring-red-200 dark:bg-red-950 dark:text-red-200 dark:ring-red-900",
+  purple:  "bg-fuchsia-50 text-fuchsia-700 ring-fuchsia-200 dark:bg-fuchsia-950 dark:text-fuchsia-200 dark:ring-fuchsia-900",
+  teal:    "bg-teal-50 text-teal-700 ring-teal-200 dark:bg-teal-950 dark:text-teal-200 dark:ring-teal-900",
+  navy:    "bg-slate-100 text-slate-800 ring-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:ring-slate-700",
+} as const;
+
+export function Pill({ tone = "gray", icon, children, className }: { tone?: keyof typeof TONES; icon?: React.ReactNode; children: React.ReactNode; className?: string }) {
+  return <span className={cn(pill, TONES[tone], className)}>{icon && <span className="[&_svg]:size-3.5">{icon}</span>}{children}</span>;
+}
+
+const TYPE: Record<ChunkType, { tone: keyof typeof TONES; icon: React.ReactNode; label: string }> = {
+  text:      { tone: "blue",   icon: <AlignLeft />, label: "text" },
+  table:     { tone: "amber",  icon: <Table2 />, label: "table" },
+  table_row: { tone: "orange", icon: <Rows3 />, label: "row" },
+  figure:    { tone: "purple", icon: <ImageIcon />, label: "figure" },
+  record:    { tone: "green",  icon: <FileSpreadsheet />, label: "record" },
 };
-const STRATEGY_ICON: Record<Strategy, React.ComponentType<{ className?: string }>> = {
-  naive: Grid2x2, structural: ListTree, contextual: BookText,
+const STRAT: Record<Strategy, { tone: keyof typeof TONES; icon: React.ReactNode }> = {
+  naive: { tone: "gray", icon: <Grid2x2 /> }, structural: { tone: "navy", icon: <ListTree /> }, contextual: { tone: "teal", icon: <BookText /> },
 };
 
-const base = "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-medium leading-4 whitespace-nowrap";
-
-/** Chunk type pill. With `count`, reads "8 text". */
 export function TypeChip({ type, count, className }: { type: ChunkType; count?: number; className?: string }) {
-  const s = TYPE_STYLE[type] ?? TYPE_STYLE.text;
-  const Icon = TYPE_ICON[type] ?? AlignLeft;
-  return (
-    <span className={cn(base, s.chip, className)}>
-      <Icon className="size-3" />{count !== undefined ? `${count.toLocaleString()} ` : ""}{s.label}
-    </span>
-  );
+  const t = TYPE[type] ?? TYPE.text;
+  return <Pill tone={t.tone} icon={t.icon} className={className}>{count !== undefined ? `${count.toLocaleString()} ` : ""}{t.label}</Pill>;
 }
 
 export function StrategyChip({ strategy, className }: { strategy: Strategy; className?: string }) {
-  const Icon = STRATEGY_ICON[strategy];
-  return (
-    <span className={cn(base, "border-transparent", STRATEGY_INFO[strategy].chip, className)}>
-      <Icon className="size-3" />{STRATEGY_INFO[strategy].label}
-    </span>
-  );
+  return <Pill tone={STRAT[strategy].tone} icon={STRAT[strategy].icon} className={className}>{STRATEGY_INFO[strategy].label}</Pill>;
 }
 
 export function StatusBadge({ status, detail, progress }: { status: string; detail?: string; progress?: number | null }) {
-  const map: Record<string, { icon: React.ReactNode; cls: string; label: string }> = {
-    ready: { icon: <CheckCircle2 className="size-3" />, cls: "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200", label: "Ready" },
-    error: { icon: <AlertCircle className="size-3" />, cls: "border-red-200 bg-red-50 text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200", label: "Failed" },
-    processing: { icon: <Donut value={progress} size={12} stroke={2.2} />, cls: "border-primary/20 bg-primary/10 text-primary", label: "Processing" },
-    queued: { icon: <Clock className="size-3" />, cls: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200", label: "Queued" },
-    uploading: { icon: <Upload className="size-3" />, cls: "border-sky-200 bg-sky-50 text-sky-800 dark:border-sky-900 dark:bg-sky-950 dark:text-sky-200", label: "Uploading" },
-  };
-  const m = map[status] ?? map.queued;
-  // While processing, the label is the stage itself ("Embedding"); the donut shows how far along it is.
-  const label = status === "processing" && detail ? detail : m.label;
-  return <span className={cn(base, m.cls)}>{m.icon}{label}</span>;
+  if (status === "ready") return <Pill tone="green" icon={<CheckCircle2 />}>Ready</Pill>;
+  if (status === "error") return <Pill tone="red" icon={<AlertCircle />}>Failed</Pill>;
+  if (status === "processing") return <Pill tone="orange" icon={<Donut value={progress} size={14} stroke={2.4} />}>{detail ?? "Processing"}</Pill>;
+  if (status === "uploading") return <Pill tone="blue" icon={<Upload />}>Uploading</Pill>;
+  return <Pill tone="gray" icon={<Clock />}>Queued</Pill>;
 }

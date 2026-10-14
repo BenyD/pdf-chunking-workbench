@@ -1,13 +1,16 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { DOCUMENTATION_MD } from "@/content/documentation";
+import { Panel } from "@/components/Panel";
 
 export const metadata = { title: "Documentation" };
 
 export default function DocsPage() {
   return (
-    <article className="prose-md mx-auto max-w-3xl rounded-xl border bg-card px-5 py-4 text-[15px] sm:px-8 sm:py-6">
-      <ReactMarkdown remarkPlugins={[remarkGfm]}>{DOCUMENTATION_MD}</ReactMarkdown>
-    </article>
+    <Panel className="mx-auto max-w-3xl" bodyClassName="px-5 py-4 sm:px-8 sm:py-6">
+      <article className="prose-md text-[15px]">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>{DOCUMENTATION_MD}</ReactMarkdown>
+      </article>
+    </Panel>
   );
 }

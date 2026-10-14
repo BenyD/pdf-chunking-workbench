@@ -24,7 +24,7 @@ export function ExplorerSkeleton() {
       <div className="flex items-center gap-3"><Skeleton className="h-7 w-24" /><Skeleton className="h-7 w-72" /><Skeleton className="h-5 w-16 rounded-full" /></div>
       <div className="grid gap-3 md:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="space-y-2 rounded-xl border bg-card p-4"><div className="flex justify-between"><Skeleton className="h-4 w-20" /><Skeleton className="h-3 w-24" /></div><div className="flex gap-1"><Skeleton className="h-5 w-14 rounded-full" /><Skeleton className="h-5 w-14 rounded-full" /><Skeleton className="h-5 w-16 rounded-full" /></div></div>
+          <div key={i} className="space-y-2 rounded-[1.25rem] bg-card p-4 ring-1 ring-black/5"><div className="flex justify-between"><Skeleton className="h-4 w-20" /><Skeleton className="h-3 w-24" /></div><div className="flex gap-1"><Skeleton className="h-5 w-14 rounded-full" /><Skeleton className="h-5 w-14 rounded-full" /><Skeleton className="h-5 w-16 rounded-full" /></div></div>
         ))}
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
@@ -39,7 +39,7 @@ export function ChunkListSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="space-y-2">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="space-y-2 rounded-xl border bg-card p-3">
+        <div key={i} className="space-y-2 rounded-[1.25rem] bg-card p-3 ring-1 ring-black/5">
           <div className="flex gap-2"><Skeleton className="h-5 w-14 rounded-full" /><Skeleton className="h-4 w-8" /><Skeleton className="h-4 w-10" /><Skeleton className="ml-auto h-4 w-12" /></div>
           <Skeleton className="h-3 w-3/4" /><Skeleton className="h-3 w-full" /><Skeleton className="h-3 w-5/6" />
         </div>
@@ -65,7 +65,7 @@ export function EvalSkeleton() {
   return (
     <div className="grid gap-3 sm:grid-cols-3">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="space-y-3 rounded-xl border bg-card p-4"><Skeleton className="h-5 w-24 rounded-full" /><Skeleton className="h-9 w-20" /><Skeleton className="h-3 w-40" /></div>
+        <div key={i} className="space-y-3 rounded-[1.25rem] bg-card p-4 ring-1 ring-black/5"><Skeleton className="h-5 w-24 rounded-full" /><Skeleton className="h-9 w-20" /><Skeleton className="h-3 w-40" /></div>
       ))}
     </div>
   );

@@ -36,7 +36,7 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad }: {
           <DialogDescription>Choose what to load. Each one is processed in the background and appears in the library as it finishes.</DialogDescription>
         </DialogHeader>
         <div className="grid min-w-0 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-          <ul className="order-2 min-w-0 divide-y rounded-xl border md:order-1">
+          <ul className="order-2 min-w-0 divide-y rounded-[1.25rem] bg-muted/60 md:order-1">
             {SAMPLES.map((s) => {
               const isLoaded = loaded.has(s.key);
               const checked = selected.has(s.key);
@@ -55,7 +55,7 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad }: {
             })}
           </ul>
           <div className="order-1 min-w-0 md:order-2">
-            <div className="relative h-48 w-full overflow-hidden rounded-xl border bg-white sm:h-64 md:h-auto md:aspect-[1/1.3]">
+            <div className="relative h-48 w-full overflow-hidden rounded-[1.25rem] bg-white ring-1 ring-black/5 sm:h-64 md:h-auto md:aspect-[1/1.3]">
               {!imgLoaded && <div className="absolute inset-0 animate-pulse bg-muted" />}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img key={current.key} src={`/samples/previews/${current.key}.png`} alt={`first page of ${current.name}`} onLoad={() => setImgLoaded(true)} className={cn("block h-full w-full object-cover object-top transition-opacity", imgLoaded ? "opacity-100" : "opacity-0")} />
@@ -64,8 +64,8 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad }: {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
-          <Button onClick={load} disabled={busy || selected.size === 0}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : null}Load {selected.size} {selected.size === 1 ? "document" : "documents"}</Button>
+          <Button variant="outline" className="rounded-full" onClick={() => onOpenChange(false)} disabled={busy}>Cancel</Button>
+          <Button className="rounded-full" onClick={load} disabled={busy || selected.size === 0}>{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : null}Load {selected.size} {selected.size === 1 ? "document" : "documents"}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

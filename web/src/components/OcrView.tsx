@@ -3,9 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Eraser, FileText, Loader2, Play, Save, ScanSearch, X } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +14,8 @@ import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/typ
 import { api, publicAsset } from "@/lib/ui";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "./EmptyState";
+import { Panel } from "./Panel";
+import { Pill } from "./Chips";
 
 type Box = { x: number; y: number; w: number; h: number };
 type Word = { text: string; conf: number; box: Box };
@@ -99,11 +99,13 @@ export function OcrView() {
 
   if (docs && docs.length === 0) {
     return (
-      <div className="space-y-4">
-        <div><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Zonal OCR</h1></div>
-        <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
-          <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
-        </EmptyState>
+      <div className="space-y-5">
+        <h1 className="text-2xl font-semibold tracking-tight">Zonal OCR</h1>
+        <Panel>
+          <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
+            <Button className="rounded-full" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+          </EmptyState>
+        </Panel>
       </div>
     );
   }
@@ -115,29 +117,25 @@ export function OcrView() {
   const tgtBoxes = result ? result.fields.map((f) => ({ box: f.box_used, label: f.name, ok: f.valid })) : fields.filter((f) => f.page === tgtPage).map((f) => ({ box: f.box, label: f.name, ok: true }));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Zonal OCR</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Zonal OCR</h1>
         <p className="mt-1 text-sm text-muted-foreground">Draw the fields once on a sample form, then run the template on any scan of the same form.</p>
       </div>
       {err && <Alert variant="destructive"><AlertDescription>{err}</AlertDescription></Alert>}
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Template</CardTitle>
-            <CardDescription>Draw a box for each value. Add two or three anchor words.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <Panel title="Template" description="Draw a box for each value. Add two or three anchor words.">
+          <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={srcDoc} onValueChange={(v) => setSrcDoc(v as string | null)} items={docItems}>
-                <SelectTrigger className="w-full sm:w-64"><SelectValue placeholder="Source document" /></SelectTrigger>
+                <SelectTrigger className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Source document" /></SelectTrigger>
                 <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={srcPages.length || 1} value={srcPage} onChange={(e) => setSrcPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />
-                <Tabs value={mode} onValueChange={(v) => setMode(v as "field" | "anchor")}><TabsList><TabsTrigger value="field">draw field</TabsTrigger><TabsTrigger value="anchor">draw anchor</TabsTrigger></TabsList></Tabs>
-                <Button variant="outline" size="sm" onClick={detectWords} disabled={!!busy}><ScanSearch data-icon="inline-start" />detect words</Button>
+                <Tabs value={mode} onValueChange={(v) => setMode(v as "field" | "anchor")}><TabsList className="rounded-full"><TabsTrigger value="field" className="rounded-full">draw field</TabsTrigger><TabsTrigger value="anchor" className="rounded-full">draw anchor</TabsTrigger></TabsList></Tabs>
+                <Button variant="outline" size="sm" className="rounded-full" onClick={detectWords} disabled={!!busy}><ScanSearch data-icon="inline-start" />detect words</Button>
               </div>
               {words && <Label className="flex items-center gap-1.5 text-xs"><Checkbox checked={showWords} onCheckedChange={(c) => setShowWords(!!c)} /> show words</Label>}
             </div>
@@ -171,39 +169,35 @@ export function OcrView() {
                 </div>
               ))}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <Button size="sm" onClick={save} disabled={!!busy}><Save data-icon="inline-start" />Save template</Button>
-                <Button variant="outline" size="sm" onClick={() => { setFields([]); setAnchors([]); setName("New template"); }}><Eraser data-icon="inline-start" />Clear</Button>
+                <Button size="sm" className="rounded-full" onClick={save} disabled={!!busy}><Save data-icon="inline-start" />Save template</Button>
+                <Button variant="outline" size="sm" className="rounded-full" onClick={() => { setFields([]); setAnchors([]); setName("New template"); }}><Eraser data-icon="inline-start" />Clear</Button>
                 {templates.length > 0 && (
                   <Select value={null} onValueChange={(v) => loadTemplate(v as string | null)} items={tplItems}>
-                    <SelectTrigger size="sm" className="w-full sm:w-64"><SelectValue placeholder="Load saved template…" /></SelectTrigger>
+                    <SelectTrigger size="sm" className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Load saved template" /></SelectTrigger>
                     <SelectContent>{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
                   </Select>
                 )}
                 {busy && <span className="flex items-center gap-1 text-xs text-muted-foreground"><Loader2 className="size-3 animate-spin" />{busy}</span>}
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </Panel>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Run</CardTitle>
-            <CardDescription>Boxes move to where the anchors find the form on the target page.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <Panel title="Run" description="Boxes move to where the anchors find the form on the target page.">
+          <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
               <Select value={tgtDoc} onValueChange={(v) => setTgtDoc(v as string | null)} items={docItems}>
-                <SelectTrigger className="w-full sm:w-64"><SelectValue placeholder="Target document" /></SelectTrigger>
+                <SelectTrigger className="w-full rounded-full bg-card sm:w-64"><SelectValue placeholder="Target document" /></SelectTrigger>
                 <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
               </Select>
               <div className="flex items-center gap-2">
                 <Input type="number" min={1} max={tgtPages.length || 1} value={tgtPage} onChange={(e) => setTgtPage(Number(e.target.value) || 1)} className="w-16 text-center" aria-label="page" />
                 <Label className="flex items-center gap-1.5 text-xs"><Checkbox checked={fallback} onCheckedChange={(c) => setFallback(!!c)} /> model fallback</Label>
-                <Button size="sm" onClick={run} disabled={!!busy || !fields.length}><Play data-icon="inline-start" />Run template</Button>
+                <Button size="sm" className="rounded-full" onClick={run} disabled={!!busy || !fields.length}><Play data-icon="inline-start" />Run template</Button>
               </div>
             </div>
             {tp && (
-              <div className="relative overflow-hidden rounded-xl border bg-white">
+              <div className="relative overflow-hidden rounded-[1rem] bg-white ring-1 ring-black/5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={pageUrl(tp)} alt="target page" className="block w-full" />
                 {tgtBoxes.map((b, i) => (
@@ -216,7 +210,7 @@ export function OcrView() {
                 <p className="text-xs text-muted-foreground">
                   Deskew {result.deskew_angle}°, shift {result.registration.dx.toFixed(0)} by {result.registration.dy.toFixed(0)} px, scale {result.registration.scale.toFixed(3)}. Anchors {result.registration.matched.length ? result.registration.matched.map((m) => `${m.anchor}→${m.found}`).join(", ") : "none"}.{result.fallback_used ? " Model fallback used." : ""}{result.fallback_error ? ` Fallback error ${result.fallback_error}.` : ""}
                 </p>
-                <div className="overflow-x-auto rounded-lg border">
+                <div className="overflow-x-auto rounded-xl ring-1 ring-black/5">
                   <Table>
                     <TableHeader><TableRow><TableHead>Field</TableHead><TableHead>Value</TableHead><TableHead className="hidden md:table-cell">Raw OCR</TableHead><TableHead>Conf.</TableHead><TableHead>Source</TableHead><TableHead className="hidden lg:table-cell">Note</TableHead></TableRow></TableHeader>
                     <TableBody>
@@ -226,7 +220,7 @@ export function OcrView() {
                           <TableCell className="font-mono">{String(f.value ?? "")}</TableCell>
                           <TableCell className="hidden font-mono text-muted-foreground md:table-cell">{f.raw}{f.ocr_value !== undefined ? ` → ${String(f.ocr_value)}` : ""}</TableCell>
                           <TableCell>{f.confidence}</TableCell>
-                          <TableCell><Badge className={cn("border-transparent", f.source === "llm" ? "bg-teal-100 text-teal-900 dark:bg-teal-950 dark:text-teal-200" : f.valid ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200" : "bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-200")}>{f.source}</Badge></TableCell>
+                          <TableCell><Pill tone={f.source === "llm" ? "teal" : f.valid ? "green" : "amber"}>{f.source}</Pill></TableCell>
                           <TableCell className="hidden text-xs text-muted-foreground lg:table-cell">{f.note}</TableCell>
                         </TableRow>
                       ))}
@@ -236,8 +230,8 @@ export function OcrView() {
                 <p className="text-xs text-muted-foreground">Saved as a record chunk of the target document. It is searchable now.</p>
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </Panel>
       </div>
     </div>
   );
@@ -253,7 +247,7 @@ function DrawableViewer({ imageUrl, onDraw, children }: { imageUrl: string; onDr
   };
   const live = start && cur ? { x: Math.min(start.x, cur.x), y: Math.min(start.y, cur.y), w: Math.abs(cur.x - start.x), h: Math.abs(cur.y - start.y) } : null;
   return (
-    <div ref={ref} className="relative cursor-crosshair touch-none overflow-hidden rounded-xl border bg-white select-none"
+    <div ref={ref} className="relative cursor-crosshair touch-none overflow-hidden rounded-[1rem] bg-white ring-1 ring-black/5 select-none"
       onPointerDown={(e) => { (e.target as HTMLElement).setPointerCapture?.(e.pointerId); setStart(rel(e)); setCur(rel(e)); }}
       onPointerMove={(e) => { if (start) setCur(rel(e)); }}
       onPointerUp={(e) => { if (start) { const p = rel(e); onDraw({ x: Math.min(start.x, p.x), y: Math.min(start.y, p.y), w: Math.abs(p.x - start.x), h: Math.abs(p.y - start.y) }); } setStart(null); setCur(null); }}

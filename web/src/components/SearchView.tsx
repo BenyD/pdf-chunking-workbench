@@ -1,11 +1,9 @@
 "use client";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { FileText, Loader2, Search, SearchX } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ArrowUp, FileText, Loader2, Search, SearchX, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import type { Chunk, Document, SearchResult, Strategy } from "@/lib/types";
@@ -13,9 +11,10 @@ import { STRATEGIES } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 import { cn } from "@/lib/utils";
 import { StrategyChip, TypeChip } from "./Chips";
-import { StrategyMulti } from "./StrategyToggle";
-import { ResultsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
+import { Panel } from "./Panel";
+import { ResultsSkeleton } from "./Skeletons";
+import { StrategyMulti } from "./StrategyToggle";
 
 type Hit = SearchResult & { page_image_url: string };
 type Results = Record<string, Hit[]>;
@@ -37,12 +36,13 @@ export function SearchView() {
   const [k, setK] = useState(6);
   const [selected, setSelected] = useState<Strategy[]>([...STRATEGIES]);
   const [weights, setWeights] = useState({ fts: 1, vec: 1 });
+  const [showOptions, setShowOptions] = useState(false);
   const [res, setRes] = useState<Response | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
 
-  useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setDocs(r.documents.filter((d) => d.status === "ready"))).catch(() => {}); }, []);
+  useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setDocs(r.documents.filter((d) => d.status === "ready"))).catch(() => setDocs([])); }, []);
 
   async function run(query = q) {
     if (!query.trim()) return;
@@ -52,61 +52,72 @@ export function SearchView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(false); }
   }
 
-  const docItems = [{ value: null, label: "All documents" }, ...(docs ?? []).map((d) => ({ value: d.id, label: d.name }))];
+  const docItems = [{ value: null, label: "All documents" }, ...(docs ?? []).map((d) => ({ value: d.id, label: d.name.replace(/\.pdf$/i, "") }))];
   const noHits = res && selected.every((s) => (res.results[s] ?? []).length === 0);
 
   if (docs && docs.length === 0) {
     return (
-      <div className="space-y-4">
-        <div><h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Search</h1></div>
-        <EmptyState icon={<FileText />} title="Nothing to search yet" hint="Add a document first. Once it finishes processing it shows up here.">
-          <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
-        </EmptyState>
+      <div className="space-y-5">
+        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
+        <Panel>
+          <EmptyState icon={<FileText />} title="Nothing to search yet" hint="Add a document first. Once it finishes processing it shows up here.">
+            <Button className="rounded-full" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+          </EmptyState>
+        </Panel>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Search</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
         <p className="mt-1 text-sm text-muted-foreground">Ask a question and compare what each strategy returns.</p>
       </div>
 
-      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask something about the documents…" className="flex-1" />
-        <div className="flex flex-wrap gap-2">
-          <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
-            <SelectTrigger className="w-full sm:w-56"><SelectValue placeholder="All documents" /></SelectTrigger>
-            <SelectContent>{docItems.map((it) => <SelectItem key={it.value ?? "all"} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
-          </Select>
-          <Input type="number" min={1} max={30} value={k} onChange={(e) => setK(Number(e.target.value))} className="w-16 text-center" aria-label="results per strategy" />
-          <Button type="submit" disabled={busy} className="flex-1 sm:flex-none">{busy ? <Loader2 className="animate-spin" data-icon="inline-start" /> : <Search data-icon="inline-start" />}Search</Button>
-        </div>
+      <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex items-center gap-2 rounded-full bg-card p-1.5 pl-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/40">
+        <Search className="size-4 shrink-0 text-muted-foreground" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask something about the documents" className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-muted-foreground" />
+        <Button type="submit" size="icon-lg" className="rounded-full" disabled={busy || !q.trim()} aria-label="search">{busy ? <Loader2 className="animate-spin" /> : <ArrowUp />}</Button>
       </form>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="flex flex-wrap items-center gap-2">
+        <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
+          <SelectTrigger size="sm" className="max-w-[60vw] rounded-full bg-card sm:max-w-xs"><SelectValue placeholder="All documents" /></SelectTrigger>
+          <SelectContent>{docItems.map((it) => <SelectItem key={it.value ?? "all"} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+        </Select>
         <StrategyMulti selected={selected} onChange={setSelected} />
-        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:w-48"><span className="w-16 shrink-0">full text</span><Slider min={0} max={2} step={0.25} value={[weights.fts]} onValueChange={(v) => setWeights({ ...weights, fts: Array.isArray(v) ? v[0] : v })} /><span className="w-6">{weights.fts}</span></div>
-        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:w-48"><span className="w-16 shrink-0">semantic</span><Slider min={0} max={2} step={0.25} value={[weights.vec]} onValueChange={(v) => setWeights({ ...weights, vec: Array.isArray(v) ? v[0] : v })} /><span className="w-6">{weights.vec}</span></div>
+        <button type="button" onClick={() => setShowOptions((o) => !o)} aria-pressed={showOptions} className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm ring-1 ring-inset transition-colors", showOptions ? "bg-foreground text-background ring-foreground" : "bg-card text-muted-foreground ring-border hover:text-foreground")}>
+          <SlidersHorizontal className="size-3.5" />Options
+        </button>
       </div>
-      <div className="flex flex-wrap gap-1.5">
-        {EXAMPLES.map((ex) => <Badge key={ex} variant="outline" className="cursor-pointer hover:bg-muted" render={<button type="button" onClick={() => { setQ(ex); run(ex); }} />}>{ex}</Badge>)}
-      </div>
+      {showOptions && (
+        <div className="grid gap-3 rounded-[1.25rem] bg-muted/80 p-4 sm:grid-cols-3">
+          <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Results</span><input type="number" min={1} max={30} value={k} onChange={(e) => setK(Number(e.target.value))} className="h-8 w-16 rounded-full bg-card text-center ring-1 ring-border" /></label>
+          <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Keyword</span><Slider min={0} max={2} step={0.25} value={[weights.fts]} onValueChange={(v) => setWeights({ ...weights, fts: Array.isArray(v) ? v[0] : v })} /><span className="w-8 text-right text-xs">{weights.fts}</span></label>
+          <label className="flex items-center gap-3 text-sm"><span className="w-24 text-muted-foreground">Meaning</span><Slider min={0} max={2} step={0.25} value={[weights.vec]} onValueChange={(v) => setWeights({ ...weights, vec: Array.isArray(v) ? v[0] : v })} /><span className="w-8 text-right text-xs">{weights.vec}</span></label>
+        </div>
+      )}
+      {!res && !busy && (
+        <div className="flex flex-wrap gap-1.5">
+          {EXAMPLES.map((ex) => <button key={ex} type="button" onClick={() => { setQ(ex); run(ex); }} className="rounded-full bg-muted px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-accent hover:text-foreground">{ex}</button>)}
+        </div>
+      )}
       {err && <p className="text-sm text-destructive">{err}</p>}
       {busy && <ResultsSkeleton columns={selected.length} />}
 
-      {res && !busy && noHits && <EmptyState icon={<SearchX />} title="No matches" hint="Try different words, or widen the search to all documents." />}
+      {res && !busy && noHits && <Panel><EmptyState icon={<SearchX />} title="No matches" hint="Try different words, or widen the search to all documents." /></Panel>}
       {res && !busy && !noHits && (
         <>
-          <p className="text-xs text-muted-foreground">{res.embedded ? `Embedded in ${res.embed_ms} ms, ` : "Full-text only, "}{res.total_ms} ms total</p>
-          <div className={cn("grid gap-3", selected.length === 2 && "md:grid-cols-2", selected.length === 3 && "lg:grid-cols-3")}>
+          <p className="px-1 text-xs text-muted-foreground">{res.embedded ? `Embedded in ${res.embed_ms} ms, ` : "Full text only, "}{res.total_ms} ms total</p>
+          <div className={cn("grid gap-4", selected.length === 2 && "md:grid-cols-2", selected.length === 3 && "lg:grid-cols-3")}>
             {selected.map((s) => (
-              <div key={s} className="space-y-2">
-                <div className="flex items-center gap-2"><StrategyChip strategy={s} /><span className="text-xs text-muted-foreground">{(res.results[s] ?? []).length} results</span></div>
-                {(res.results[s] ?? []).length === 0 && <p className="text-xs text-muted-foreground">no results</p>}
-                {(res.results[s] ?? []).map((r, i) => <ResultCard key={r.id} r={r} rank={i + 1} open={open === r.id} onToggle={() => setOpen(open === r.id ? null : r.id)} />)}
-              </div>
+              <Panel key={s} title={<StrategyChip strategy={s} />} description={`${(res.results[s] ?? []).length} results`} bodyClassName="bg-transparent p-0 shadow-none">
+                <div className="space-y-2">
+                  {(res.results[s] ?? []).length === 0 && <div className="rounded-[1.25rem] bg-card p-4 text-center text-xs text-muted-foreground">no results</div>}
+                  {(res.results[s] ?? []).map((r, i) => <ResultCard key={r.id} r={r} rank={i + 1} open={open === r.id} onToggle={() => setOpen(open === r.id ? null : r.id)} />)}
+                </div>
+              </Panel>
             ))}
           </div>
         </>
@@ -122,34 +133,34 @@ function ResultCard({ r, rank, open, onToggle }: { r: Hit; rank: number; open: b
   const box = r.bboxes.find((b) => b.page === r.page_start);
   const meta = r.metadata as { image_path?: string };
   return (
-    <div className={cn("rounded-xl border bg-card p-3 text-sm transition", open ? "border-foreground" : "border-border")}>
+    <div className={cn("rounded-[1.25rem] bg-card p-3.5 text-sm shadow-[0_1px_2px_rgba(16,24,40,0.04)] ring-1 ring-inset transition", open ? "ring-foreground" : "ring-black/5 hover:ring-black/15")}>
       <button type="button" onClick={onToggle} className="w-full text-left">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
           <span className="font-mono">#{rank}</span><TypeChip type={r.chunk_type} />
-          <span className="max-w-[40vw] truncate sm:max-w-[12rem]">{r.document_name}</span><span>p.{r.page_start}</span>
-          <span className="ml-auto whitespace-nowrap" title="fused score, rank in full-text list, rank in vector list">rrf {r.rrf_score.toFixed(4)}, fts {r.fts_rank ?? "–"}, vec {r.vec_rank ?? "–"}</span>
+          <span className="max-w-[40vw] truncate sm:max-w-[11rem]">{r.document_name?.replace(/\.pdf$/i, "")}</span><span>p.{r.page_start}</span>
+          <span className="ml-auto whitespace-nowrap" title="fused score, rank by keywords, rank by meaning">rrf {r.rrf_score.toFixed(3)}, fts {r.fts_rank ?? "–"}, vec {r.vec_rank ?? "–"}</span>
         </div>
-        {r.context && <div className="mt-1 line-clamp-2 text-xs text-primary">{r.context}</div>}
+        {r.context && <div className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{r.context}</div>}
         <div className={cn("mt-1 whitespace-pre-wrap text-foreground/90", !open && "line-clamp-4")}>{r.raw_text}</div>
       </button>
       {open && (
-        <div className="mt-3 space-y-2 border-t pt-2 text-xs">
+        <div className="mt-3 space-y-2 border-t pt-3 text-xs">
           {meta.image_path && (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={publicAsset(meta.image_path)} alt="figure" className="max-h-56 rounded-lg border" />
+            <img src={publicAsset(meta.image_path)} alt="figure" className="max-h-56 rounded-xl ring-1 ring-black/5" />
           )}
           {box && (
-            <div className="relative overflow-hidden rounded-lg border bg-white">
+            <div className="relative overflow-hidden rounded-xl bg-white ring-1 ring-black/5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={r.page_image_url} alt="page" className="block w-full" />
-              <div className="absolute border-2 border-primary bg-primary/10" style={{ left: `${box.x0 * 100}%`, top: `${box.y0 * 100}%`, width: `${(box.x1 - box.x0) * 100}%`, height: `${(box.y1 - box.y0) * 100}%` }} />
+              <div className="absolute border-2 border-foreground bg-foreground/10" style={{ left: `${box.x0 * 100}%`, top: `${box.y0 * 100}%`, width: `${(box.x1 - box.x0) * 100}%`, height: `${(box.y1 - box.y0) * 100}%` }} />
             </div>
           )}
-          {ctx?.parent && <div className="rounded-lg bg-amber-50 p-2 dark:bg-amber-950/40"><div className="mb-1 font-medium text-amber-800 dark:text-amber-200">parent table (retrieved small, expanded big)</div><pre className="max-h-48 overflow-auto font-mono text-[11px] whitespace-pre-wrap">{ctx.parent.raw_text}</pre></div>}
+          {ctx?.parent && <div className="rounded-xl bg-amber-50 p-3 dark:bg-amber-950/40"><div className="mb-1 font-medium text-amber-800 dark:text-amber-200">Parent table</div><pre className="max-h-48 overflow-auto font-mono text-[11px] whitespace-pre-wrap">{ctx.parent.raw_text}</pre></div>}
           {ctx && (ctx.prev || ctx.next) && (
             <div className="grid gap-2 md:grid-cols-2">
-              {ctx.prev && <div className="rounded-lg bg-muted p-2"><div className="mb-1 font-medium">← previous chunk</div><div className="line-clamp-6 whitespace-pre-wrap">{ctx.prev.raw_text}</div></div>}
-              {ctx.next && <div className="rounded-lg bg-muted p-2"><div className="mb-1 font-medium">next chunk →</div><div className="line-clamp-6 whitespace-pre-wrap">{ctx.next.raw_text}</div></div>}
+              {ctx.prev && <div className="rounded-xl bg-muted p-3"><div className="mb-1 font-medium">Previous chunk</div><div className="line-clamp-6 whitespace-pre-wrap">{ctx.prev.raw_text}</div></div>}
+              {ctx.next && <div className="rounded-xl bg-muted p-3"><div className="mb-1 font-medium">Next chunk</div><div className="line-clamp-6 whitespace-pre-wrap">{ctx.next.raw_text}</div></div>}
             </div>
           )}
           {ctx && ctx.children.length > 0 && <div className="text-muted-foreground">{ctx.children.length} row chunks belong to this table.</div>}
