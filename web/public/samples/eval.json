@@ -1,0 +1,38 @@
+{
+  "bns-2023": [
+    { "question": "What is the punishment for murder?", "must_contain": "Whoever commits murder shall be punished with death" },
+    { "question": "How is theft defined?", "must_contain": "intending to take dishonestly any movable property" },
+    { "question": "What is dowry death?", "must_contain": "dowry death" },
+    { "question": "What is the punishment for causing death by negligence?", "must_contain": "rash or negligent act not amounting to culpable homicide" },
+    { "question": "What counts as organised crime?", "must_contain": "organised crime" },
+    { "question": "What is the punishment for criminal intimidation?", "must_contain": "criminal intimidation" },
+    { "question": "How is cheating defined?", "must_contain": "deceiving any person" },
+    { "question": "What is defamation?", "must_contain": "harm the reputation" },
+    { "question": "Can a child under seven commit an offence?", "must_contain": "under seven years of age" },
+    { "question": "What is the minimum sentence for rape?", "must_contain": "shall not be less than ten years" },
+    { "question": "What does the law say about snatching?", "must_contain": "snatching" },
+    { "question": "What is the punishment when a group of five or more people commit murder on grounds of caste?", "must_contain": "group of five or more persons" }
+  ],
+  "bnss-2023": [
+    { "question": "Is murder bailable and which court tries it?", "must_contain": "Murder" },
+    { "question": "Is theft a cognizable offence?", "must_contain": "Theft" },
+    { "question": "Which court tries dowry death?", "must_contain": "Dowry death" },
+    { "question": "When may police arrest without a warrant?", "must_contain": "arrest without warrant" },
+    { "question": "How long can an arrested person be detained without a magistrate's order?", "must_contain": "twenty-four hours" },
+    { "question": "What is a bailable offence?", "must_contain": "bailable offence" },
+    { "question": "What are the classes of criminal courts?", "must_contain": "Courts of Session" }
+  ],
+  "price-schedule": [
+    { "question": "What is the ceiling price of formulation F-10001?", "must_contain": "F-10001" },
+    { "question": "Which manufacturer is listed for code F-12345?", "must_contain": "F-12345" },
+    { "question": "Price of F-14321", "must_contain": "F-14321" },
+    { "question": "What is the ceiling price of F-11000 and its schedule category?", "must_contain": "F-11000" }
+  ],
+  "inspection-report": [
+    { "question": "Which unit had a dent on the rim and how deep was it?", "must_contain": "2.1 mm" },
+    { "question": "What defect was found on the ladle weld?", "must_contain": "Hairline crack" },
+    { "question": "Which units were rejected and scrapped?", "must_contain": "rejected and scrapped" },
+    { "question": "What does the red arrow in Figure 1 point to?", "must_contain": "Dent on rim" },
+    { "question": "What is the acceptance limit for rim deformation?", "must_contain": "up to 1.0 mm" }
+  ]
+}

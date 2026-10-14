@@ -1,0 +1,27 @@
+# deps
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# env
+.env
+.env.*
+!.env.example
+
+# build
+.next/
+dist/
+out/
+
+# supabase local
+supabase/.branches/
+supabase/.temp/
+
+# samples: downloaded originals are fetched by script, generated ones are committed
+samples/raw/*.pdf
+samples/work/
+
+# misc
+.DS_Store
+*.log
