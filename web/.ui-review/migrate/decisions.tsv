@@ -1,0 +1,4 @@
+id	decision	evidence
+D1	No sidebar in the Quartz registry; the shell is the top bar with three text links and a PageHeader per page	registry.json has 83 items and none is a sidebar; project-home block imports none
+D2	Three row actions become two icon buttons plus a menu (re-process; menu: finish indexing, delete)	item-actions-two
+D3	Delete asks in an alertdialog with a written destructive button instead of window.confirm	quartz-ask-before-destructive
