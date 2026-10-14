@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Quartz design-system code is installed from its registry and kept as shipped
+    "src/components/quartz/**",
+    "src/lib/quartz/**",
   ]),
   {
     rules: {
