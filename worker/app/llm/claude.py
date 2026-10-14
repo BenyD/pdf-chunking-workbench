@@ -28,7 +28,8 @@ _client: anthropic.AsyncAnthropic | None = None
 def client() -> anthropic.AsyncAnthropic:
     global _client
     if _client is None:
-        _client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key, max_retries=4)
+        # a hung connection must not stall an ingest for the SDK default of ten minutes per attempt
+        _client = anthropic.AsyncAnthropic(api_key=settings.anthropic_api_key, max_retries=4, timeout=120.0)
     return _client
 
 

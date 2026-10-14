@@ -78,7 +78,8 @@ Uploads go straight from the browser to Supabase Storage through a signed URL, s
 - Every API route that costs money or disk is rate limited per client address (searches 30/min, answers 20/min, uploads and re-processing 10/hour, form reads 30/min). The window is kept in memory; move it to Redis/Upstash when running more than one web instance.
 - Uploads are PDF only, 150 MB at most. Questions are capped at 500 characters.
 - Processing runs in the worker as a background job with progress written to the document row; embedding is a separate resumable stage, so a provider rate limit never loses the parsed document. The worker paces embedding calls (`VOYAGE_RPM`) and retries on `Retry-After`.
-- Model calls use structured output and fall back to plain parsing; a failed figure description or suggestion never fails the document.
+- Model calls use structured output and fall back to plain parsing; a failed figure description or suggestion never fails the document. Model calls time out after two minutes so a hung connection cannot stall a document for the SDK's default ten.
+- If the embedding provider is unreachable, search still answers on keywords alone and says so in the response (`embedded: false`).
 
 ## Models and cost
 

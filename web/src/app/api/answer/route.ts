@@ -6,7 +6,7 @@ const SYSTEM = `You answer questions about a reader's documents using only the n
 Write one to three plain sentences a business reader understands at a glance; no jargon, no preamble.
 After each sentence, cite the passages it rests on like [2] or [1][3]. Only cite passages that support the sentence.
 If the passages do not contain the answer, say in one sentence that the documents do not cover it, and do not guess.
-Never mention passages, chunks, search or yourself; just answer.`;
+State the facts directly, as the document would. Never write "the passages say", "the documents mention", "based on the sources" or anything about passages, chunks, search or yourself.`;
 
 type Passage = { n: number; text: string; document_name: string; page: number };
 

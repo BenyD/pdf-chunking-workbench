@@ -294,3 +294,88 @@ chunking strategies and became one product: Documents, Search, Forms.
 concept on screen is a question in the interview that is not about the
 problem being solved. The comparison is the story of how the pipeline was
 chosen; it belongs in the conversation and in these notes, not in the product.
+
+## 14. Stress test on real pharmaceutical documents
+
+**Why.** The samples were written to exercise known failure modes. Real
+documents fail in ways nobody planned for, so on 2026-10-15 six public pharma
+PDFs went through the product unchanged: the FDA Humira prescribing
+information (100 pages, dosing tables, adverse-reaction tables, illustrated
+instructions for use), the WHO GMP main principles (TRS 986 Annex 2, 60 pages
+of numbered clauses), two NPPA ceiling-price gazette notifications (English
+and Hindi, ruled tables), the CDSCO list of new drugs approved in 2024 (a
+two-page ruled table that breaks across the page) and an Indian Pharmacopoeia
+draft monograph (Rifaximin tablets, every page under a diagonal "DRAFT FOR
+COMMENTS" watermark). Thirteen questions a pharmacist or a pricing analyst
+would ask were run across all documents at once.
+
+**What held.** Every question was answered correctly with the right citation:
+the ceiling price of Tacrolimus 1 mg (Rs 39.98) and Temozolomide 250 mg
+(Rs 3,757.94), the oxaliplatin vial price, the CDSCO approval dates and
+indications, the WHO rules on self-inspection, dedicated facilities for
+penicillins and reference-standard labels, the Humira Crohn's induction dose
+(160 mg, then 80 mg, then 40 mg), the 14-day room-temperature limit and the
+paediatric maximum dose. The layout parser produced the right tables and rows
+on all of them without any document-specific rule.
+
+**What broke, and the generic fix for each.**
+
+1. *Every ruled table also became a figure.* Table borders are zero-area line
+   segments sitting exactly on the table's edge; the figure detector's table
+   exclusion tested area overlap, which is zero for a line. Each table then
+   cost an Opus vision call that described "a table listing four new drugs".
+   Exclusion now uses a 3 pt tolerance, and a cluster that mostly overlaps a
+   table is dropped.
+2. *A watermark swallowed a monograph.* The diagonal "DRAFT FOR COMMENTS" is
+   vector text covering half the page; it clustered into a figure, the page's
+   text became its "labels", and the dissolution test lived only inside a
+   figure description. A vector-only cluster whose area is more than a fifth
+   text is now treated as decorated text, not a figure.
+3. *Fifty-eight figures in a text-only guideline.* The WHO running header is
+   drawn with hairlines; every page produced a 5%-of-page "figure" and an
+   Opus call. Clusters made only of hairlines, and full-width thin bands, are
+   never figures.
+4. *A row lost at a page break.* PyMuPDF names the first row of every ruled
+   table its header; on the CDSCO continuation page that row was drug number
+   5, and the merge kept it as a header. The header of a continuation page is
+   now put back as data unless it reads like a header (short cells, no long
+   numbers). The "(1) (2) (3)" column-number row of gazette tables is dropped
+   from ruled tables as it already was from ruling-free ones.
+5. *A hung model call stalled a document for ten minutes.* Two context calls
+   for the price schedule never returned; the SDK waits 600 s per attempt.
+   The client now times out at 120 s.
+6. *A network blip returned a server error from search.* One connect timeout
+   to the embedding provider surfaced as a 500. Query embedding now retries
+   with an 8 s limit and falls back to keyword search, and the response says
+   so.
+7. *Exact codes lost to long passages.* After the single-pipeline re-ingest,
+   "ceiling price of F-11000" ranked two 900-token table parts above the one
+   row that contains F-11000, because keyword rank rewards many header-word
+   hits and ignores length; "how is theft defined" found five sections that
+   mention theft before the one headed "Theft". Migration
+   `20261015000000_fts_codes_headings.sql` weights the context (breadcrumb and
+   situating sentence) above the body, ranks chunks containing every
+   digit-bearing query token first, and normalises ranks by length. Recall@5
+   on the samples went back to 100% on all four sets.
+
+**Cost and time, before and after** (same documents, same machine):
+
+| Document | before | after |
+|---|---|---|
+| CDSCO new drugs 2024 (2 pp) | 93 s, 2 vision calls, row 5 lost | 20 s, 0 vision calls, 6 rows |
+| NPPA notification (2 pp) | 1 spurious figure, "(1) (2)" row | 0 figures, 9 rows |
+| Rifaximin monograph (3 pp) | 4 figures, 2 text passages | 0 figures, 6 text passages |
+| WHO GMP (60 pp) | 121 s, 58 vision calls, 58 junk figures | 50 s, 0 vision calls, 80 text passages |
+| Humira label (100 pp) | 201 s, 59 vision calls, 60 figures | 181 s, 49 vision calls, 49 figures (the illustrated instructions for use; 11 decorations gone) |
+
+After the fixes, 12 of the 13 questions had their source passage at rank 1
+and the thirteenth (tirzepatide's approval) was answered correctly from the
+row at rank 1 as well; the only miss was my own check string, which expected
+the date in one format.
+
+**Still open.** Hindi text set in legacy (non-Unicode) fonts extracts as
+mojibake; the right fix is to detect the garbage ratio per page and OCR that
+page. A figure on a page without raster images still costs one Opus call;
+cheap pre-classification (is this a chart, a photo, a logo?) would cut that.
+The question set is thirteen hand-written questions; a labelled set per
+document type is the next step before any number is quoted as a benchmark.

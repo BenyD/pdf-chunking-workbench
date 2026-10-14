@@ -43,14 +43,23 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
     excl = [pymupdf.Rect(e) for e in exclude]
 
     def excluded(r: pymupdf.Rect) -> bool:
-        return any(e.contains(r) or (e & r).get_area() > 0.6 * r.get_area() for e in excl)
+        # Table borders are zero-area segments that sit exactly on the table's edge;
+        # a 3 pt tolerance keeps them with the table instead of seeding a "figure".
+        for e in excl:
+            wide = pymupdf.Rect(e.x0 - 3, e.y0 - 3, e.x1 + 3, e.y1 + 3)
+            if wide.contains(r) or (r.get_area() > 0 and (e & r).get_area() > 0.6 * r.get_area()):
+                return True
+        return False
 
     rects: list[pymupdf.Rect] = []
+    image_rects: list[pymupdf.Rect] = []
+    solid_rects: list[pymupdf.Rect] = []
     for info in page.get_image_info():
         r = pymupdf.Rect(info["bbox"]) & page.rect
         if r.is_empty or r.get_area() < 0.004 * area or excluded(r):
             continue
         rects.append(r)
+        image_rects.append(r)
     for d in page.get_drawings():
         r = pymupdf.Rect(d["rect"]) & page.rect
         if r.is_empty:
@@ -61,12 +70,31 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
         if w * h > 0.9 * area or excluded(r):
             continue
         rects.append(r)
+        if min(w, h) >= 3:
+            solid_rects.append(r)      # a shape, not a hairline
     if not rects:
         return []
 
     figs: list[FigureBlock] = []
     for c in _cluster(rects, margin=14):
         if c.get_area() < 0.02 * area or c.get_area() > 0.85 * area:
+            continue
+        has_image = any(c.intersects(i) for i in image_rects)
+        # Hairlines alone (cell borders, header rules) never make a figure, and a
+        # full-width thin band is a running header or footer decoration.
+        if not has_image and not any(c.intersects(sr) for sr in solid_rects):
+            continue
+        if c.width > 0.9 * W and c.height < 0.07 * H:
+            continue
+        # A vector-only cluster mostly covered by text is decorated text (a
+        # watermark, a box around a paragraph, a page frame), not a figure.
+        if not has_image:
+            text_area = sum(max(0.0, min(l.bbox[2], c.x1) - max(l.bbox[0], c.x0)) * max(0.0, min(l.bbox[3], c.y1) - max(l.bbox[1], c.y0))
+                            for l in lines if pymupdf.Rect(l.bbox).intersects(c))
+            if text_area > 0.2 * c.get_area():
+                continue
+        # The region already belongs to a table
+        if any((c & e).get_area() > 0.5 * c.get_area() for e in excl):
             continue
         # text sitting on the figure = labels; grow the box to include them
         grown = pymupdf.Rect(c.x0 - 6, c.y0 - 6, c.x1 + 6, c.y1 + 6)

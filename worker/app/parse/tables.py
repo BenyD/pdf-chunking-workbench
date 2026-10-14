@@ -95,7 +95,7 @@ def find_ruled_tables(page: pymupdf.Page) -> list[TableBlock]:
         else:
             header = data[0]
             rows = data[1:]
-        rows = [r for r in rows if any(r)]
+        rows = [r for r in rows if any(r) and not _is_numbered_header(r)]
         if not rows:
             continue
         # Reject "tables" that are really a boxed paragraph: 1 non-empty cell per row
@@ -109,7 +109,9 @@ def find_ruled_tables(page: pymupdf.Page) -> list[TableBlock]:
             row_objs = row_objs[1:]
         tb.row_bboxes = [tuple(r.bbox) for r in row_objs][: len(rows)]   # type: ignore[attr-defined]
         tb.row_pages = [pno] * len(rows)                                  # type: ignore[attr-defined]
-        tb.has_header_text = any(header)                                  # type: ignore[attr-defined]
+        # PyMuPDF always names the first row the header; on a continuation page
+        # that row is data (a date, a long cell) and the merge pass puts it back
+        tb.has_header_text = any(header) and _looks_like_header(header)   # type: ignore[attr-defined]
         out.append(tb)
     return out
 
