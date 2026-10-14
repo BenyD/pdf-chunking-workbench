@@ -144,7 +144,7 @@
     @apply font-sans;
   }
 }
-/* markdown rendering for the decisions page */
+/* markdown rendering for the documentation page */
 .prose-md h1 { font-size: 1.6rem; font-weight: 600; margin: 1.5rem 0 0.75rem; }
 .prose-md h2 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
 .prose-md h3 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.5rem; }

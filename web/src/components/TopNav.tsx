@@ -11,7 +11,7 @@ const NAV = [
   { href: "/search", label: "Search", icon: Search },
   { href: "/ocr", label: "Zonal OCR", icon: ScanText },
   { href: "/eval", label: "Evaluation", icon: FlaskConical },
-  { href: "/decisions", label: "Decisions", icon: BookOpenText },
+  { href: "/docs", label: "Documentation", icon: BookOpenText },
 ];
 
 export function TopNav() {

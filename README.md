@@ -7,8 +7,9 @@ strategies stored side by side so you can see and measure the difference.
 - **structural**: cuts follow headings, tables (whole and row by row) and figures; breadcrumb prepended; no model calls
 - **contextual**: structural + a model-written context sentence per chunk and an arrow-aware description per figure
 
-Read [docs/DECISIONS.md](docs/DECISIONS.md) for why each choice was made. The
-same text is served at `/decisions` in the app.
+Read [docs/DECISIONS.md](docs/DECISIONS.md) for why each choice was made (internal
+notes, not served by the app). The user guide is [docs/DOCUMENTATION.md](docs/DOCUMENTATION.md),
+served at `/docs`.
 
 ## Layout
 
@@ -17,7 +18,7 @@ web/       Next.js 16 app (UI + API routes). Deploys to Vercel.
 worker/    FastAPI + PyMuPDF + Tesseract + OpenCV. Parsing, chunking, model calls, embeddings, zonal OCR. Deploys as a Docker container.
 supabase/  Postgres schema (pgvector + full text + hybrid_search function) and local stack config.
 samples/   Generator for the synthetic sample PDFs. Output lands in web/public/samples.
-docs/      Design decisions.
+docs/      User documentation (served at /docs) and internal design notes.
 ```
 
 ## Run locally
@@ -49,7 +50,7 @@ deterministic pseudo-vectors so the pipeline runs without a Voyage key (search
 then works on full text only).
 
 Regenerate the synthetic samples: `uv run --project worker python samples/generate/make_samples.py`.
-Sync the decisions page after editing the markdown: `python3 scripts/sync-decisions.py`.
+Sync the documentation page after editing the markdown: `python3 scripts/sync-content.py`.
 
 ## Deploy
 
