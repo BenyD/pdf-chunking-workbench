@@ -128,3 +128,19 @@ def set_embeddings(pairs: list[tuple[str, list[float]]]) -> None:
             "update chunks set embedding = %s::vector where id = %s",
             [("[" + ",".join(f"{x:.6f}" for x in v) + "]", cid) for cid, v in pairs],
         )
+
+
+def sample_chunks(document_id: str, n: int = 12) -> list[dict]:
+    """A spread of structural chunks for writing question suggestions."""
+    with conn() as c:
+        return c.execute(
+            """select raw_text, chunk_type from chunks
+               where document_id = %s and strategy = 'structural' and chunk_type in ('text','table_row','figure')
+               order by random() limit %s""",
+            (document_id, n),
+        ).fetchall()
+
+
+def merge_stats(document_id: str, extra: dict) -> None:
+    with conn() as c:
+        c.execute("update documents set stats = coalesce(stats, '{}'::jsonb) || %s::jsonb where id = %s", (json.dumps(extra), document_id))

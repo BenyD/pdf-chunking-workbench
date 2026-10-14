@@ -167,3 +167,39 @@ async def ocr_fallback(png: bytes, fields: list[dict]) -> dict | None:
         {"type": "text", "text": "Extract these fields: " + ", ".join(f["name"] for f in fields)},
     ]
     return await _opus_structured(OCR_SYSTEM, content, schema, max_tokens=2000)
+
+
+SUGGEST_SYSTEM = (
+    "You write short, natural questions a reader might ask about a document, based only on the excerpts given. "
+    "Each question must be answerable from the excerpts. Mix kinds: a fact lookup, a table value, a definition, "
+    "a figure or annotation if one is present. Plain language, no numbering, no quotes, under 14 words each."
+)
+
+SUGGEST_SCHEMA = {
+    "type": "object",
+    "properties": {"questions": {"type": "array", "items": {"type": "string"}}},
+    "required": ["questions"],
+    "additionalProperties": False,
+}
+
+
+async def suggest_questions(doc_title: str, excerpts: list[str]) -> list[str]:
+    """Five or so questions the document can answer, from a sample of its chunks. Haiku, once per document."""
+    body = "\n\n---\n\n".join(e[:900] for e in excerpts[:12])
+    prompt = f"<document_title>{doc_title}</document_title>\n<excerpts>\n{body}\n</excerpts>\n\nWrite 5 questions."
+    resp = await client().messages.create(
+        model=settings.context_model,
+        max_tokens=1500,
+        system=SUGGEST_SYSTEM,
+        output_config={"effort": "low", "format": {"type": "json_schema", "schema": SUGGEST_SCHEMA}},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    if resp.stop_reason == "refusal":
+        return []
+    text = _text_of(resp)
+    try:
+        data = json.loads(text)
+        qs = [q.strip().rstrip("?") + "?" for q in data.get("questions", []) if isinstance(q, str) and q.strip()]
+    except json.JSONDecodeError:
+        qs = [l.strip("-•* ").strip() for l in text.splitlines() if l.strip()]
+    return [q for q in qs if 8 <= len(q) <= 120][:6]

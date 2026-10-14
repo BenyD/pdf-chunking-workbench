@@ -78,6 +78,7 @@ def ingest(document_id: str) -> None:
         db.delete_chunks(document_id)
         db.insert_chunks(all_rows)
         stats["llm"] = llm_usage
+        stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(structural)])
         stats["embedding_model"] = settings.embedding_model if not settings.fake_embeddings else "fake (dev)"
         stats["parse_seconds"] = round(time.time() - t0, 1)
         db.update_document(document_id, stats=stats)
@@ -86,6 +87,39 @@ def ingest(document_id: str) -> None:
     except Exception as e:  # noqa: BLE001
         log.exception("ingest failed for %s", document_id)
         db.update_document(document_id, status="error", progress={"stage": "error", "message": str(e)[:500]})
+
+
+def _spread(chunks: list[ChunkDraft], n: int = 12) -> list[ChunkDraft]:
+    """Up to n chunks spread across the document, favouring a mix of types."""
+    pool = [c for c in chunks if c.chunk_type in ("text", "table_row", "figure")]
+    if len(pool) <= n:
+        return pool
+    step = len(pool) / n
+    picked = [pool[int(i * step)] for i in range(n)]
+    figs = [c for c in pool if c.chunk_type == "figure"][:2]
+    return (figs + [c for c in picked if c not in figs])[:n]
+
+
+def suggest_for(document_id: str, title: str, excerpts: list[str]) -> list[str]:
+    """Question suggestions for the search page. Never fails the ingest."""
+    if settings.skip_llm or not excerpts:
+        return []
+    try:
+        from .llm import claude
+        return asyncio.run(claude.suggest_questions(title, excerpts))
+    except Exception as e:  # noqa: BLE001
+        log.warning("suggestions failed for %s: %s", document_id, e)
+        return []
+
+
+def suggest_existing(document_id: str) -> None:
+    """Regenerate suggestions for an already-ingested document."""
+    row = db.get_document(document_id)
+    if not row:
+        return
+    excerpts = [r["raw_text"] for r in db.sample_chunks(document_id)]
+    qs = suggest_for(document_id, row["name"].rsplit(".", 1)[0], excerpts)
+    db.merge_stats(document_id, {"suggestions": qs})
 
 
 _embed_lock = __import__("threading").Lock()

@@ -63,6 +63,15 @@ def embed(req: IngestRequest, bg: BackgroundTasks) -> dict:
     return {"queued": req.document_id, "missing": missing}
 
 
+@app.post("/suggest", status_code=202, dependencies=[Depends(require_secret)])
+def suggest(req: IngestRequest, bg: BackgroundTasks) -> dict:
+    """Write question suggestions for a document that is already ingested."""
+    if not db.get_document(req.document_id):
+        raise HTTPException(status_code=404, detail="document not found")
+    bg.add_task(pipeline.suggest_existing, req.document_id)
+    return {"queued": req.document_id}
+
+
 class OcrRunRequest(BaseModel):
     document_id: str
     page_number: int = 1
