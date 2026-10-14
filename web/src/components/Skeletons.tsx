@@ -70,3 +70,37 @@ export function EvalSkeleton() {
     </div>
   );
 }
+
+/** Whole-page placeholder used as the route Suspense fallback. */
+export function PageSkeleton({ panels = 1 }: { panels?: number }) {
+  return (
+    <div className="space-y-5">
+      <div className="space-y-2"><Skeleton className="h-7 w-44" /><Skeleton className="h-4 w-80 max-w-full" /></div>
+      <div className="flex gap-2"><Skeleton className="h-9 w-40 rounded-lg" /><Skeleton className="h-9 w-28 rounded-lg" /></div>
+      {Array.from({ length: panels }).map((_, i) => (
+        <div key={i} className="rounded-[1.75rem] bg-muted/80 p-1.5">
+          <div className="px-3.5 pt-2.5 pb-2"><Skeleton className="h-4 w-28" /></div>
+          <div className="space-y-3 rounded-[1.25rem] bg-card p-4"><Skeleton className="h-4 w-full" /><Skeleton className="h-4 w-5/6" /><Skeleton className="h-4 w-2/3" /></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Table rows placeholder, for lists that load inside a panel. */
+export function RowsSkeleton({ rows = 4, cols = 3 }: { rows?: number; cols?: number }) {
+  return (
+    <div className="divide-y">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="flex items-center gap-4 px-4 py-3">
+          {Array.from({ length: cols }).map((_, j) => <Skeleton key={j} className={j === 0 ? "h-4 flex-1" : "h-4 w-24"} />)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** Image placeholder with a page-like aspect ratio. */
+export function ImageSkeleton({ className = "" }: { className?: string }) {
+  return <Skeleton className={`aspect-[1/1.41] w-full rounded-[1rem] ${className}`} />;
+}

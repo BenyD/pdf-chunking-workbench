@@ -1,9 +1,10 @@
 import { Suspense } from "react";
+import { PageSkeleton } from "@/components/Skeletons";
 import { OcrView } from "@/components/OcrView";
 
 export default function OcrPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-500">Loading…</p>}>
+    <Suspense fallback={<PageSkeleton />}>
       <OcrView />
     </Suspense>
   );

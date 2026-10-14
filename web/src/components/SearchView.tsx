@@ -13,7 +13,8 @@ import { cn } from "@/lib/utils";
 import { StrategyChip, TypeChip } from "./Chips";
 import { EmptyState } from "./EmptyState";
 import { Panel } from "./Panel";
-import { ResultsSkeleton } from "./Skeletons";
+import { PageSkeleton, ResultsSkeleton } from "./Skeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 import { StrategyMulti } from "./StrategyToggle";
 
 type Hit = SearchResult & { page_image_url: string };
@@ -55,10 +56,10 @@ export function SearchView() {
   const docItems = [{ value: null, label: "All documents" }, ...(docs ?? []).map((d) => ({ value: d.id, label: d.name.replace(/\.pdf$/i, "") }))];
   const noHits = res && selected.every((s) => (res.results[s] ?? []).length === 0);
 
-  if (docs && docs.length === 0) {
+  if (docs === null) return <PageSkeleton panels={0} />;
+  if (docs.length === 0) {
     return (
       <div className="space-y-5">
-        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="Nothing to search yet" hint="Add a document first. Once it finishes processing it shows up here.">
             <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
@@ -70,10 +71,7 @@ export function SearchView() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Search</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Ask a question and compare what each strategy returns.</p>
-      </div>
+      <p className="text-sm text-muted-foreground">Ask a question and compare what each strategy returns.</p>
 
       <form onSubmit={(e) => { e.preventDefault(); run(); }} className="flex items-center gap-2 bg-card p-1.5 pl-4 shadow-[0_1px_2px_rgba(16,24,40,0.06)] ring-1 ring-black/10 focus-within:ring-foreground/40">
         <Search className="size-4 shrink-0 text-muted-foreground" />
@@ -156,6 +154,7 @@ function ResultCard({ r, rank, open, onToggle }: { r: Hit; rank: number; open: b
               <div className="absolute border-2 border-foreground bg-foreground/10" style={{ left: `${box.x0 * 100}%`, top: `${box.y0 * 100}%`, width: `${(box.x1 - box.x0) * 100}%`, height: `${(box.y1 - box.y0) * 100}%` }} />
             </div>
           )}
+          {!ctx && <div className="space-y-2"><Skeleton className="h-3 w-1/3" /><Skeleton className="h-3 w-full" /><Skeleton className="h-3 w-5/6" /></div>}
           {ctx?.parent && <div className="rounded-xl bg-amber-50 p-3 dark:bg-amber-950/40"><div className="mb-1 font-medium text-amber-800 dark:text-amber-200">Parent table</div><pre className="max-h-48 overflow-auto font-mono text-[11px] whitespace-pre-wrap">{ctx.parent.raw_text}</pre></div>}
           {ctx && (ctx.prev || ctx.next) && (
             <div className="grid gap-2 md:grid-cols-2">

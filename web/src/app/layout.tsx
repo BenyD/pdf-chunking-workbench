@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "./globals.css";
+import { HeaderProvider } from "@/components/HeaderContext";
 import { TopNav } from "@/components/TopNav";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -20,10 +21,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${inter.variable} ${mono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <TooltipProvider>
-          <Suspense fallback={<div className="h-14 border-b" />}>
-            <TopNav />
-          </Suspense>
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">{children}</main>
+          <HeaderProvider>
+            <Suspense fallback={<div className="h-16" />}>
+              <TopNav />
+            </Suspense>
+            <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-4 sm:px-6 sm:py-6">{children}</main>
+          </HeaderProvider>
         </TooltipProvider>
       </body>
     </html>

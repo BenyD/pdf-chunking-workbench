@@ -14,13 +14,12 @@ import { EmptyState } from "./EmptyState";
 import { Panel } from "./Panel";
 import { SamplePicker } from "./SamplePicker";
 
-type Stats = { strategies?: Record<string, { chunks: number }>; seconds?: number; llm?: { context_calls: number; vision_calls: number } };
-
 export function DocumentsHome() {
   const [docs, setDocs] = useState<Document[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [picker, setPicker] = useState(false);
+  const [pending, setPending] = useState<Record<string, "ingest" | "embed" | "delete">>({});
   const fileRef = useRef<HTMLInputElement>(null);
 
   const load = useCallback(async () => {
@@ -57,11 +56,13 @@ export function DocumentsHome() {
 
   async function act(d: Document, what: "ingest" | "embed" | "delete") {
     if (what === "delete" && !confirm(`Delete "${d.name}" and all its chunks?`)) return;
+    setPending((p) => ({ ...p, [d.id]: what }));
     try {
       if (what === "delete") await api(`/api/documents/${d.id}`, { method: "DELETE" });
       else await api(`/api/documents/${d.id}/${what}`, { method: "POST" });
       await load();
     } catch (e) { setError(String(e)); }
+    finally { setPending((p) => { const n = { ...p }; delete n[d.id]; return n; }); }
   }
 
   const loaded = new Set((docs ?? []).map((d) => d.sample_key).filter((k): k is string => !!k));
@@ -69,10 +70,7 @@ export function DocumentsHome() {
   return (
     <div className="space-y-6">
       <section className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Documents</h1>
-          <p className="mt-1 text-sm text-muted-foreground">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
-        </div>
+        <p className="text-sm text-muted-foreground">Upload a PDF or load the sample set. Each document is chunked three ways and ready to search within minutes.</p>
         {docs !== null && docs.length > 0 && <div className="flex flex-wrap items-center gap-2">
           {busy && <span className="flex items-center gap-1.5 text-sm text-muted-foreground"><Loader2 className="size-3.5 animate-spin" />{busy}</span>}
           <Button variant="outline" disabled={!!busy} nativeButton={false} render={<label />}>
@@ -107,14 +105,11 @@ export function DocumentsHome() {
                     <TableHead>Document</TableHead>
                     <TableHead className="hidden sm:table-cell">Pages</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">Chunks</TableHead>
-                    <TableHead className="hidden lg:table-cell">Processed in</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {docs.map((d) => {
-                    const st = (d.stats ?? {}) as Stats;
                     const pct = d.progress?.total ? Math.round(((d.progress.done ?? 0) / d.progress.total) * 100) : null;
                     return (
                       <TableRow key={d.id}>
@@ -139,9 +134,9 @@ export function DocumentsHome() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="inline-flex gap-0.5">
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "ingest")} />}><RefreshCw /></TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" onClick={() => act(d, "embed")} />}><Orbit /></TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
-                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" onClick={() => act(d, "delete")} />}><Trash2 /></TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "ingest")} />}>{pending[d.id] === "ingest" ? <Loader2 className="animate-spin" /> : <RefreshCw />}</TooltipTrigger><TooltipContent>Re-ingest (parse, chunk, context, embed)</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" disabled={!!pending[d.id]} onClick={() => act(d, "embed")} />}>{pending[d.id] === "embed" ? <Loader2 className="animate-spin" /> : <Orbit />}</TooltipTrigger><TooltipContent>Embed chunks that have no vector yet</TooltipContent></Tooltip>
+                            <Tooltip><TooltipTrigger render={<Button variant="ghost" size="icon-sm" className="text-destructive" disabled={!!pending[d.id]} onClick={() => act(d, "delete")} />}>{pending[d.id] === "delete" ? <Loader2 className="animate-spin" /> : <Trash2 />}</TooltipTrigger><TooltipContent>Delete document</TooltipContent></Tooltip>
                           </div>
                         </TableCell>
                       </TableRow>

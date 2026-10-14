@@ -14,6 +14,7 @@ import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/typ
 import { api, publicAsset } from "@/lib/ui";
 import { cn } from "@/lib/utils";
 import { EmptyState } from "./EmptyState";
+import { ImageSkeleton, PageSkeleton } from "./Skeletons";
 import { Panel } from "./Panel";
 import { Pill } from "./Chips";
 
@@ -31,6 +32,8 @@ export function OcrView() {
   const [templates, setTemplates] = useState<OcrTemplate[]>([]);
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
   const [srcPages, setSrcPages] = useState<Page[]>([]);
+  const [srcLoading, setSrcLoading] = useState(false);
+  const [tgtLoading, setTgtLoading] = useState(false);
   const [srcPage, setSrcPage] = useState(1);
   const [mode, setMode] = useState<"field" | "anchor">("field");
   const [name, setName] = useState("New template");
@@ -56,8 +59,8 @@ export function OcrView() {
     }).catch(() => {});
     void loadTemplates();
   }, [loadTemplates]);
-  useEffect(() => { if (srcDoc) api<{ pages: Page[] }>(`/api/documents/${srcDoc}`).then((r) => { setSrcPages(r.pages); setSrcPage(1); setWords(null); }); }, [srcDoc]);
-  useEffect(() => { if (tgtDoc) api<{ pages: Page[] }>(`/api/documents/${tgtDoc}`).then((r) => { setTgtPages(r.pages); setTgtPage(1); setResult(null); }); }, [tgtDoc]);
+  useEffect(() => { if (srcDoc) { setSrcLoading(true); api<{ pages: Page[] }>(`/api/documents/${srcDoc}`).then((r) => { setSrcPages(r.pages); setSrcPage(1); setWords(null); }).finally(() => setSrcLoading(false)); } }, [srcDoc]);
+  useEffect(() => { if (tgtDoc) { setTgtLoading(true); api<{ pages: Page[] }>(`/api/documents/${tgtDoc}`).then((r) => { setTgtPages(r.pages); setTgtPage(1); setResult(null); }).finally(() => setTgtLoading(false)); } }, [tgtDoc]);
 
   async function detectWords() {
     setBusy("Detecting words…"); setErr(null);
@@ -97,10 +100,10 @@ export function OcrView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(null); }
   }
 
-  if (docs && docs.length === 0) {
+  if (docs === null) return <PageSkeleton panels={2} />;
+  if (docs.length === 0) {
     return (
       <div className="space-y-5">
-        <h1 className="text-2xl font-semibold tracking-tight">Zonal OCR</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="No documents to work on" hint="Load the samples to get the pharmacy bills, or upload a scanned form of your own.">
             <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
@@ -118,10 +121,7 @@ export function OcrView() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Zonal OCR</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Draw the fields once on a sample form, then run the template on any scan of the same form.</p>
-      </div>
+      <p className="text-sm text-muted-foreground">Draw the fields once on a sample form, then run the template on any scan of the same form.</p>
       {err && <Alert variant="destructive"><AlertDescription>{err}</AlertDescription></Alert>}
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -139,13 +139,14 @@ export function OcrView() {
               </div>
               {words && <Label className="flex items-center gap-1.5 text-xs"><Checkbox checked={showWords} onCheckedChange={(c) => setShowWords(!!c)} /> show words</Label>}
             </div>
-            {sp ? (
+            {srcLoading && <ImageSkeleton />}
+            {!srcLoading && sp ? (
               <DrawableViewer imageUrl={pageUrl(sp)} onDraw={onDraw}>
                 {showWords && (words ?? []).map((w, i) => <div key={i} title={`${w.text} (${w.conf})`} className="absolute border border-muted-foreground/40 bg-muted-foreground/5" style={pct(w.box)} />)}
                 {fields.filter((f) => f.page === srcPage).map((f, i) => <div key={`f${i}`} className="absolute border-2 border-primary bg-primary/10" style={pct(f.box)}><span className="absolute -top-4 left-0 rounded bg-primary px-1 text-[10px] text-primary-foreground">{f.name}</span></div>)}
                 {anchors.filter((a) => a.page === srcPage).map((a, i) => <div key={`a${i}`} className="absolute border-2 border-dashed border-emerald-600 bg-emerald-500/10" style={pct(a.box)}><span className="absolute -top-4 left-0 rounded bg-emerald-600 px-1 text-[10px] text-white">⚓ {a.text}</span></div>)}
               </DrawableViewer>
-            ) : <p className="text-sm text-muted-foreground">No rendered page. Ingest a document first.</p>}
+            ) : !srcLoading && <p className="text-sm text-muted-foreground">No rendered page. Ingest a document first.</p>}
 
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2"><Label className="w-24 text-xs text-muted-foreground">Template</Label><Input value={name} onChange={(e) => setName(e.target.value)} className="h-8" /></div>
@@ -196,10 +197,12 @@ export function OcrView() {
                 <Button size="sm" onClick={run} disabled={!!busy || !fields.length}><Play data-icon="inline-start" />Run template</Button>
               </div>
             </div>
-            {tp && (
+            {tgtLoading && <ImageSkeleton />}
+            {!tgtLoading && tp && (
               <div className="relative overflow-hidden rounded-[1rem] bg-white ring-1 ring-black/5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={pageUrl(tp)} alt="target page" className="block w-full" />
+                {busy === "Running OCR…" && <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[1px]"><span className="flex items-center gap-2 rounded-full bg-card px-3 py-1.5 text-sm shadow-sm ring-1 ring-black/5"><Loader2 className="size-4 animate-spin" />Reading fields</span></div>}
                 {tgtBoxes.map((b, i) => (
                   <div key={i} className={cn("absolute border-2", result ? (b.ok ? "border-emerald-600 bg-emerald-500/10" : "border-amber-500 bg-amber-500/10") : "border-dashed border-primary/60")} style={pct(b.box)}><span className="absolute -top-4 left-0 rounded bg-foreground px-1 text-[10px] text-background">{b.label}</span></div>
                 ))}

@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import type { Document, EvalQuestion, Strategy } from "@/lib/types";
 import { api, STRATEGY_INFO } from "@/lib/ui";
 import { Pill, StrategyChip } from "./Chips";
-import { EvalSkeleton } from "./Skeletons";
+import { EvalSkeleton, PageSkeleton, RowsSkeleton } from "./Skeletons";
 import { EmptyState } from "./EmptyState";
 import { Panel } from "./Panel";
 
@@ -25,6 +25,7 @@ export function EvalView() {
   const [docs, setDocs] = useState<Document[] | null>(null);
   const [docId, setDocId] = useState<string | null>(sp.get("document_id"));
   const [questions, setQuestions] = useState<EvalQuestion[]>([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
   const [k, setK] = useState(5);
   const [draft, setDraft] = useState({ question: "", must_contain: "", expected_page: "" });
   const [result, setResult] = useState<RunResult | null>(null);
@@ -40,7 +41,8 @@ export function EvalView() {
   }, []);
   useEffect(() => {
     if (!docId) return;
-    api<{ questions: EvalQuestion[] }>(`/api/eval/questions?document_id=${docId}`).then((r) => setQuestions(r.questions)).catch(() => {});
+    setQuestionsLoading(true);
+    api<{ questions: EvalQuestion[] }>(`/api/eval/questions?document_id=${docId}`).then((r) => setQuestions(r.questions)).catch(() => {}).finally(() => setQuestionsLoading(false));
     setResult(null);
   }, [docId]);
 
@@ -59,10 +61,10 @@ export function EvalView() {
 
   const docItems = (docs ?? []).map((d) => ({ value: d.id, label: d.name }));
 
-  if (docs && docs.length === 0) {
+  if (docs === null) return <PageSkeleton />;
+  if (docs.length === 0) {
     return (
       <div className="space-y-5">
-        <h1 className="text-2xl font-semibold tracking-tight">Evaluation</h1>
         <Panel>
           <EmptyState icon={<FileText />} title="Nothing to evaluate yet" hint="Add a document, then write a few questions with the phrase a correct answer must contain.">
             <Button nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
@@ -74,10 +76,7 @@ export function EvalView() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Evaluation</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Recall@k for each strategy on the same questions.</p>
-      </div>
+      <p className="text-sm text-muted-foreground">Recall@k for each strategy on the same questions.</p>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
         <Select value={docId} onValueChange={(v) => setDocId(v as string | null)} items={docItems}>
           <SelectTrigger className="w-full bg-card sm:w-80"><SelectValue placeholder="Pick a document" /></SelectTrigger>
@@ -106,10 +105,11 @@ export function EvalView() {
 
       <Panel title="Questions" description="A hit means a top result contains the expected phrase." bodyClassName="p-0 sm:px-2">
         <div>
-          {questions.length === 0 && (
+          {questionsLoading && <RowsSkeleton rows={4} cols={3} />}
+          {!questionsLoading && questions.length === 0 && (
             <EmptyState icon={<ListChecks />} title="No questions for this document" hint="Add one below. Sample documents come with a ready-made set." className="py-8" />
           )}
-          <div className="overflow-x-auto">
+          <div className={questionsLoading ? "hidden" : "overflow-x-auto"}>
             <Table>
               <TableHeader>
                 <TableRow>

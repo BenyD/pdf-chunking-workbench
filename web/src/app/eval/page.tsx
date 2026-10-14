@@ -1,9 +1,10 @@
 import { Suspense } from "react";
+import { PageSkeleton } from "@/components/Skeletons";
 import { EvalView } from "@/components/EvalView";
 
 export default function EvalPage() {
   return (
-    <Suspense fallback={<p className="text-sm text-zinc-500">Loading…</p>}>
+    <Suspense fallback={<PageSkeleton />}>
       <EvalView />
     </Suspense>
   );
