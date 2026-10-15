@@ -10,6 +10,7 @@ import { Button } from "@/components/quartz/ui/button";
 import { ButtonGroup, ButtonGroupText } from "@/components/quartz/ui/button-group";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardMeta, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
+import { Chip, ChipGroup } from "@/components/quartz/ui/chip";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLinkItem, DropdownMenuTrigger } from "@/components/quartz/ui/dropdown-menu";
 import { Empty, EmptyDescription, EmptyHeader, EmptyRetry, EmptyStatus, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Input } from "@/components/quartz/ui/input";
@@ -18,12 +19,15 @@ import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription
 import { Progress, ProgressLabel, ProgressStep, ProgressStepDescription, ProgressStepIndicator, ProgressStepSeparator, ProgressStepText, ProgressStepTitle, ProgressStepTrigger, ProgressSteps, ProgressValue } from "@/components/quartz/ui/progress";
 import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
+import { cn } from "@/lib/quartz/utils";
 import type { Chunk, Document, Page } from "@/lib/types";
 import { STRATEGY } from "@/lib/types";
 import { api, fmtNum, publicAsset, stageLabel } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel, type Overlay } from "./PageViewer";
 
 /** The widths a page can be shown at, as a share of the viewer; 1 fits the width. */
+/** The chunks API caps a page at a thousand rows. */
+const PAGE_SIZE = 1000;
 const ZOOMS = [0.5, 0.75, 1, 1.5, 2, 3];
 
 /** The four things that happen to a document, in the words a reader needs; the worker's finer stages map onto them. */
@@ -51,6 +55,7 @@ export function Explorer({ id }: { id: string }) {
   const [chunks, setChunks] = useState<Chunk[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [showRows, setShowRows] = useState(false);
+  const [scope, setScope] = useState<"page" | "all">("all");   // list every passage, or only the page in view
   const [zoom, setZoom] = useState(1);
   const [err, setErr] = useState<string | null>(null);
   const scroller = useRef<HTMLDivElement | null>(null);
@@ -80,17 +85,28 @@ export function Explorer({ id }: { id: string }) {
     const t = setInterval(() => loadDoc().catch(() => {}), 2500);
     return () => clearInterval(t);
   }, [doc, loadDoc]);
-  // The passages of the page in view. A short wait lets a scroll settle before fetching.
+  // The passages listed: the whole document in pages of a thousand, or only the page in view, where a short
+  // wait lets a scroll settle before fetching. wantPage is null in the whole-document mode so scrolling never refetches.
+  const wantPage = scope === "page" ? pageNo : null;
   useEffect(() => {
     if (!doc || doc.status !== "ready") return;
     setChunks(null);
-    const t = setTimeout(() => {
-      api<{ chunks: Chunk[] }>(`/api/documents/${id}/chunks?strategy=${STRATEGY}&page=${pageNo}&limit=1000`)
-        .then((r) => { setChunks(r.chunks); setSelected(null); })
-        .catch((e) => setErr(String(e)));
-    }, 150);
-    return () => clearTimeout(t);
-  }, [id, pageNo, doc]);
+    let stale = false;
+    const t = setTimeout(async () => {
+      try {
+        const base = `/api/documents/${id}/chunks?strategy=${STRATEGY}&limit=${PAGE_SIZE}`;
+        const out: Chunk[] = [];
+        if (wantPage !== null) out.push(...(await api<{ chunks: Chunk[] }>(`${base}&page=${wantPage}`)).chunks);
+        else for (let offset = 0; ; offset += PAGE_SIZE) {
+          const r = await api<{ chunks: Chunk[] }>(`${base}&offset=${offset}`);
+          out.push(...r.chunks);
+          if (r.chunks.length < PAGE_SIZE) break;
+        }
+        if (!stale) { setChunks(out); setSelected(null); }
+      } catch (e) { if (!stale) setErr(String(e)); }
+    }, wantPage !== null ? 150 : 0);
+    return () => { stale = true; clearTimeout(t); };
+  }, [id, wantPage, doc]);
 
   // The page most in view is the current page. Observed inside the viewer, so the window's own scroll never counts.
   const pageCount = pages.length;
@@ -112,6 +128,15 @@ export function Explorer({ id }: { id: string }) {
 
   const zoomTo = (step: number) => setZoom((z) => ZOOMS[Math.min(ZOOMS.length - 1, Math.max(0, ZOOMS.indexOf(z) + step))]);
   const visible = useMemo(() => (chunks ?? []).filter((c) => showRows || c.chunk_type !== "table_row"), [chunks, showRows]);
+  // With every passage listed, the list follows the viewer: the first passage of the page in view is scrolled to the top.
+  const listRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const list = listRef.current;
+    if (scope !== "all" || !list) return;
+    const first = visible.find((c) => c.page_start <= pageNo && pageNo <= c.page_end);
+    const el = first ? list.querySelector<HTMLElement>(`[data-chunk="${first.id}"]`) : null;
+    if (el) list.scrollTo({ top: el.offsetTop, behavior: "smooth" });
+  }, [scope, pageNo, visible]);
   const overlays: Overlay[] = useMemo(() => visible.flatMap((c) => c.bboxes.filter((b) => b.page === pageNo).map((b, i) => ({
     id: `${c.id}:${i}`, type: c.chunk_type, box: b, selected: selected === c.id, label: `${typeLabel[c.chunk_type]} passage on page ${pageNo}`,
   }))), [visible, pageNo, selected]);
@@ -119,6 +144,8 @@ export function Explorer({ id }: { id: string }) {
   const total = doc?.page_count ?? 1;
   const title = doc ? doc.name.replace(/\.pdf$/i, "") : "";
   const go = (n: number) => { const t = Math.min(Math.max(1, n), total); setPageNo(t); scrollTo(t); };
+  /** Open a passage; when it sits on another page, the viewer goes there too. */
+  const pick = (c: Chunk) => { setSelected(c.id); if (pageNo < c.page_start || pageNo > c.page_end) go(c.page_start); };
 
   return (
     <>
@@ -253,13 +280,18 @@ export function Explorer({ id }: { id: string }) {
                 <Card>
                   <CardHeader>
                     <CardTitle>Passages</CardTitle>
-                    <CardMeta>{chunks === null ? (doc.status === "ready" ? "Loading" : stageLabel(doc.progress.stage)) : `${visible.length} on this page`}</CardMeta>
-                    <CardAction>
-                      <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Show each table row</label>
-                    </CardAction>
+                    <CardMeta>{chunks === null ? (doc.status === "ready" ? "Loading" : stageLabel(doc.progress.stage)) : `${fmtNum(visible.length)} ${scope === "page" ? "on this page" : "in the document"}`}</CardMeta>
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-col gap-4">
+                      {/* The controls sit in a row of their own, like the zoom row opposite, so they wrap on a phone instead of crowding the title. */}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <ChipGroup aria-label="Which passages to list">
+                          <Chip pressed={scope === "all"} onPressedChange={() => setScope("all")}>All pages</Chip>
+                          <Chip pressed={scope === "page"} onPressedChange={() => setScope("page")}>This page</Chip>
+                        </ChipGroup>
+                        <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Show each table row</label>
+                      </div>
                       {sel && <PassageDetail chunk={sel} onClose={() => setSelected(null)} />}
                       <SkeletonSwap
                         loading={chunks === null}
@@ -269,21 +301,22 @@ export function Explorer({ id }: { id: string }) {
                         {chunks !== null && visible.length === 0 && (
                           <Empty variant="plain" size="sm">
                             <EmptyHeader>
-                              <EmptyTitle>Nothing on this page</EmptyTitle>
-                              <EmptyDescription>This page has no text we could read, or only table rows. Tick Show each table row to list those.</EmptyDescription>
+                              <EmptyTitle>{scope === "page" ? "Nothing on this page" : "Nothing to list"}</EmptyTitle>
+                              <EmptyDescription>{scope === "page" ? "This page has" : "The document has"} no text we could read, or only table rows. Tick Show each table row to list those.</EmptyDescription>
                             </EmptyHeader>
                           </Empty>
                         )}
                         {visible.length > 0 && (
+                          <div ref={listRef} className={cn("relative", scope === "all" && "max-h-[75dvh] overflow-auto")}>
                           <ItemGroup>
                             <ul>
                               {visible.map((c) => (
-                                <li key={c.id}>
+                                <li key={c.id} data-chunk={c.id}>
                                   <Item kind={chunkKind[c.chunk_type]} selected={selected === c.id}>
                                     <ItemContent>
                                       <ItemTitle>
                                         <Badge kind={chunkKind[c.chunk_type]} label={typeLabel[c.chunk_type]} />
-                                        <ItemLink href="#passage" aria-current={selected === c.id ? "true" : undefined} onClick={(e) => { e.preventDefault(); setSelected(c.id); }}>
+                                        <ItemLink href="#passage" aria-current={selected === c.id ? "true" : undefined} onClick={(e) => { e.preventDefault(); pick(c); }}>
                                           {c.page_end !== c.page_start ? `Pages ${c.page_start} to ${c.page_end}` : `Page ${c.page_start}`}
                                         </ItemLink>
                                       </ItemTitle>
@@ -294,6 +327,7 @@ export function Explorer({ id }: { id: string }) {
                               ))}
                             </ul>
                           </ItemGroup>
+                          </div>
                         )}
                       </SkeletonSwap>
                     </div>
