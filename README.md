@@ -91,6 +91,58 @@ Uploads go straight from the browser to Supabase Storage through a signed URL, s
 - Model calls use structured output and fall back to plain parsing; a failed figure description or suggestion never fails the document. Model calls time out after two minutes so a hung connection cannot stall a document for the SDK's default ten.
 - If the embedding provider is unreachable, search still answers on keywords alone and says so in the response (`embedded: false`).
 
+## Deploy
+
+Three pieces, each on the service that fits it. The commands below are what
+was run for the demo; the secret values live only in the hosting dashboards
+and in the two local env files.
+
+**Database and storage: Supabase.** One project, with the migrations pushed
+and the public bucket the first migration creates.
+
+```bash
+supabase projects create chunklab --org-id <org> --region ap-south-1 --db-password <generated>
+supabase link --project-ref <ref> -p <password>
+supabase db push -p <password>
+supabase projects api-keys --project-ref <ref>      # anon and service_role keys
+```
+
+The worker connects through the session pooler
+(`postgresql://postgres.<ref>:<password>@aws-0-<region>.pooler.supabase.com:5432/postgres`),
+which answers over IPv4; the direct host does not on the free tier.
+
+**Worker: a Cloudflare container.** The worker needs PyMuPDF and Tesseract,
+native code that Cloudflare Workers cannot run, so it runs as a container
+built from `worker/Dockerfile` behind a small Worker that forwards every
+request to it (`deploy/cloudflare`). Needs Docker locally and the Workers
+paid plan.
+
+```bash
+cd deploy/cloudflare && npm install
+npm run deploy                                       # builds and pushes the image, deploys the Worker
+npx wrangler secret bulk secrets.json                # DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
+                                                     # STORAGE_BUCKET, WORKER_SECRET, ANTHROPIC_API_KEY,
+                                                     # VOYAGE_API_KEY, VOYAGE_RPM, VOYAGE_MAX_TOKENS_PER_REQUEST
+curl https://chunklab-worker.<account>.workers.dev/health
+```
+
+The container sleeps two hours after its last request and wakes on the
+next one, which takes a few seconds; an ingest started before it sleeps
+runs to the end.
+
+**Web app: Vercel.** The `web` folder is the project root.
+
+```bash
+cd web && vercel link --yes --project chunklab --scope <team>
+vercel env add NEXT_PUBLIC_SUPABASE_URL production    # and SUPABASE_SERVICE_ROLE_KEY, WORKER_URL, WORKER_SECRET,
+                                                      # ANTHROPIC_API_KEY, VOYAGE_API_KEY, EMBEDDING_MODEL, NEXT_PUBLIC_FORMS
+vercel deploy --prod
+```
+
+`WORKER_URL` is the Worker's address and `WORKER_SECRET` must match the one
+given to the container. Samples load from the deployment itself, so nothing
+else needs uploading.
+
 ## Models and cost
 
 | Step | Model | Notes |
