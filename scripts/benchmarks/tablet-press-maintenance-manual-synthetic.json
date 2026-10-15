@@ -1,0 +1,11 @@
+{
+  "document": "Tablet press maintenance manual (synthetic).pdf",
+  "generated": "2026-10-15",
+  "model": "hand-written",
+  "note": "Each question asks where a part is on a drawing whose arrows carry only a letter or number; the key is a table on page 3. The right passage is the figure on the expected page, holding the key's words. Figure 4's letters are printed text (bound without a model); Figure 5's numbers are drawn inside the photo (bound only after the vision model reads them).",
+  "questions": [
+    {"question": "On the turret drawing, which lettered part is checked for pitting on the punch tips?", "must_contain": "C = Lower punch", "expected_page": 1, "answer": "C, the lower punch.", "chunk_type": "figure"},
+    {"question": "What does the arrow marked D point to in the turret figure?", "must_contain": "D = Feed frame", "expected_page": 1, "answer": "The feed frame.", "chunk_type": "figure"},
+    {"question": "Which numbered part in the cleaning photo is the paddle wheel, and what is it cleaned with?", "must_contain": "2 = Paddle wheel", "expected_page": 2, "answer": "Part 2, cleaned with isopropyl alcohol 70%.", "chunk_type": "figure"}
+  ]
+}

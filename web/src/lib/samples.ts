@@ -15,6 +15,10 @@ export const SAMPLES: { key: string; file: string; name: string; blurb: string; 
   { key: "pharmacy-bill-2", file: "pharmacy-bill-2.pdf", name: "Pharmacy bill 2 (synthetic).pdf", blurb: "The same bill with a different patient and items.", pages: 1 },
   { key: "pharmacy-bill-3-scan", file: "pharmacy-bill-3-scan.pdf", name: "Pharmacy bill 3 scanned (synthetic).pdf",
     blurb: "A crooked, shifted scan of the same bill, with no text layer.", pages: 1 },
+  { key: "maintenance-manual", file: "maintenance-manual.pdf", name: "Tablet press maintenance manual (synthetic).pdf",
+    blurb: "Drawings marked only with letters and numbers, explained by tables on another page.", pages: 3 },
+  { key: "sop-stability", file: "sop-stability.pdf", name: "SOP-QC-014 Stability and reserve samples (synthetic).pdf",
+    blurb: "A company SOP with known gaps, to check line by line against 21 CFR Part 211.", pages: 1 },
 ];
 
 // A4 is 595 x 842 pt. Boxes are fractions of the page. Values printed at x=120 (labels at 50).

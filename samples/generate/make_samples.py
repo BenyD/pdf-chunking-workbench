@@ -6,8 +6,11 @@ no real patients, no real prices.
   pharmacy-bill-2.pdf      same layout, other data      -> zonal OCR target
   pharmacy-bill-3-scan.pdf same layout, rotated/shifted image-only scan -> OCR path + registration
   price-schedule.pdf       a ruled table running across 150 pages (~4,500 rows) -> scale test
+  maintenance-manual.pdf   drawings marked with bare letters and numbers; the keys are tables on another page
+  sop-stability.pdf        an SOP to check against 21 CFR 211.137, 211.166 and 211.170, with known gaps
 
-Run:  uv run --project worker python samples/generate/make_samples.py
+Run:  uv run --project worker python samples/generate/make_samples.py            (all)
+      uv run --project worker python samples/generate/make_samples.py manual     (just the manual)
 """
 from __future__ import annotations
 
@@ -375,9 +378,184 @@ def make_price_schedule(pages: int = 150, rows_per_page: int = 30) -> None:
     print(f"price-schedule.pdf {doc.page_count} pages, {total_rows} rows")
 
 
+# ---------------------------------------------------------------------------
+# 5. maintenance manual: bare callout labels, keys on another page
+# ---------------------------------------------------------------------------
+
+def turret_image(path: Path) -> None:
+    """A plain line drawing of a rotary tablet press turret. No text: the labels go on as PDF text."""
+    im = Image.new("RGB", (900, 600), "white")
+    d = ImageDraw.Draw(im)
+    d.rectangle([120, 470, 780, 520], outline="black", width=4)                   # base
+    d.rectangle([260, 120, 640, 200], outline="black", width=4)                   # upper punch guide (cam drum)
+    for x in range(290, 621, 55):
+        d.line([x, 200, x, 268], fill="black", width=7)                            # upper punches
+        d.line([x, 352, x, 430], fill="black", width=7)                            # lower punches
+    d.ellipse([200, 262, 700, 358], outline="black", width=5)                     # die table
+    for x in range(290, 621, 55):
+        d.ellipse([x - 9, 303, x + 9, 317], outline="black", width=3)              # die bores
+    d.rectangle([260, 430, 640, 470], outline="black", width=4)                   # lower cam drum
+    d.polygon([(560, 268), (730, 268), (750, 296), (580, 296)], outline="black", width=4)   # feed frame
+    d.polygon([(640, 60), (770, 60), (730, 262), (690, 262)], outline="black", width=4)     # hopper
+    im.filter(ImageFilter.SMOOTH).save(path)
+
+
+def feed_frame_photo(path: Path) -> None:
+    """A photo-like view of the feed frame taken apart, with numbered callouts drawn INTO the image."""
+    r = random.Random(7)
+    im = Image.new("RGB", (900, 560), (205, 207, 203))
+    px = im.load()
+    for _ in range(26000):                                                          # bench texture
+        x, y = r.randrange(900), r.randrange(560)
+        g = r.randrange(185, 225)
+        px[x, y] = (g, g + 2, g - 2)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([90, 150, 470, 420], 18, fill=(168, 172, 176), outline=(90, 92, 95), width=5)   # frame body
+    d.ellipse([560, 120, 800, 360], fill=(180, 184, 188), outline=(80, 82, 85), width=5)                # paddle wheel
+    for a in range(0, 360, 45):
+        cx, cy = 680, 240
+        d.line([cx, cy, cx + 105 * math.cos(math.radians(a)), cy + 105 * math.sin(math.radians(a))], fill=(80, 82, 85), width=8)
+    d.rectangle([540, 430, 820, 470], fill=(150, 154, 158), outline=(70, 72, 75), width=4)              # scraper blade
+    im = im.filter(ImageFilter.GaussianBlur(0.8))
+    d = ImageDraw.Draw(im)
+    try:
+        from PIL import ImageFont
+        font = ImageFont.load_default(size=34)
+    except Exception:  # noqa: BLE001
+        font = None
+    for n, (tx, ty), (ax, ay) in [(1, (60, 70), (180, 160)), (2, (840, 60), (760, 150)), (3, (470, 500), (560, 450))]:
+        d.line([tx + 18, ty + 18, ax, ay], fill=(200, 20, 20), width=5)
+        d.ellipse([tx - 4, ty - 4, tx + 40, ty + 40], fill="white", outline=(200, 20, 20), width=5)
+        d.text((tx + 8, ty), str(n), fill=(200, 20, 20), font=font)
+    im.save(path, quality=90)
+
+
+def make_manual() -> None:
+    doc = pymupdf.open()
+    turret, frame = WORK / "turret.png", WORK / "feed-frame.jpg"
+    turret_image(turret)
+    feed_frame_photo(frame)
+
+    p = doc.new_page(width=A4.width, height=A4.height)
+    text(p, 50, 60, "TP-36 rotary tablet press: maintenance manual (synthetic)", 15, bold=True)
+    text(p, 50, 100, "4. Turret assembly", 12, bold=True)
+    paragraph(p, pymupdf.Rect(50, 110, 545, 175),
+              "Figure 4 shows the turret of the TP-36 press from the front. The parts are marked with letters "
+              "only; what each letter is, what to check on it and how often are given in Table 6 on page 3. "
+              "Inspect the turret before every batch and record the result in the batch record.")
+    fig = pymupdf.Rect(70, 190, 525, 493)
+    p.insert_image(fig, filename=str(turret))
+    # Callout letters as PDF text, with arrows drawn over the drawing: the labels a parser can read.
+    # Targets in page points: the image (900 x 600 px) fills 70..525 x 190..493, about 0.506 pt per px.
+    for lab, (lx, ly), (ax, ay) in [("A", (90, 215), (225, 262)), ("B", (505, 330), (405, 350)),
+                                    ("C", (90, 420), (244, 393)), ("D", (505, 245), (445, 330))]:
+        text(p, lx, ly, lab, 14, bold=True, color=RED)
+        arrow(p, (lx + 12 if lx < 300 else lx - 4, ly - 5), (ax, ay))
+    text(p, 70, 512, "Figure 4. Turret assembly, front view.", 9.5)
+
+    p = doc.new_page(width=A4.width, height=A4.height)
+    text(p, 50, 60, "5. Cleaning the feed frame", 12, bold=True)
+    paragraph(p, pymupdf.Rect(50, 70, 545, 140),
+              "Take the feed frame apart after every product change. Figure 5 shows the parts laid out on the "
+              "bench, numbered in the photo; Table 7 on page 3 says what each numbered part is and what to clean "
+              "it with. Dry every part fully before it goes back on the press.")
+    p.insert_image(pymupdf.Rect(70, 150, 525, 433), filename=str(frame))
+    text(p, 70, 450, "Figure 5. Feed frame taken apart for cleaning.", 9.5)
+
+    p = doc.new_page(width=A4.width, height=A4.height)
+    text(p, 50, 60, "6. Keys to the figures", 12, bold=True)
+    text(p, 50, 95, "Table 6. Key to Figure 4", 10, bold=True)
+    ruled_table(p, 50, 102, [50, 140, 200, 105], ["Label", "Part", "What to check", "Interval"], [
+        ["A", "Upper punch guide", "Wear on the cam track", "Weekly"],
+        ["B", "Die table", "Cracks around the die bores", "Every batch"],
+        ["C", "Lower punch", "Pitting on the punch tips", "Weekly"],
+        ["D", "Feed frame", "Powder build-up under the frame", "Every batch"],
+    ], size=9, row_h=18)
+    text(p, 50, 225, "Table 7. Key to Figure 5", 10, bold=True)
+    ruled_table(p, 50, 232, [50, 140, 200, 105], ["No.", "Part", "Clean with", "Then"], [
+        ["1", "Feed frame body", "Warm water and neutral detergent", "Air dry"],
+        ["2", "Paddle wheel", "Isopropyl alcohol 70%", "Air dry"],
+        ["3", "Scraper blade", "Isopropyl alcohol 70%", "Check edge"],
+    ], size=9, row_h=18)
+    doc.save(OUT / "maintenance-manual.pdf", garbage=3, deflate=True)
+    print(f"maintenance-manual.pdf {doc.page_count} pages")
+
+
+# ---------------------------------------------------------------------------
+# 6. an SOP with known gaps against 21 CFR 211.137, 211.166 and 211.170
+# ---------------------------------------------------------------------------
+# What it deliberately leaves out, so a gap check can be graded:
+#   211.166(b)  sets a tentative expiry from accelerated data but never says the long-term study must go on
+#               until that date is verified
+#   211.170(a)  keeps no reserve samples of active ingredients at all
+#   211.170(b)  never examines reserve samples visually once a year
+#   211.170(b)(1) keeps reserve samples six months after expiry, where the rule says one year
+# and what is out of its scope (tablets and capsules only): reconstitution, homeopathic products,
+# allergenic extracts, radioactive drugs, investigational products and OTC exemptions.
+
+SOP_SECTIONS = [
+    ("1. Purpose", "To define how stability studies are planned and run, how expiry dates are assigned and printed, "
+     "and how reserve samples of finished product are kept, for products made at the Chennai site."),
+    ("2. Scope", "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, "
+     "products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or "
+     "investigational products."),
+    ("3. Responsibilities", "The QC manager writes and approves each stability protocol. QA approves the protocol, "
+     "reviews every stability report and owns this procedure. Stores keeps the retention room."),
+    ("4. Stability programme", "4.1 Every product has a written stability protocol, approved by QA, and the protocol "
+     "is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time "
+     "point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 "
+     "months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH "
+     "(accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test "
+     "methods are used (SOP-QC-002). 4.5 Stability samples are packed in the same container-closure system as the "
+     "marketed product. 4.6 At least three production batches of each product are placed on stability, and every "
+     "result is recorded in the stability database."),
+    ("5. Expiry dating", "5.1 The expiry date of each product is set from its long-term stability data and is "
+     "printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months "
+     "of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example "
+     "Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by "
+     "21 CFR 201.17."),
+    ("6. Reserve samples", "6.1 An identified reserve sample, representative of each batch of finished product, is "
+     "kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample "
+     "holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six "
+     "months after the expiry date of the batch, then destroyed under QA witness."),
+    ("7. Records", "Stability protocols, results, reports and the retention room log are kept for the life of the "
+     "product plus one year."),
+]
+
+
+def make_sop() -> None:
+    doc = pymupdf.open()
+    p = doc.new_page(width=A4.width, height=A4.height)
+    text(p, 50, 60, "SOP-QC-014: Stability testing, expiry dating and reserve samples (synthetic)", 13, bold=True)
+    text(p, 50, 80, "Version 3   Effective 01-Jul-2026   Department: Quality Control   Site: Chennai", 9, color=GREY)
+    y = 110
+    for head, body in SOP_SECTIONS:
+        if y > 740:
+            p = doc.new_page(width=A4.width, height=A4.height)
+            y = 60
+        text(p, 50, y, head, 11, bold=True)
+        lines = max(2, math.ceil(len(body) / 95) + body.count(" 4.") + body.count(" 5.") + body.count(" 6."))
+        h = lines * 13 + 8
+        rect = pymupdf.Rect(50, y + 6, 545, y + 6 + h)
+        left = p.insert_textbox(rect, body, fontsize=10, fontname=FONT, color=BLACK)
+        if left < 0:
+            raise RuntimeError(f"SOP section {head} overflows its box by {-left:.0f} pt")
+        y += h + 24
+    doc.save(OUT / "sop-stability.pdf", garbage=3, deflate=True)
+    print(f"sop-stability.pdf {doc.page_count} pages")
+
+
 if __name__ == "__main__":
+    if sys.argv[1:] == ["manual"]:
+        make_manual()
+        sys.exit(0)
+    if sys.argv[1:] == ["sop"]:
+        make_sop()
+        sys.exit(0)
     make_inspection_report()
     make_bills()
     make_price_schedule()
+    make_manual()
+    make_sop()
     for f in sorted(OUT.glob("*.pdf")):
         print(f"  {f.name:28} {f.stat().st_size/1024:8.0f} KB")
