@@ -2,13 +2,15 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Icon, ListChecked } from "@/components/quartz/icon";
+import { Edit, Icon, ListChecked } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Button } from "@/components/quartz/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
 import { docName, plural } from "@/lib/forms";
 import { SAMPLES } from "@/lib/samples";
 import type { Document, OcrTemplate } from "@/lib/types";
@@ -51,6 +53,30 @@ export function FormsHome() {
       </PageHeader>
       {err && <Alert status="fail"><AlertTitle>Loading the samples failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
 
+      {/* The idea in three lines, for anyone meeting the page for the first time. */}
+      <Card>
+        <CardHeader>
+          <CardTitle>How it works</CardTitle>
+          <CardDescription>Search answers questions across whole documents. Forms is for paper that arrives in the same layout every time, when you want the same values from every copy, in a table.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ol className="grid gap-4 md:grid-cols-3">
+            <li className="flex flex-col gap-1">
+              <p className="type-label text-text-1">1. Teach it once</p>
+              <p className="type-body-sm text-text-2">Open one clean copy and say which boxes to read: invoice number, date, total. The labels printed beside them are remembered, so the boxes can find the form on any scan.</p>
+            </li>
+            <li className="flex flex-col gap-1">
+              <p className="type-label text-text-1">2. Test it on a scan</p>
+              <p className="type-body-sm text-text-2">Read one scan, even a crooked one. The labels say where the form sits, the boxes move with it, and each value is read and checked against its kind.</p>
+            </li>
+            <li className="flex flex-col gap-1">
+              <p className="type-label text-text-1">3. Read scans by the pile</p>
+              <p className="type-body-sm text-text-2">Tick any number of scans and get one table, a row per scan, with anything doubtful flagged for a look. Download it as CSV.</p>
+            </li>
+          </ol>
+        </CardContent>
+      </Card>
+
       <SkeletonSwap loading={docs === null || templates === null} label="Loading forms" fallback={<div className="flex flex-col gap-2"><SkeletonText type="label" className="w-64" /><SkeletonText type="body-sm" className="w-80" /></div>}>
         {noDocs && (
           <Empty>
@@ -89,7 +115,12 @@ export function FormsHome() {
                         <ItemDescription>{facts}</ItemDescription>
                       </ItemContent>
                       <ItemActions>
-                        <Button variant="ghost" size="sm" nativeButton={false} render={<Link href={`/forms/${t.id}/edit`} />}>Edit</Button>
+                        <Tooltip>
+                          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`Edit ${t.name}`} nativeButton={false} render={<Link href={`/forms/${t.id}/edit`} />} />}>
+                            <Icon icon={Edit} />
+                          </TooltipTrigger>
+                          <TooltipContent>Edit the form</TooltipContent>
+                        </Tooltip>
                       </ItemActions>
                     </Item>
                   </li>

@@ -101,13 +101,6 @@ export function ReadForm() {
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink render={<Link href="/forms" />}>Forms</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem><BreadcrumbPage>{form?.name ?? "Form"}</BreadcrumbPage></BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       {err && <Alert status="fail"><AlertTitle>The last step failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
       <SkeletonSwap loading={docs === null || form === null} label="Loading the form" className="flex flex-col gap-6" fallback={<Skeleton className="min-h-96" />}>
         {form && (
@@ -115,6 +108,13 @@ export function ReadForm() {
             <PageHeader size="sm">
               <PageHeaderRow>
                 <PageHeaderContent>
+      <Breadcrumb>
+      <BreadcrumbList>
+      <BreadcrumbItem><BreadcrumbLink render={<Link href="/forms" />}>Forms</BreadcrumbLink></BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem><BreadcrumbPage>{form?.name ?? "Form"}</BreadcrumbPage></BreadcrumbItem>
+      </BreadcrumbList>
+      </Breadcrumb>
                   <PageHeaderTitle>{form.name}</PageHeaderTitle>
                   <PageHeaderDescription>
                     {plural(form.fields.length, "value")}: {form.fields.map((f) => f.name).join(", ")}.{copy ? ` Taught on ${docName(copy)}.` : ""}{form.runs ? ` ${plural(form.runs, "scan")} read so far.` : ""}

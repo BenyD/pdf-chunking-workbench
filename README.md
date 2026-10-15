@@ -38,6 +38,15 @@ scripts/   eval.py: recall@k on the question sets, against a running deployment.
 Prerequisites: Node 20+, pnpm, Python 3.12+, [uv](https://docs.astral.sh/uv/),
 Docker, the Supabase CLI, and Tesseract with its language packs (`brew install tesseract tesseract-lang`; the Hindi pack reads gazette pages set in legacy fonts).
 
+Once the two env files below exist, one command runs everything (Supabase,
+the worker and the web app) from one terminal, and Ctrl-C stops all three:
+
+```bash
+./dev.sh
+```
+
+Step by step, the same thing by hand:
+
 ```bash
 # 1. database + storage (local Supabase on ports 563xx)
 supabase start -x edge-runtime,logflare,vector,realtime,imgproxy

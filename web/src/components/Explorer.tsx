@@ -122,26 +122,6 @@ export function Explorer({ id }: { id: string }) {
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink render={<Link href="/" />}>Documents</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            {/* The current crumb opens the list of the other documents, so switching never needs the list page. */}
-            {others.length > 0 ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger render={<Button variant="ghost" size="sm" aria-label={`Switch document, now ${title || "this document"}`} />}>
-                  {title || "Document"}
-                  <Icon icon={ChevronDown} size={12} />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="max-w-(--popover)">
-                  {others.map((d) => <DropdownMenuLinkItem key={d.id} render={<Link href={`/documents/${d.id}`} />}><span className="truncate">{docTitle(d)}</span></DropdownMenuLinkItem>)}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : <BreadcrumbPage>{title || "Document"}</BreadcrumbPage>}
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       {err && <Alert status="fail"><AlertTitle>The page could not load</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
       <SkeletonSwap
         loading={!doc}
@@ -154,6 +134,26 @@ export function Explorer({ id }: { id: string }) {
             <PageHeader size="sm">
               <PageHeaderRow>
                 <PageHeaderContent>
+      <Breadcrumb>
+      <BreadcrumbList>
+      <BreadcrumbItem><BreadcrumbLink render={<Link href="/" />}>Documents</BreadcrumbLink></BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem>
+      {/* The current crumb opens the list of the other documents, so switching never needs the list page. */}
+      {others.length > 0 ? (
+      <DropdownMenu>
+      <DropdownMenuTrigger render={<Button variant="ghost" size="sm" aria-label={`Switch document, now ${title || "this document"}`} />}>
+      {title || "Document"}
+      <Icon icon={ChevronDown} size={12} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="max-w-(--popover)">
+      {others.map((d) => <DropdownMenuLinkItem key={d.id} render={<Link href={`/documents/${d.id}`} />}><span className="truncate">{docTitle(d)}</span></DropdownMenuLinkItem>)}
+      </DropdownMenuContent>
+      </DropdownMenu>
+      ) : <BreadcrumbPage>{title || "Document"}</BreadcrumbPage>}
+      </BreadcrumbItem>
+      </BreadcrumbList>
+      </Breadcrumb>
                   <PageHeaderTitle>{title}</PageHeaderTitle>
                   <PageHeaderDescription>
                     {doc.page_count ? `${fmtNum(doc.page_count)} ${doc.page_count === 1 ? "page" : "pages"}` : null}

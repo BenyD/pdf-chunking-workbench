@@ -172,17 +172,17 @@ export function FormWizard() {
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink render={<Link href="/forms" />}>Forms</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator />
-          {id && <><BreadcrumbItem><BreadcrumbLink render={<Link href={`/forms/${id}`} />}>{name}</BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator /></>}
-          <BreadcrumbItem><BreadcrumbPage>{id ? "Edit" : "New form"}</BreadcrumbPage></BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <PageHeader size="sm">
         <PageHeaderRow>
           <PageHeaderContent>
+      <Breadcrumb>
+      <BreadcrumbList>
+      <BreadcrumbItem><BreadcrumbLink render={<Link href="/forms" />}>Forms</BreadcrumbLink></BreadcrumbItem>
+      <BreadcrumbSeparator />
+      {id && <><BreadcrumbItem><BreadcrumbLink render={<Link href={`/forms/${id}`} />}>{name}</BreadcrumbLink></BreadcrumbItem><BreadcrumbSeparator /></>}
+      <BreadcrumbItem><BreadcrumbPage>{id ? "Edit" : "New form"}</BreadcrumbPage></BreadcrumbItem>
+      </BreadcrumbList>
+      </Breadcrumb>
             <PageHeaderTitle>{title}</PageHeaderTitle>
             <PageHeaderDescription>Four steps: a clean copy, the values on it, a test on a scan, and a name to save it under.</PageHeaderDescription>
           </PageHeaderContent>
