@@ -554,3 +554,24 @@ not matter (half of Opus). Caching by image hash and passage hash so a
 re-ingest costs nothing. None of these is switched on: the demo should
 show the best reading, and the numbers above are already small.
 
+
+## 19. Forms: read first, teach second, landmarks taken automatically
+
+**Why.** The three-step page exposed every mechanism at once (values,
+landmark words, word outlines, kinds, patterns, templates, scans, the
+model fallback) and asked for all of it before anything could be read.
+Even its author found it confusing. What people do with it is mostly one
+thing, read a scan with a form already taught, and only sometimes teach.
+
+**Shape.** The page opens on "Read a scan": pick the form, pick the scan,
+press Read. The values come back as a plain list, each with a check word,
+and a sentence on what happened to the scan. "Teach a new form" and "Edit
+this form" open the one other view: a clean copy to drag boxes on, a hint
+on the page until the first box is drawn, and a list where each box gets a
+name and a kind, with the name box taking the focus as soon as the box is
+drawn. The printed label beside each drawn value (the word to its left on
+the same line, read once from the page by OCR) becomes the landmark the
+form is found by on a scan, so landmarks are never explained unless a
+person opens "Change the words". Patterns and word outlines left the
+screen; the data keeps them. The sample form's values are named in plain
+words ("Invoice number", "Grand total") rather than keys.

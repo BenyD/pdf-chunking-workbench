@@ -24,12 +24,12 @@ export const SAMPLE_OCR_TEMPLATE: { name: string; sample_key: string; fields: Oc
   name: "Sunrise pharmacy bill",
   sample_key: "pharmacy-bill-1",
   fields: [
-    { name: "invoice_no", type: "text", page: 1, box: f(118, 99, 160, 15), pattern: "SP/\\d{4}/\\d+" },
-    { name: "date", type: "date", page: 1, box: f(118, 117, 120, 15) },
-    { name: "patient", type: "text", page: 1, box: f(118, 135, 190, 15) },
-    { name: "patient_id", type: "text", page: 1, box: f(118, 153, 120, 15), pattern: "PT-\\d+" },
-    { name: "doctor", type: "text", page: 1, box: f(398, 99, 150, 15) },
-    { name: "grand_total", type: "amount", page: 1, box: f(466, 352, 90, 18) },
+    { name: "Invoice number", type: "text", page: 1, box: f(118, 99, 160, 15), pattern: "SP/\\d{4}/\\d+" },
+    { name: "Date", type: "date", page: 1, box: f(118, 117, 120, 15) },
+    { name: "Patient", type: "text", page: 1, box: f(118, 135, 190, 15) },
+    { name: "Patient ID", type: "text", page: 1, box: f(118, 153, 120, 15), pattern: "PT-\\d+" },
+    { name: "Doctor", type: "text", page: 1, box: f(398, 99, 150, 15) },
+    { name: "Grand total", type: "amount", page: 1, box: f(466, 352, 90, 18) },
   ],
   anchors: [
     { text: "SUNRISE", page: 1, box: f(50, 47, 70, 16) },
