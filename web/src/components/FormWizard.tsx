@@ -8,7 +8,7 @@ import { Badge } from "@/components/quartz/ui/badge";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/quartz/ui/breadcrumb";
 import { Button } from "@/components/quartz/ui/button";
 import { ButtonGroup } from "@/components/quartz/ui/button-group";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/quartz/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
 import { Dialog, DialogAction, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
@@ -247,10 +247,6 @@ export function FormWizard() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <Button variant="ghost" nativeButton={false} render={<Link href={id ? `/forms/${id}` : "/forms"} />}>Cancel</Button>
-              <Button onClick={next} disabled={!canLeave[1]}>Next: mark the values</Button>
-            </CardFooter>
           </Card>
         )}
 
@@ -266,8 +262,6 @@ export function FormWizard() {
                   <Button variant="secondary" size="sm" onClick={findAll} disabled={!words} focusableWhenDisabled aria-describedby={words ? undefined : "find-hint"}><Icon icon={MagicWand} />Find the values for me</Button>
                   {!words && <span id="find-hint" className="type-body-sm text-text-2">Reading the printed words on the page.</span>}
                   {words && <span className="type-body-sm text-text-2">Or drag a box on the page.</span>}
-                  {found && found.length === 0 && <Status status="warn">No labelled value found on this page. Drag boxes instead.</Status>}
-                  {found && found.length > 0 && <Status status="ok">{plural(found.length, "value")} added: {found.join(", ")}</Status>}
                 </div>
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="min-w-0">
@@ -290,6 +284,8 @@ export function FormWizard() {
                     )}
                   </div>
                   <div className="flex min-w-0 flex-col gap-4">
+                    {found && found.length === 0 && <Status status="warn">No labelled value found on this page. Drag boxes instead.</Status>}
+                    {found && found.length > 0 && <Status status="ok">{plural(found.length, "value")} added: {found.join(", ")}</Status>}
                     {fields.length === 0 ? (
                       <Empty variant="plain">
                         <EmptyHeader>
@@ -341,11 +337,6 @@ export function FormWizard() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
-              <Button onClick={next} disabled={!canLeave[2]} focusableWhenDisabled aria-describedby={canLeave[2] ? undefined : "next-hint"}>Next: test it</Button>
-              {!canLeave[2] && <span id="next-hint" className="sr-only">Mark at least one value first.</span>}
-            </CardFooter>
           </Card>
         )}
 
@@ -416,10 +407,6 @@ export function FormWizard() {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
-              <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
-              <Button onClick={next}>Next: save it</Button>
-            </CardFooter>
           </Card>
         )}
 
@@ -450,14 +437,33 @@ export function FormWizard() {
                 </ItemGroup>
               </div>
             </CardContent>
-            <CardFooter>
-              {id && <Button variant="ghost" onClick={() => setConfirmDelete(true)}>Delete this form</Button>}
-              <Button variant="ghost" onClick={() => setStep(3)}>Back</Button>
-              <Button onClick={save} pending={busy === "save"} pendingLabel="Saving" disabled={!fields.length}>Save the form</Button>
-            </CardFooter>
           </Card>
         )}
       </SkeletonSwap>
+
+      {/* The step's buttons stay at the bottom of the window, so a long page never hides them. */}
+      {docs !== null && loaded && (
+        <div className="sticky bottom-0 z-10 -mb-6 flex w-full flex-wrap items-center justify-end gap-2 border-t border-hair bg-page py-3">
+          {step === 1 && <>
+            <Button variant="ghost" nativeButton={false} render={<Link href={id ? `/forms/${id}` : "/forms"} />}>Cancel</Button>
+            <Button onClick={next} disabled={!canLeave[1]}>Mark the values</Button>
+          </>}
+          {step === 2 && <>
+            {!canLeave[2] && <span id="next-hint" className="type-body-sm text-text-2">Mark at least one value first.</span>}
+            <Button variant="ghost" onClick={() => setStep(1)}>Back</Button>
+            <Button onClick={next} disabled={!canLeave[2]} focusableWhenDisabled aria-describedby={canLeave[2] ? undefined : "next-hint"}>Test on a scan</Button>
+          </>}
+          {step === 3 && <>
+            <Button variant="ghost" onClick={() => setStep(2)}>Back</Button>
+            <Button onClick={next}>Review and save</Button>
+          </>}
+          {step === 4 && <>
+            {id && <Button variant="ghost" onClick={() => setConfirmDelete(true)}>Delete this form</Button>}
+            <Button variant="ghost" onClick={() => setStep(3)}>Back</Button>
+            <Button onClick={save} pending={busy === "save"} pendingLabel="Saving" disabled={!fields.length}>Save the form</Button>
+          </>}
+        </div>
+      )}
 
       <Dialog role="alertdialog" open={confirmDelete} onOpenChange={setConfirmDelete}>
         <DialogContent size="sm">
