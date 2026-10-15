@@ -12,6 +12,8 @@ type Env = {
   VOYAGE_API_KEY: string;
   VOYAGE_RPM?: string;
   VOYAGE_MAX_TOKENS_PER_REQUEST?: string;
+  /** Bump in wrangler.jsonc to start a fresh container, for example after changing a secret: a running container keeps the env it started with. */
+  GENERATION?: string;
 };
 
 /** One container, kept warm for two hours after its last request, since an ingest runs on in the background. */
@@ -37,6 +39,6 @@ export class ChunklabWorker extends Container<Env> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     // Every request goes to the same container, so background ingests and the queries about them share a process.
-    return getContainer(env.WORKER, "main").fetch(request);
+    return getContainer(env.WORKER, `main-${env.GENERATION ?? "1"}`).fetch(request);
   },
 } satisfies ExportedHandler<Env>;

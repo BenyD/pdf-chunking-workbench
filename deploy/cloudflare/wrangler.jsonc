@@ -6,6 +6,8 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-01-01",
   "observability": { "enabled": true },
+  // A running container keeps the env it started with; bump GENERATION after changing a secret so a fresh one starts.
+  "vars": { "GENERATION": "2" },
   "containers": [
     {
       "class_name": "ChunklabWorker",
