@@ -1,0 +1,91 @@
+{
+  "document": "who-trs986-annex2.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "Which earlier WHO Technical Report Series annex does the revised GMP main principles document in Annex 2 of TRS 986 replace?",
+      "must_contain": "No. 961, 2011, Annex 3",
+      "expected_page": 1,
+      "answer": "It revises the GMP main principles published in WHO Technical Report Series, No. 961, 2011, Annex 3.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the WHO GMP glossary (TRS 986 Annex 2), what is a starting material and what does it exclude?",
+      "must_contain": "excluding packaging materials",
+      "expected_page": 8,
+      "answer": "A starting material is any substance of a defined quality used in producing a pharmaceutical product, excluding packaging materials.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the WHO GMP guidance on product recalls, where should recalled products be kept while a decision is made on what to do with them?",
+      "must_contain": "secure segregated area",
+      "expected_page": 17,
+      "answer": "Recalled products should be stored in a secure segregated area while their fate is decided, and the written recall procedures should include this instruction.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What kind of additional medical check does WHO GMP guidance require for personnel who carry out visual inspections of products?",
+      "must_contain": "periodic eye examinations",
+      "expected_page": 27,
+      "answer": "Personnel conducting visual inspections should undergo periodic eye examinations, in addition to the health examinations required before and during employment.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the WHO TRS 986 Annex 2 GMP documentation section, how should an alteration to an entry on a document be made so the original information stays readable?",
+      "must_contain": "signed and dated",
+      "expected_page": 39,
+      "answer": "Any alteration should be signed and dated and done so the original information can still be read, with the reason recorded where appropriate (clause 15.7).",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under WHO TRS 986 Annex 2 good production practices, which kinds of products are named as needing dedicated and self-contained production areas to avoid cross-contamination?",
+      "must_contain": "penicillins, live vaccines, live bacterial preparations",
+      "expected_page": 50,
+      "answer": "Dedicated, self-contained areas may be required for products such as penicillins, live vaccines, live bacterial preparations and certain other biologicals.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "On which page of WHO TRS 986 Annex 2 does the subsection on reference standards under Materials begin?",
+      "must_contain": "Reference standards 114",
+      "expected_page": 2,
+      "answer": "The Reference standards subsection under Section 14 Materials begins on page 114.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In WHO TRS 986 Annex 2, what term is used for the totality of systematic actions that give adequate confidence a product will meet quality requirements?",
+      "must_contain": "termed “QA”",
+      "expected_page": 9,
+      "answer": "The totality of these systematic actions is termed quality assurance (QA), which serves as a management tool within an organization.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the WHO TRS 986 Annex 2 guidance on contract production, who must give final release approval when the outsourced work is analysis?",
+      "must_contain": "authorized person",
+      "expected_page": 18,
+      "answer": "For contract analysis, the authorized person must give final approval for release in accordance with GMP and the marketing authorization as specified in the contract (7.4).",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the WHO TRS 986 Annex 2 premises requirements, what must be in place regarding pests and rodents in a manufacturing facility?",
+      "must_contain": "procedure for rodent and pest control",
+      "expected_page": 28,
+      "answer": "Premises should be designed to protect against entry of insects, birds or other animals, and there should be a procedure for rodent and pest control (clause 12.9).",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under WHO TRS 986 Annex 2 GMP documentation rules, how long must manufacturing records be kept relative to the finished product's expiry date?",
+      "must_contain": "at least one year after",
+      "expected_page": 40,
+      "answer": "Records should be retained for at least one year after the expiry date of the finished product.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under WHO TRS 986 Annex 2 good production practices, what information must be shown on the label attached to a measuring or control instrument?",
+      "must_contain": "date when recalibration is due",
+      "expected_page": 51,
+      "answer": "The label must clearly show the date of calibration and servicing and the date when recalibration is due.",
+      "chunk_type": "text"
+    }
+  ]
+}

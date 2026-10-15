@@ -1,0 +1,28 @@
+{
+  "document": "Pharmacy bill 1 (synthetic).pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "What GSTIN is printed on the Sunrise Pharmacy & Clinic tax invoice SP/2026/04417 issued in Chennai?",
+      "must_contain": "33AAACS1234F1Z5",
+      "expected_page": 1,
+      "answer": "The invoice shows GSTIN 33AAACS1234F1Z5 for Sunrise Pharmacy & Clinic.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What batch number was the Pantoprazole 40 mg tablet dispensed from on Sunrise Pharmacy invoice SP/2026/04417?",
+      "must_contain": "B7219",
+      "expected_page": 1,
+      "answer": "The Pantoprazole 40 mg tablets on that invoice came from batch B7219.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What batch number was dispensed for the Pantoprazole 40 mg tablets on Sunrise Pharmacy invoice SP/2026/04417?",
+      "must_contain": "B7219",
+      "expected_page": 1,
+      "answer": "The Pantoprazole 40 mg tablets were from batch B7219.",
+      "chunk_type": "table"
+    }
+  ]
+}

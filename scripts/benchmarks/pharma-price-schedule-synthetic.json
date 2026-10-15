@@ -1,0 +1,42 @@
+{
+  "document": "Pharma Price Schedule (synthetic).pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "Which columns does each row of the ceiling prices table for scheduled formulations contain, and do the column headings repeat on later pages?",
+      "must_contain": "repeated on every page",
+      "expected_page": 1,
+      "answer": "Each row gives formulation code, molecule, strength, dosage form, pack size, ceiling price in rupees, schedule category and reference manufacturer, and the headings are repeated on every page for readability only.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the ceiling price in INR for product code F-13555, the Omeprazole 250 mg ointment from Cadence Pharma?",
+      "must_contain": "65.77",
+      "expected_page": 120,
+      "answer": "The ceiling price for F-13555 is INR 65.77.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "Which manufacturer makes the aspirin 10 mg ointment listed under code F-10858 in the price schedule?",
+      "must_contain": "Nilgiri Biotech",
+      "expected_page": 30,
+      "answer": "Nilgiri Biotech is the manufacturer of aspirin 10 mg ointment, code F-10858.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the ceiling price in INR for the Losartan 100 mcg inhaler under product code F-11880 from Suryodaya Remedies?",
+      "must_contain": "35.47",
+      "expected_page": 64,
+      "answer": "The ceiling price for F-11880 (Losartan 100 mcg inhaler, pack of 1) is INR 35.47.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the ceiling price in INR for the Montelukast 5 mg/5 ml tablet in the price schedule?",
+      "must_contain": "49.66",
+      "expected_page": 2,
+      "answer": "The Montelukast 5 mg/5 ml tablet (F-10007, pack of 30) has a ceiling price of INR 49.66.",
+      "chunk_type": "table"
+    }
+  ]
+}

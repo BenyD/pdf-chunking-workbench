@@ -1,0 +1,49 @@
+{
+  "document": "rifaximin-tablets.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "Who should receive a copy of comments on the draft Rifaximin Tablets monograph, in addition to the general IPC laboratory email address?",
+      "must_contain": "Dr. Gaurav Pratap Singh",
+      "expected_page": 1,
+      "answer": "A copy of comments should be sent to Dr. Gaurav Pratap Singh (gpsingh.ipc@gov.in), alongside lab.ipc@gov.in.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "When was the first draft of the Rifaximin Tablets monograph posted on the IPC website for public comments?",
+      "must_contain": "28 November, 2022",
+      "expected_page": 1,
+      "answer": "The first draft was published on the IPC website for public comments on 28 November, 2022.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "How much sodium lauryl sulphate is added to the dissolution medium for Rifaximin Tablets of 400 mg and above?",
+      "must_contain": "8 g of sodium lauryl sulphate",
+      "expected_page": 2,
+      "answer": "For 400 mg and above strengths, 8 g of sodium lauryl sulphate is added to 1000 ml of the pH 7.4 phosphate buffer.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What column temperature and detection wavelength are specified for the related substances LC test in the draft IP monograph for Rifaximin Tablets?",
+      "must_contain": "column temperature: 40º",
+      "expected_page": 2,
+      "answer": "The column is held at 40º and the spectrophotometer is set at 276 nm.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the related substances test for Rifaximin Tablets, what is the minimum resolution required between the impurity D+H peaks and rifaximin for the test to be valid?",
+      "must_contain": "not less than 3.0",
+      "expected_page": 3,
+      "answer": "The resolution between the peaks due to impurity D+H and rifaximin must be not less than 3.0, otherwise the test is not valid.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the concentration of the rifaximin IPRS reference solution used in the assay of Rifaximin Tablets in the draft IP monograph?",
+      "must_contain": "0.004per cent w/v",
+      "expected_page": 3,
+      "answer": "The reference solution is a 0.004 per cent w/v solution of rifaximin IPRS in the mobile phase.",
+      "chunk_type": "text"
+    }
+  ]
+}

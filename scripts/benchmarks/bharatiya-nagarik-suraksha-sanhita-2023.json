@@ -1,0 +1,84 @@
+{
+  "document": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "Which clause of the Bharatiya Nagarik Suraksha Sanhita 2023 Bill deals with the Directorate of Prosecution, and under which chapter does it fall?",
+      "must_contain": "20. Directorate of Prosecution",
+      "expected_page": 1,
+      "answer": "Clause 20, Directorate of Prosecution, appears in Chapter II on the constitution of criminal courts and offices.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "How long after the Official Gazette publication of a forfeiture declaration under Section 98 can an interested person apply to the High Court to set it aside?",
+      "must_contain": "within two months",
+      "expected_page": 45,
+      "answer": "The application must be made within two months from the date the declaration is published in the Official Gazette.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under section 195 of the BNSS, what is the age limit above which a male person cannot be required to attend anywhere other than where he resides when summoned by police during a section 194 investigation?",
+      "must_contain": "above the age of sixty years",
+      "expected_page": 81,
+      "answer": "A male person above the age of sixty years (or under fifteen) cannot be required to attend at a place other than his residence unless he is willing to attend at the police station or another place within its limits.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under Section 310 of the BNSS, in what form is a witness's evidence ordinarily taken down in a warrant-case before a Magistrate?",
+      "must_contain": "in the form of a narrative",
+      "expected_page": 112,
+      "answer": "Evidence is ordinarily taken down as a narrative, though the Magistrate may in his discretion record any part of it in question and answer form.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the BNSS 2023, if an accused pleaded guilty and was convicted by a Court of Session or a Magistrate, what can still be appealed?",
+      "must_contain": "extent or legality of the sentence",
+      "expected_page": 145,
+      "answer": "Only the extent or legality of the sentence can be appealed; there is no appeal against the conviction itself, and no appeal at all if a High Court convicted on the plea.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under which section of the Bharatiya Nagarik Suraksha Sanhita 2023 must a High Court supervise subordinate Sessions Courts and Judicial Magistrates so that cases are disposed of expeditiously?",
+      "must_contain": "expeditious and proper disposal of cases",
+      "expected_page": 173,
+      "answer": "Section 531 requires every High Court to exercise superintendence over subordinate Courts of Session and Judicial Magistrates to ensure expeditious and proper disposal of cases.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the First Schedule classification table of the BNSS 2023, what is the punishment for abetment where the abettor or the person abetted is a public servant whose duty is to prevent the offence?",
+      "must_contain": "one-half of the longest term",
+      "expected_page": 175,
+      "answer": "Imprisonment of one-half of the longest term provided for the offence abetted, or the fine provided for it, or both.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the punishment, and is the offence bailable, when a public servant or police officer is involved in trafficking of a child under section 141 in the BNSS First Schedule?",
+      "must_contain": "remainder of that person’s natural life",
+      "expected_page": 185,
+      "answer": "It is punishable with imprisonment for life (the remainder of the person's natural life) and fine, and it is non-bailable, cognizable and triable by the Court of Session.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the punishment for wrongfully confining a person for 10 or more days under section 125(4) in the First Schedule of the BNSS, and is it bailable?",
+      "must_contain": "Imprisonment for 5 years",
+      "expected_page": 184,
+      "answer": "It is punishable with imprisonment for 5 years and a fine of 10000 rupees, and the offence is cognizable and non-bailable.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "Who is allowed to compound the offence of wrongfully confining a person in secret under the BNSS table of compoundable offences, and what is the corresponding BNS section?",
+      "must_contain": "125(6)",
+      "expected_page": 126,
+      "answer": "Wrongful confinement in secret falls under BNS section 125(6), and it can be compounded by the person confined.",
+      "chunk_type": "table"
+    },
+    {
+      "question": "Under Section 311 BNSS 2023, in what form is a witness's evidence ordinarily taken down in a Court of Session trial, and when can question and answer form be used?",
+      "must_contain": "form of a narrative",
+      "expected_page": 112,
+      "answer": "Evidence is ordinarily recorded as a narrative, but the presiding Judge may in his discretion have any part recorded in question and answer form.",
+      "chunk_type": "text"
+    }
+  ]
+}

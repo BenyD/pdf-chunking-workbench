@@ -32,7 +32,7 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
         c.parent_id = id_map.get(c.parent_id) if c.parent_id else None
     link_sequence(clones)
 
-    usage = {"context_calls": 0, "vision_calls": 0, "skipped": 0, "errors": 0}
+    usage = {"context_calls": 0, "triage_calls": 0, "vision_calls": 0, "figures_dropped": 0, "skipped": 0, "errors": 0}
     if settings.skip_llm:
         for c in clones:
             c.metadata["llm_context"] = None
@@ -50,8 +50,18 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
         async with sem:
             try:
                 if c.chunk_type == "figure":
-                    desc = await claude.describe_figure(c.image_png or b"", c.metadata.get("caption"), c.metadata.get("labels", []), c.context or doc_title)
-                    usage["vision_calls"] += 1
+                    # One cheap look first. A logo, a border or a blank box gets no description and no
+                    # passage; a captioned or numbered figure is always described, whatever the look says.
+                    kind = await claude.triage_figure(c.image_png or b"")
+                    usage["triage_calls"] += 1
+                    c.metadata["figure_kind"] = kind
+                    if kind in claude.SKIP_KINDS and not c.metadata.get("caption") and not c.metadata.get("figure_number"):
+                        c.metadata["vision_skipped"] = kind
+                        usage["figures_dropped"] += 1
+                        desc = None
+                    else:
+                        desc = await claude.describe_figure(c.image_png or b"", c.metadata.get("caption"), c.metadata.get("labels", []), c.context or doc_title)
+                        usage["vision_calls"] += 1
                     if desc:
                         c.metadata["vision"] = desc
                         ann = "; ".join(f"{a['marker']} -> {a['points_to']}" + (f" ({a['text']})" if a.get("text") else "") for a in desc.get("annotations", []))
@@ -77,6 +87,11 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
                 on_progress(done, len(targets))
 
     await asyncio.gather(*(work(c, clones.index(c)) for c in targets))
+
+    # A figure the look dismissed leaves the document, and the sequence closes over the gap.
+    if any(c.metadata.get("vision_skipped") for c in clones):
+        clones = [c for c in clones if not c.metadata.get("vision_skipped")]
+        link_sequence(clones)
 
     # rows inherit their table's model context
     for c in clones:

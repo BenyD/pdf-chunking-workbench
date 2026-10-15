@@ -1,0 +1,14 @@
+{
+  "document": "Pharmacy bill 3 scanned (synthetic).pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "What is the grand total on the Sunrise Pharmacy & Clinic invoice for Meera Pillai that includes 12% GST on the medicines?",
+      "must_contain": "Rs. 442.40",
+      "expected_page": 1,
+      "answer": "The grand total is Rs. 442.40, made up of a subtotal of 395.00 plus 47.40 GST at 12%.",
+      "chunk_type": "text"
+    }
+  ]
+}

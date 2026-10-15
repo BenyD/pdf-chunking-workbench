@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # Which model does what. Vision + OCR fallback need judgement -> Opus.
     # Per-chunk context is bulk, simple work -> Haiku.
     vision_model: str = "claude-opus-5-5"
+    triage_model: str = "claude-haiku-5-5"    # one cheap look at a figure crop before the Opus description
     context_model: str = "claude-haiku-5-5"
     ocr_model: str = "claude-opus-5-5"
     embedding_model: str = "voyage-4"

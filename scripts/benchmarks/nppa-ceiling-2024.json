@@ -1,0 +1,63 @@
+{
+  "document": "nppa-ceiling-2024.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "On what date was the NPPA ceiling price notification S.O. 4886(E) issued from New Delhi under the Department of Pharmaceuticals?",
+      "must_contain": "10th November, 2023",
+      "expected_page": 1,
+      "answer": "It was issued on 10th November, 2023.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Which earlier NPPA order dated 31 March 2023 is superseded by S.O. 4886(E) for the formulation packs listed in its table?",
+      "must_contain": "SO 1573(E) dated 31st March, 2023",
+      "expected_page": 1,
+      "answer": "S.O. 4886(E) supersedes NPPA Order No SO 1573(E) dated 31st March, 2023, insofar as it relates to the formulation packs in the table, except for things done or omitted before the supersession.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the NPPA ceiling price notification, what form must an existing manufacturer use to apply for prior price approval when launching a new drug in a scheduled formulation's strength?",
+      "must_contain": "Form I",
+      "expected_page": 1,
+      "answer": "The manufacturer must apply to the NPPA for prior price approval in Form I under Schedule-II of the DPCO, 2013.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "How far ahead must a manufacturer notify NPPA in Form-IV of Schedule-II before discontinuing a scheduled formulation under the 2024 ceiling price notification?",
+      "must_contain": "at least six months prior",
+      "expected_page": 2,
+      "answer": "The manufacturer must furnish Form-IV information to the NPPA at least six months before the intended date of discontinuation.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the NPPA ceiling price per tablet, excluding GST, for Co-trimoxazole 800mg + 160mg tablets?",
+      "must_contain": "2.30",
+      "expected_page": 1,
+      "answer": "The ceiling price is Rs. 2.30 per tablet (excluding GST).",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the NPPA ceiling price, exclusive of GST, for one 20mg Zinc Sulphate dispersible tablet?",
+      "must_contain": "3.41",
+      "expected_page": 1,
+      "answer": "The ceiling price is Rs. 3.41 per tablet.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the NPPA ceiling price per tablet, excluding GST, for Tramadol 50mg tablets?",
+      "must_contain": "9.70",
+      "expected_page": 1,
+      "answer": "The ceiling price for Tramadol 50mg tablet is Rs. 9.70 per tablet.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the NPPA ceiling price per tablet, excluding GST, for Temozolomide 250 mg tablets under S.O. 4886(E)?",
+      "must_contain": "3757.94",
+      "expected_page": 1,
+      "answer": "The ceiling price for Temozolomide Tablet 250 mg is Rs. 3757.94 per tablet, exclusive of GST.",
+      "chunk_type": "table"
+    }
+  ]
+}

@@ -429,3 +429,79 @@ The installed design-system code under `web/src/components/quartz` and
 `web/src/lib/quartz` is kept as the registry ships it and excluded from the
 project lint; the Quartz lint (`npx eslint -c quartz.eslint.config.mjs .` in
 `web/`) reports nothing.
+
+## 16. One cheap look before every figure description, and a labelled benchmark
+
+**Why.** Section 14 left two things open: a figure on a page with no raster
+image still cost one Opus call, and the thirteen stress questions were
+hand-written, so no number could be quoted as a benchmark.
+
+**The look.** Every figure crop now goes to Haiku first with one question,
+which kind of region is this, answered in one word: photo, chart, diagram,
+drawing, map, table, text, logo, decoration or blank. Only logo, decoration
+and blank are dismissed, and never when the figure has a caption or a figure
+number; a dismissed figure gets no Opus description and leaves the document
+altogether, so no junk passage is stored and the sequence closes over the
+gap. Anything with arrows, callouts, labels or measurements is told to count
+as a photo, diagram or drawing, so annotated images are always described in
+full as before. The look costs a fraction of a cent and adds under a second
+per figure. On the thirteen documents it kept all 49 Humira instruction
+figures and both inspection photos, and dismissed one: the Gazette of India
+emblem on the first page of the Bharatiya Nyaya Sanhita, which had been
+described by Opus at every ingest and stored as a figure passage nobody would
+search for. The geometric rules from section 14 already remove hairline
+boxes, bands and watermarks before any model sees them, so on this set the
+look is a safety net; its value is on letterheads, seals and vector
+decorations that pass those rules.
+
+**Glossary passages.** The first benchmark pass missed one WHO question, the
+definition of "starting material", because the glossary chunk holding three
+definitions carried a context that said only "the final portion of the
+glossary", so it ranked seventh behind Section 14 passages that mention
+starting materials. The context prompt now asks the model to name every term
+a passage defines when it reads like a glossary or a definitions section.
+After re-processing, that passage's context lists "standard operating
+procedure (SOP)", "starting material" and "validation", and it ranks first.
+
+**The benchmark.** `scripts/make_questions.py` writes a labelled set per
+document: passages are sampled across the pages and kinds, Sonnet writes a
+question a pharmacist, pricing analyst, regulatory officer, QA manager or
+lawyer would ask that the passage answers, and names the shortest exact
+phrase from the passage that the right answer must contain, at most six
+words; a phrase that is not in the passage verbatim, or that already appears
+in the question, is rejected and the model is asked once more. The sets are
+saved under `scripts/benchmarks/` so a reset does not lose them, and
+`scripts/eval.py` runs them through the live search. On 2026-10-15, 98
+generated questions plus the 28 hand-written sample questions, over 13
+documents:
+
+| Document | questions | recall@5 | MRR |
+|---|---|---|---|
+| Bharatiya Nyaya Sanhita 2023 | 23 | 100% | 0.96 |
+| Bharatiya Nagarik Suraksha Sanhita 2023 | 18 | 94% | 0.90 |
+| QC inspection report | 16 | 100% | 0.97 |
+| NPPA notice, Apollo | 12 | 100% | 1.00 |
+| WHO GMP, TRS 986 Annex 2 | 12 | 92% | 0.78 |
+| FDA Humira label | 11 | 100% | 0.84 |
+| Pharma price schedule | 9 | 100% | 1.00 |
+| NPPA ceiling-price notice 2024 | 8 | 100% | 1.00 |
+| Rifaximin monograph | 6 | 100% | 0.83 |
+| CDSCO new drugs 2024 | 4 | 100% | 1.00 |
+| Pharmacy bills (three) | 7 | 100% | 0.93 |
+| All documents | 126 | 98% | 0.93 |
+
+The two misses are instructive rather than alarming. "Which clause of the
+BNSS deals with the Directorate of Prosecution" expects the entry in the
+arrangement of clauses, and the search returns the section itself, which
+answers the question just as well; the label is stricter than a reader would
+be. "Which earlier annex does the revised GMP document replace" lives in one
+preamble sentence that no passage context mentions. The WHO document's mean
+reciprocal rank of 0.78 says the same thing from the other side: long
+guideline prose with many near-duplicate clauses is where ranking is weakest,
+and the glossary fix above is the kind of change that moves it.
+
+**What the numbers are not.** The questions were written by a model from the
+passages, so they are phrased close to the document's own words, which flatters
+keyword search; a set written by the people who use these documents would be
+harder. The numbers are a floor to regress against, not a ceiling to quote.
+

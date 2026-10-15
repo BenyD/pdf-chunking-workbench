@@ -1,0 +1,35 @@
+{
+  "document": "cdsco-new-drugs-2024.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "On what date did CDSCO issue the 2024 new drug approval for Vonoprazan fumarate bulk drug and Vonoprazan 10mg/20mg tablets?",
+      "must_contain": "08-05-2024",
+      "expected_page": 1,
+      "answer": "The approval for Vonoprazan fumarate bulk drug and Vonoprazan tablets 10mg/20mg was issued on 08-05-2024.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "On what date did CDSCO issue the 2024 new drug approval for Etifoxine Hydrochloride 50 mg capsules for anxiety?",
+      "must_contain": "21-03-2024",
+      "expected_page": 1,
+      "answer": "The approval for Etifoxine Hydrochloride bulk drug and 50 mg capsules was issued on 21-03-2024.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "On what date did CDSCO issue the 2024 new drug approval for Tirzepatide prefilled pen injection for type 2 diabetes?",
+      "must_contain": "19-01 2024",
+      "expected_page": 1,
+      "answer": "The approval for Tirzepatide solution for injection in a prefilled pen was issued on 19-01 2024.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "On what date did CDSCO issue the 2024 new drug approval for Plazomicin injection 500mg/10ml for complicated urinary tract infections?",
+      "must_contain": "02-02-2024",
+      "expected_page": 1,
+      "answer": "Plazomicin injection was approved on 02-02-2024.",
+      "chunk_type": "table"
+    }
+  ]
+}

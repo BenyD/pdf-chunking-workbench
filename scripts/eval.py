@@ -46,3 +46,7 @@ for d in docs:
 print(f"\n{'Document':44} {'questions':>9} {'recall@' + str(k):>9} {'MRR':>6}")
 for name, n, rec, mrr in rows:
     print(f"{name[:44]:44} {n:>9} {rec:>9.0%} {mrr:>6.2f}")
+total = sum(n for _, n, _, _ in rows)
+if total:
+    # weighted by question count, so a 12-question set counts for more than a 3-question one
+    print(f"{'All documents':44} {total:>9} {sum(n * rec for _, n, rec, _ in rows) / total:>9.0%} {sum(n * mrr for _, n, _, mrr in rows) / total:>6.2f}")

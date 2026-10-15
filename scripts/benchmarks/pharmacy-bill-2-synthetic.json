@@ -1,0 +1,28 @@
+{
+  "document": "Pharmacy bill 2 (synthetic).pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "What is the GSTIN printed on the Sunrise Pharmacy & Clinic tax invoice for the Chennai Lake View Road branch?",
+      "must_contain": "33AAACS1234F1Z5",
+      "expected_page": 1,
+      "answer": "The GSTIN on the invoice is 33AAACS1234F1Z5.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What batch number was the ORS sachet 21 g dispensed from on Rahul Verma's Sunrise Pharmacy invoice SP/2026/04452?",
+      "must_contain": "B4476",
+      "expected_page": 1,
+      "answer": "The ORS sachet 21 g was dispensed from batch B4476.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What batch number was dispensed for the Azithromycin 500 mg tablets on Sunrise Pharmacy invoice SP/2026/04452?",
+      "must_contain": "B6048",
+      "expected_page": 1,
+      "answer": "The Azithromycin 500 mg Tab was dispensed from batch B6048.",
+      "chunk_type": "table"
+    }
+  ]
+}

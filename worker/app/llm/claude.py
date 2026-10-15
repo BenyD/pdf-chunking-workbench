@@ -1,7 +1,8 @@
 """All Claude calls live here so cost and model choice are visible in one file.
 
-Three jobs, three different cost profiles:
-  describe_figure  - vision judgement, once per figure at ingest      -> Opus 5.5
+Four jobs, three different cost profiles:
+  triage_figure    - one cheap look at every figure crop at ingest    -> Haiku 5.5
+  describe_figure  - vision judgement, once per figure worth it       -> Opus 5.5
   chunk_context    - bulk, simple, once per chunk at ingest           -> Haiku 5.5
   ocr_fallback     - only when zonal OCR confidence is low            -> Opus 5.5
 
@@ -114,10 +115,47 @@ async def describe_figure(png: bytes, caption: str | None, labels: list[str], br
     return await _opus_structured(FIGURE_SYSTEM, content, FIGURE_SCHEMA)
 
 
+# What a cropped region can be. Only the last three carry no information worth a description.
+FIGURE_KINDS = ("photo", "chart", "diagram", "drawing", "map", "table", "text", "logo", "decoration", "blank")
+SKIP_KINDS = {"logo", "decoration", "blank"}
+
+TRIAGE_SYSTEM = (
+    "You sort cropped regions of document pages. Answer with exactly one lowercase word and nothing else: "
+    "photo (a photograph), chart (a graph or plot), diagram (a schematic, flow or labelled drawing), "
+    "drawing (a line illustration, icon set or pictogram that carries information), map, "
+    "table (a grid of values), text (a block of ordinary text in a box or frame), "
+    "logo (an emblem, crest, seal or brand mark), "
+    "decoration (a border, rule, band, watermark, bullet or ornament with no information), blank (nothing visible). "
+    "When a region has arrows, callouts, labels or measurements, it is a photo, diagram or drawing, never decoration."
+)
+
+
+async def triage_figure(png: bytes) -> str:
+    """One cheap look at a figure crop: which kind of region it is, so the expensive description
+    is spent only on regions that carry information. Unknown answers count as worth describing."""
+    content = [
+        {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": base64.standard_b64encode(png).decode()}},
+        {"type": "text", "text": "Which kind of region is this? One word."},
+    ]
+    resp = await client().messages.create(
+        model=settings.triage_model,
+        max_tokens=10,
+        system=TRIAGE_SYSTEM,
+        output_config={"effort": "low"},
+        messages=[{"role": "user", "content": content}],
+    )
+    if resp.stop_reason == "refusal":
+        return "unknown"
+    word = _text_of(resp).strip().lower().split()
+    first = word[0].strip(".,;:!") if word else ""
+    return first if first in FIGURE_KINDS else "unknown"
+
+
 CONTEXT_SYSTEM = (
     "You write a short situating context for a chunk of a long document, so the chunk can be understood and "
     "retrieved on its own. Answer with one or two plain sentences and nothing else: which part of the document "
-    "this is, what it is about, and what key entities, section numbers or terms it concerns. Do not restate the chunk."
+    "this is, what it is about, and what key entities, section numbers or terms it concerns. When the chunk defines "
+    "terms, as a glossary or a definitions section does, name every term it defines. Do not restate the chunk."
 )
 
 

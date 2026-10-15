@@ -1,0 +1,84 @@
+{
+  "document": "humira-label-2017.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "In the 2017 HUMIRA highlights, what year is given as the initial U.S. approval for adalimumab?",
+      "must_contain": "Initial U.S. Approval: 2002",
+      "expected_page": 1,
+      "answer": "The highlights list HUMIRA's initial U.S. approval as 2002.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the HUMIRA label's serious infections section, what should be considered for a patient with a serious systemic illness who lives in or travels to an area where mycoses are endemic, and what can be done while the workup is ongoing?",
+      "must_contain": "empiric antifungal therapy",
+      "expected_page": 10,
+      "answer": "Consider invasive fungal infection in the differential diagnosis, since histoplasmosis antigen and antibody tests may be negative, and consider empiric antifungal therapy during the workup along with consulting an invasive fungal infection expert.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In HUMIRA Study JIA-I, what percentage of polyarticular JIA patients in the MTX stratum were Pediatric ACR 30 responders at the end of the 16-week OL-LI phase?",
+      "must_contain": "94%",
+      "expected_page": 34,
+      "answer": "94% of patients in the MTX stratum were Pediatric ACR 30 responders at the end of the 16-week OL-LI phase.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the NDC number for the HUMIRA Pen 80 mg/0.8 mL starter package for Crohn's disease, ulcerative colitis or hidradenitis suppurativa?",
+      "must_contain": "0074-0124-03",
+      "expected_page": 48,
+      "answer": "The NDC number for the HUMIRA Pen 80 mg/0.8 mL starter package is 0074-0124-03.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "When using the HUMIRA Pen, is it normal to see bubbles in the medicine window, and when should the plum-colored activator button be pressed?",
+      "must_contain": "one or more bubbles",
+      "expected_page": 65,
+      "answer": "Seeing one or more bubbles in the window is normal, and the plum-colored activator button should only be pressed when you are ready to inject, since it releases the medicine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the pooled RA placebo-controlled studies (RA-I to RA-IV), what percentage of patients on HUMIRA 40 mg every other week reported nausea compared with placebo?",
+      "must_contain": "9%",
+      "expected_page": 17,
+      "answer": "Nausea was reported by 9% of patients on HUMIRA 40 mg every other week versus 8% on placebo.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "In the HUMIRA ankylosing spondylitis study, what was the Week 24 value for Patient's Global Assessment of Disease Activity in the HUMIRA group?",
+      "must_contain": "HUMIRA N=208: 63. col5: 38",
+      "expected_page": 38,
+      "answer": "The HUMIRA group's Patient's Global Assessment of Disease Activity went from a baseline of 63 to 38 at Week 24, versus 65 to 60 for placebo.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "In the HUMIRA psoriatic arthritis ACR response table for Study PsA-I, what p-value footnote applies to the comparisons between HUMIRA and placebo?",
+      "must_contain": "p<0.001 for all comparisons",
+      "expected_page": 35,
+      "answer": "The footnote states that p<0.001 for all comparisons between HUMIRA and placebo.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What HUMIRA dose and presentation is used every other week for a polyarticular JIA patient aged 2 or older weighing between 15 kg and under 30 kg?",
+      "must_contain": "20 mg Prefilled Syringe",
+      "expected_page": 5,
+      "answer": "A patient weighing 15 kg to <30 kg (33 to <66 lbs) receives 20 mg every other week using the 20 mg Prefilled Syringe.",
+      "chunk_type": "table"
+    },
+    {
+      "question": "In the Humira 2017 label's Study RA-III ACR 20 time-course figure, about what percent of patients on 40 mg every other week were ACR20 responders at week 24?",
+      "must_contain": "peaks near 62% at week 24",
+      "expected_page": 31,
+      "answer": "The adalimumab 40 mg every other week group peaks near 62% ACR20 response at week 24.",
+      "chunk_type": "figure"
+    },
+    {
+      "question": "In the Humira pen instructions figure, what supplies are laid out in Step 2 along with the prefilled pen?",
+      "must_contain": "alcohol prep pad",
+      "expected_page": 79,
+      "answer": "Step 2 shows a sharps disposal container, a prefilled pen with a maroon cap in a tray, an alcohol prep pad, and a cotton ball or gauze, plus a handwashing inset.",
+      "chunk_type": "figure"
+    }
+  ]
+}

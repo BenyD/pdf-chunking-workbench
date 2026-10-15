@@ -1,0 +1,84 @@
+{
+  "document": "Bharatiya Nyaya Sanhita 2023.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "What Gazette of India issue number and date was the Bharatiya Nyaya Sanhita 2023 published under in Part II, Section 1?",
+      "must_contain": "DECEMBER 25, 2023",
+      "expected_page": 1,
+      "answer": "It was published in Extraordinary Gazette No. 53 on Monday, 25 December 2023 (Pausha 4, 1945 Saka).",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under Section 58 of the Bharatiya Nyaya Sanhita, what is the maximum imprisonment for concealing a design to commit an offence punishable with death or life imprisonment when the offence is not actually committed?",
+      "must_contain": "may extend to three years",
+      "expected_page": 21,
+      "answer": "If the offence is not committed, the concealer faces imprisonment of either description for up to three years, and is also liable to fine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the maximum imprisonment under Section 120(2) of the Bharatiya Nyaya Sanhita for voluntarily causing grievous hurt to extort a confession or compel restoration of property?",
+      "must_contain": "extend to ten years",
+      "expected_page": 39,
+      "answer": "Imprisonment of either description for up to ten years, along with liability to fine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "For postal stamp offences in the Bharatiya Nyaya Sanhita, how is the word \"Government\" extended to cover authorities in India or abroad, regardless of the general definition in section 2?",
+      "must_contain": "clause (12) of section 2",
+      "expected_page": 54,
+      "answer": "Where it relates to a stamp denoting a rate of postage, \"Government\" is deemed to include persons authorised by law to administer executive Government in any part of India or any foreign country, notwithstanding clause (12) of section 2.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under Section 248 of the Bharatiya Nyaya Sanhita, what is the maximum fine for instituting a false criminal proceeding with intent to injure someone, where the charge is not for a death, life or ten-year offence?",
+      "must_contain": "two lakh rupees",
+      "expected_page": 68,
+      "answer": "The fine may extend to two lakh rupees, alongside or instead of imprisonment of up to five years.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under Section 309 of the Bharatiya Nyaya Sanhita, what is the maximum prison term for robbery committed on the highway between sunset and sunrise?",
+      "must_contain": "extended to fourteen years",
+      "expected_page": 82,
+      "answer": "Robbery on the highway between sunset and sunrise can be punished with rigorous imprisonment extended to fourteen years, rather than the usual ten-year maximum.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "On what date did the Bharatiya Nyaya Sanhita 2023 receive the President's assent according to the Gazette notice from the Legislative Department?",
+      "must_contain": "25th December, 2023",
+      "expected_page": 1,
+      "answer": "The Act received the President's assent on 25th December, 2023, and was published for general information.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the minimum and maximum imprisonment under Section 121(2) of the BNS 2023 for voluntarily causing grievous hurt to a public servant on duty?",
+      "must_contain": "not be less than one year",
+      "expected_page": 40,
+      "answer": "Imprisonment of either description for at least one year and up to ten years, plus liability to fine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the maximum imprisonment under the Bharatiya Nyaya Sanhita for a mint employee who deliberately causes coins to differ in weight or composition from what the law fixes?",
+      "must_contain": "extend to seven years",
+      "expected_page": 54,
+      "answer": "Section 187 provides imprisonment of either description for up to seven years, and the offender is also liable to fine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under Section 249 of the Bharatiya Nyaya Sanhita 2023, what is the maximum imprisonment for harbouring an offender whose offence is punishable with death?",
+      "must_contain": "may extend to five years",
+      "expected_page": 68,
+      "answer": "Harbouring an offender whose offence is punishable with death carries imprisonment of either description for up to five years, plus a possible fine.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the minimum term of rigorous imprisonment under Section 310 of the Bharatiya Nyaya Sanhita when one member of a dacoity gang commits murder during the dacoity?",
+      "must_contain": "not be less than ten years",
+      "expected_page": 82,
+      "answer": "Every member of the gang is punishable with death, life imprisonment, or rigorous imprisonment of not less than ten years, plus a fine.",
+      "chunk_type": "text"
+    }
+  ]
+}

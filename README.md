@@ -30,7 +30,7 @@ worker/    FastAPI + PyMuPDF + Tesseract + OpenCV. Parsing, chunking, model call
 supabase/  Postgres schema (pgvector + full text + hybrid_search function) and local stack config.
 samples/   Generator for the synthetic sample PDFs. Output lands in web/public/samples.
 docs/      Internal design notes.
-scripts/   eval.py: recall@k on the built-in question sets, against a running deployment.
+scripts/   eval.py: recall@k on the question sets, against a running deployment. make_questions.py: writes a labelled set per document with Claude. benchmarks/: the saved sets.
 ```
 
 ## Run locally
@@ -86,7 +86,8 @@ Uploads go straight from the browser to Supabase Storage through a signed URL, s
 
 | Step | Model | Notes |
 |---|---|---|
-| figure descriptions | `claude-opus-5-5` | once per figure at ingest, structured JSON output |
+| a look at each figure | `claude-haiku-5-5` | one cheap look at every figure crop at ingest; a logo, a border or a blank box gets no description and no passage |
+| figure descriptions | `claude-opus-5-5` | once per figure that carries information, structured JSON output |
 | passage context and suggested questions | `claude-haiku-5-5` | once per text/table passage at ingest |
 | answer on the search page | `claude-haiku-5-5` | one short call per search, from the passages found |
 | OCR fallback | `claude-opus-5-5` | only for fields with low confidence or failed validation |
@@ -94,17 +95,39 @@ Uploads go straight from the browser to Supabase Storage through a signed URL, s
 
 Retrieval itself is a single Postgres function (full text + vector, reciprocal rank fusion) and costs nothing per query.
 
-## Measured on the samples
+## Measured
 
-`scripts/eval.py` runs the built-in question sets through the deployed search
-(recall@5 and mean reciprocal rank). On 2026-10-15, with Voyage embeddings:
+`scripts/make_questions.py` writes a labelled question set for every document
+with Claude: passages are sampled across each document's pages and kinds (text,
+table rows, whole tables, figures, forms), and for each one the model writes a
+question someone who works with the document would ask, plus the exact phrase
+from that passage which the right answer must contain. A phrase that is not in
+the passage word for word, or that the question already gives away, is
+rejected. The sets live in `scripts/benchmarks/` (and `public/samples/eval.json`
+for the hand-written sample questions); `scripts/eval.py` runs them through the
+live search and reports recall@5 and mean reciprocal rank. On 2026-10-15, 126
+questions over 13 documents, with Voyage embeddings:
 
 | Document | questions | recall@5 | MRR |
 |---|---|---|---|
-| QC inspection report (figures + ruled table) | 5 | 100% | 1.00 |
-| Bharatiya Nyaya Sanhita (102 pages, sections) | 12 | 100% | 1.00 |
-| Bharatiya Nagarik Suraksha Sanhita (297 pages, 30-page schedule) | 7 | 100% | 0.91 |
-| Price schedule (150-page table, 4,500 rows) | 4 | 100% | 1.00 |
+| Bharatiya Nyaya Sanhita 2023 (102 pages, sections) | 23 | 100% | 0.96 |
+| Bharatiya Nagarik Suraksha Sanhita 2023 (297 pages, 30-page schedule) | 18 | 94% | 0.90 |
+| QC inspection report (annotated photos, ruled table) | 16 | 100% | 0.97 |
+| NPPA ceiling-price notice, Apollo (public gazette) | 12 | 100% | 1.00 |
+| WHO GMP main principles, TRS 986 Annex 2 (60 pages) | 12 | 92% | 0.78 |
+| FDA Humira label (100 pages, tables, illustrated instructions) | 11 | 100% | 0.84 |
+| Pharma price schedule (150-page table, 4,500 rows) | 9 | 100% | 1.00 |
+| NPPA ceiling-price notice 2024 (English and Hindi) | 8 | 100% | 1.00 |
+| Rifaximin tablets monograph (watermarked draft) | 6 | 100% | 0.83 |
+| CDSCO new drugs 2024 (table across a page break) | 4 | 100% | 1.00 |
+| Three pharmacy bills, one a crooked scan | 7 | 100% | 0.93 |
+| All documents | 126 | 98% | 0.93 |
+
+The two misses: which clause of the BNSS names the Directorate of Prosecution,
+where the search returned the section itself rather than the table-of-contents
+entry the label asked for; and which earlier annex the WHO document replaces, a
+sentence in its preamble. After a reset, `make_questions.py --seed` puts the
+saved sets back onto the documents by name.
 
 The pipeline was chosen by running the same questions against three ways of
 cutting the documents (fixed windows, layout-aware cuts, layout-aware cuts

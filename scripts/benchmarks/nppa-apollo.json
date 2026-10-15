@@ -1,0 +1,91 @@
+{
+  "document": "nppa-apollo.pdf",
+  "generated": "2026-10-15",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "question": "On what date was the NPPA notification issued from New Delhi by the Department of Pharmaceuticals under the Ministry of Chemicals and Fertilizers?",
+      "must_contain": "15th May, 2024",
+      "expected_page": 1,
+      "answer": "The notification was issued on 15th May, 2024.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "Under the note to the Mesalazine 400mg ceiling-price entry, which form must a manufacturer use to issue its price list to NPPA through IPDMS from the notification date?",
+      "must_contain": "Form–V",
+      "expected_page": 1,
+      "answer": "The manufacturer must issue the price list in Form–V under paragraph 24 of DPCO 2013, sending it to NPPA via IPDMS and copying the State Drug Controller and dealers.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "In the NPPA order of 5 May 2024, which column of the price table gives the maximum price fixed for each scheduled formulation, and is GST included in it?",
+      "must_contain": "स्तंभ (5)",
+      "expected_page": 3,
+      "answer": "The maximum price is given in column (5) of the table, and it excludes GST (goods and services tax), if any.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "उपर्युक्त सारणी के किस स्तंभ में वर्णित अधिकतम कीमत से अधिक कीमत वाली अनुसूचित विनिर्मितियों का दाम विनिर्माताओं को घटाना होगा?",
+      "must_contain": "स्तंभ (5)",
+      "expected_page": 4,
+      "answer": "विनिर्माताओं को सारणी के स्तंभ (5) में वर्णित अधिकतम कीमत (जीएसटी सहित, जो लागू हो) से अधिक कीमत का अधोमुखी पुनरीक्षण करना होगा।",
+      "chunk_type": "text"
+    },
+    {
+      "question": "औषध (मूल्य नियंत्रण) आदेश के किस पैरा के अनुसार फुटकर विक्रेता और वितरक को अपने कारोबार परिसर में कीमत सूची और पूरक सूची प्रदर्शित करनी होती है?",
+      "must_contain": "पैरा 24 (4)",
+      "expected_page": 4,
+      "answer": "पैरा 24 (4) के अनुसार प्रत्येक फुटकर विक्रेता और वितरक को ऐसे परिसर में, जहां परामर्श के इच्छुक व्यक्ति आसानी से पहुंच सकें, कीमत सूची और पूरक सूची (यदि कोई हो) प्रदर्शित करनी होती है।",
+      "chunk_type": "text"
+    },
+    {
+      "question": "अनुसूचित विनिर्मितियों का उत्पादन या आयात बन्द करने के इच्छुक निर्माता को एनपीपीए को कितने समय पहले और किस फॉर्म में सूचना देनी होती है?",
+      "must_contain": "छः महीने पहले",
+      "expected_page": 4,
+      "answer": "निर्माता को उत्पादन या आयात बन्द करने की तिथि से छः महीने पहले अनुसूची ॥ के फॉर्म IV में भरकर एनपीपीए को सूचना देनी होगी।",
+      "chunk_type": "text"
+    },
+    {
+      "question": "What is the NPPA ceiling price for Oxaliplatin injection 5 mg/mL in a 20 ml vial, excluding GST?",
+      "must_contain": "4979.68",
+      "expected_page": 1,
+      "answer": "The ceiling price is Rs. 4979.68 per vial of Oxaliplatin injection 5 mg/mL in 20ml.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the NPPA ceiling price per capsule for Cloxacillin 250mg capsules, exclusive of GST?",
+      "must_contain": "1.41",
+      "expected_page": 1,
+      "answer": "The ceiling price for Cloxacillin 250mg capsule is Rs. 1.41 per capsule.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the NPPA ceiling price, excluding GST, for one vial of Ampicillin powder for injection 1000 mg?",
+      "must_contain": "24.92",
+      "expected_page": 1,
+      "answer": "The ceiling price for a 1000 mg vial of Ampicillin powder for injection is Rs. 24.92.",
+      "chunk_type": "table_row"
+    },
+    {
+      "question": "What is the ceiling price per vial for Oxaliplatin injection 5 mg/mL in a 20 ml vial in the NPPA price notification?",
+      "must_contain": "4979.68",
+      "expected_page": 1,
+      "answer": "The ceiling price of Oxaliplatin injection 5 mg/mL in a 20ml vial is Rs. 4979.68 per vial, exclusive of GST.",
+      "chunk_type": "table"
+    },
+    {
+      "question": "Which earlier NPPA order from March 2024 does S.O. 1992(E) supersede for the formulation packs listed in its table?",
+      "must_contain": "SO 1548(E) dated 26th March, 2024",
+      "expected_page": 1,
+      "answer": "S.O. 1992(E) supersedes NPPA Order No. SO 1548(E) dated 26th March, 2024, for the formulation packs in its table, except for things done or omitted before the supersession.",
+      "chunk_type": "text"
+    },
+    {
+      "question": "यदि किसी मौजूदा निर्माता की अनुसूचित विनिर्मिति का अधिकतम खुदरा मूल्य सारणी के स्तंभ (5) में दी गई अधिकतम कीमत से कम है, तो औषध (मूल्य नियंत्रण) आदेश के किस पैराग्राफ के अनुसार उसे अपना मौजूदा MRP बनाए रखना होगा?",
+      "must_contain": "पैराग्राफ 3(2)",
+      "expected_page": 4,
+      "answer": "ऐसे निर्माताओं को औषध (मूल्य नियंत्रण) आदेश के पैराग्राफ 3(2) के अनुसार अपना मौजूदा अधिकतम खुदरा मूल्य बनाए रखना होगा।",
+      "chunk_type": "text"
+    }
+  ]
+}
