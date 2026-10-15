@@ -1,0 +1,459 @@
+{
+  "sop": "SOP-QA-031 Product complaints (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.198"
+  ],
+  "scope": {
+    "how": "measured",
+    "threshold": 0.65,
+    "ranking": [
+      {
+        "section": "211.198",
+        "title": "211.198 Complaint files.",
+        "score": 0.692,
+        "in_scope": true
+      },
+      {
+        "section": "211.180",
+        "title": "211.180 General requirements.",
+        "score": 0.635,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.633,
+        "in_scope": false
+      },
+      {
+        "section": "211.204",
+        "title": "211.204 Returned drug products.",
+        "score": 0.601,
+        "in_scope": false
+      },
+      {
+        "section": "211.170",
+        "title": "211.170 Reserve samples.",
+        "score": 0.589,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.57,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.56,
+        "in_scope": false
+      },
+      {
+        "section": "211.166",
+        "title": "211.166 Stability testing.",
+        "score": 0.556,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.555,
+        "in_scope": false
+      },
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.55,
+        "in_scope": false
+      },
+      {
+        "section": "211.134",
+        "title": "211.134 Drug product inspection.",
+        "score": 0.548,
+        "in_scope": false
+      },
+      {
+        "section": "211.84",
+        "title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+        "score": 0.545,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 11,
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 11,
+    "in": 12883,
+    "out": 1293,
+    "dollars": 0.00097,
+    "dollars_per_requirement": 8.8e-05,
+    "batch_calls": 11
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 11,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.198(a), sentence 1",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "Written procedures describing the handling of all written and oral complaints regarding a drug product shall be established and followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: handling, regarding, drug, followed."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Any employee who receives a complaint passes it to QA the same working day.",
+        "reason": "The SOP establishes written procedures for receiving, recording, assessing and closing both written and oral complaints about marketed products (Purpose and Section 3), and the scope covers all complaints about tablet and capsule products released from the Chennai site, whoever receives them."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(a), sentence 2",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "Such procedures shall include provisions for review by the quality control unit, of any complaint involving the possible failure of a drug product to meet any of its specifications and, for such drug products, a determination as to the need for an investigation in accordance with § 211.192.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment and investigation\n\n4.1 QA decides within five working days whether the complaint is about a possible failure of the product to meet its specifications. 4.2 If it is, the batch record and the retained samples are reviewed and an investigation is opened under SOP-QA-015; other batches that may be affected are included. 4.3 QA also decides whether the complaint must be reported to the licensing authority."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: provisions, quality, control, unit, involving."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "4.1 QA decides within five working days whether the complaint is about a possible failure of the product to meet its specifications. 4.2 If it is, the batch record and the retained samples are reviewed and an investigation is opened under SOP-QA-015",
+        "reason": "The SOP has QA (not the quality control unit) assess specification-failure complaints and decide on investigations under SOP-QA-015, but it does not state that the quality control unit reviews such complaints, so the review-by-QCU element is not explicitly addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(a), sentence 3",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "Such procedures shall include provisions for review to determine whether the complaint represents a serious and unexpected adverse drug experience which is required to be reported to the Food and Drug Administration in accordance with §§ 310.305 and 514.80 of this chapter.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every complaint about a tablet or capsule product released from the Chennai site, whoever receives it. Adverse event reports are passed to Pharmacovigilance under SOP-PV-002."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment and investigation\n\n4.1 QA decides within five working days whether the complaint is about a possible failure of the product to meet its specifications. 4.2 If it is, the batch record and the retained samples are reviewed and an investigation is opened under SOP-QA-015; other batches that may be affected are included. 4.3 QA also decides whether the complaint must be reported to the licensing authority."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions provisions, review, determine, represents, serious, unexpected."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "4.3 QA also decides whether the complaint must be reported to the licensing authority.",
+        "reason": "The SOP requires QA to decide whether a complaint must be reported to the licensing authority, but it does not state a review for serious and unexpected adverse drug experiences reportable under 21 CFR 310.305 and 514.80, and only refers adverse event reports to Pharmacovigilance without a review step to determine reportability."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b), sentence 1",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "A written record of each complaint shall be maintained in a file designated for drug product complaints.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: maintained, file, designated, drug."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Complaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned",
+        "reason": "The SOP requires each complaint to be opened as a numbered record and kept in a designated QA complaint register, which satisfies the requirement for a written record of each complaint in a designated file."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b), sentence 2",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "The file regarding such drug product complaints shall be maintained at the establishment where the drug product involved was manufactured, processed, or packed, or such file may be maintained at another facility if the written records in such files are readily available for inspection at that other facility.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions file, regarding, drug, maintained, establishment, involved."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP does not state where the complaint file must be maintained, nor whether it must be at the manufacturing establishment or at another facility with records readily available for inspection; it only mentions a QA complaint register without location requirements."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b), sentence 3",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "Written records involving a drug product shall be maintained until at least 1 year after the expiration date of the drug product, or 1 year after the date that the complaint was received, whichever is longer.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: involving, drug, maintained, until, least."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Complaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned",
+        "reason": "The SOP sets retention at one year after batch expiry but omits the alternative of one year after the complaint receipt date and the 'whichever is longer' rule, so a complaint received after expiry could be discarded too early."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b), sentence 4",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files.",
+      "text": "In the case of certain OTC drug products lacking expiration dating because they meet the criteria for exemption under § 211.137, such written records shall be maintained for 3 years after distribution of the drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions case, certain, drug, lacking, expiration, dating."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "The SOP scope covers only tablet and capsule products released from the Chennai site, and the SOP's records section dates all complaint records from batch expiry, so the OTC exempt-from-expiration-dating retention rule is outside the SOP's stated scope and conditions."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b)(1)",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files. > A written record of each complaint shall be maintained in a file designated for drug product complaints. The file regarding such drug product complaints shall be maintained at the establishment where the drug product involved was manufactured, processed, or packed, or such file may be maintained at another facility if the written records in such files are readily available for inspection at that o...",
+      "text": "The written record shall include the following information, where known: the name and strength of the drug product, lot number, name of complainant, nature of complaint, and reply to complainant.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 67% of the terms; missing: information, known, drug, reply."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint.",
+        "reason": "The SOP requires the record to capture product name and strength, batch number, complainant and nature of complaint, but does not mention recording the reply to the complainant."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b)(2), sentence 1",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files. > A written record of each complaint shall be maintained in a file designated for drug product complaints. The file regarding such drug product complaints shall be maintained at the establishment where the drug product involved was manufactured, processed, or packed, or such file may be maintained at another facility if the written records in such files are readily available for inspection at that o...",
+      "text": "Where an investigation under § 211.192 is conducted, the written record shall include the findings of the investigation and followup.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment and investigation\n\n4.1 QA decides within five working days whether the complaint is about a possible failure of the product to meet its specifications. 4.2 If it is, the batch record and the retained samples are reviewed and an investigation is opened under SOP-QA-015; other batches that may be affected are included. 4.3 QA also decides whether the complaint must be reported to the licensing authority."
+        },
+        {
+          "page": 1,
+          "text": "5. Closing\n\n5.1 The record states what was found, what was done and the reply sent to the complainant. 5.2 Where no investigation was made, the record gives the reason and the name of the person who decided."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: 211.192, conducted, findings, followup."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "5.1 The record states what was found, what was done and the reply sent to the complainant.",
+        "reason": "The SOP requires the complaint record to state findings and actions for complaints, and sends investigations to SOP-QA-015, but does not explicitly require the investigation record itself to include findings and follow-up; the closing requirement is only partially equivalent."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b)(2), sentence 2",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files. > A written record of each complaint shall be maintained in a file designated for drug product complaints. The file regarding such drug product complaints shall be maintained at the establishment where the drug product involved was manufactured, processed, or packed, or such file may be maintained at another facility if the written records in such files are readily available for inspection at that o...",
+      "text": "The record or copy of the record of the investigation shall be maintained at the establishment where the investigation occurred in accordance with § 211.180(c).",
+      "passages": [
+        {
+          "page": 1,
+          "text": "3. Receiving a complaint\n\n3.1 Any employee who receives a complaint passes it to QA the same working day. 3.2 QA opens a complaint record with a number, the date received, the complainant, the product name and strength, the batch number and the nature of the complaint. 3.3 Samples returned with a complaint are labelled with the complaint number and held in the QA retention cabinet."
+        },
+        {
+          "page": 1,
+          "text": "5. Closing\n\n5.1 The record states what was found, what was done and the reply sent to the complainant. 5.2 Where no investigation was made, the record gives the reason and the name of the person who decided."
+        },
+        {
+          "page": 1,
+          "text": "6. Records\n\nComplaint records are kept in the QA complaint register for one year after the expiry date of the batch concerned, and complaint trends are reviewed in the annual product review."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 29% of the terms; missing: copy, maintained, establishment, occurred, 211.180."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers complaint records and closing but never states that the record or copy of an investigation must be maintained at the establishment where the investigation occurred, nor references 211.180(c)."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.198(b)(3)",
+      "section_title": "211.198 Complaint files.",
+      "context": "211.198 Complaint files. > A written record of each complaint shall be maintained in a file designated for drug product complaints. The file regarding such drug product complaints shall be maintained at the establishment where the drug product involved was manufactured, processed, or packed, or such file may be maintained at another facility if the written records in such files are readily available for inspection at that o...",
+      "text": "Where an investigation under § 211.192 is not conducted, the written record shall include the reason that an investigation was found not to be necessary and the name of the responsible person making such a determination.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how written and oral complaints about a marketed product are received, recorded, assessed and closed, and when a complaint leads to an investigation."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment and investigation\n\n4.1 QA decides within five working days whether the complaint is about a possible failure of the product to meet its specifications. 4.2 If it is, the batch record and the retained samples are reviewed and an investigation is opened under SOP-QA-015; other batches that may be affected are included. 4.3 QA also decides whether the complaint must be reported to the licensing authority."
+        },
+        {
+          "page": 1,
+          "text": "5. Closing\n\n5.1 The record states what was found, what was done and the reply sent to the complainant. 5.2 Where no investigation was made, the record gives the reason and the name of the person who decided."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: 211.192, conducted, necessary, responsible, making."
+      },
+      "model": {
+        "status": "met",
+        "quote": "5.2 Where no investigation was made, the record gives the reason and the name of the person who decided.",
+        "reason": "The SOP requires that where no investigation is made, the complaint record gives the reason and the name of the deciding person, which matches the requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    }
+  ]
+}

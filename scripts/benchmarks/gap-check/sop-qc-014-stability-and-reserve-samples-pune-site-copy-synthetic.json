@@ -1,0 +1,1391 @@
+{
+  "sop": "SOP-QC-014 Stability and reserve samples, Pune site copy (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.170",
+    "211.137",
+    "211.166"
+  ],
+  "scope": {
+    "how": "measured",
+    "threshold": 0.65,
+    "ranking": [
+      {
+        "section": "211.170",
+        "title": "211.170 Reserve samples.",
+        "score": 0.708,
+        "in_scope": true
+      },
+      {
+        "section": "211.137",
+        "title": "211.137 Expiration dating.",
+        "score": 0.684,
+        "in_scope": true
+      },
+      {
+        "section": "211.166",
+        "title": "211.166 Stability testing.",
+        "score": 0.677,
+        "in_scope": true
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.611,
+        "in_scope": false
+      },
+      {
+        "section": "211.180",
+        "title": "211.180 General requirements.",
+        "score": 0.606,
+        "in_scope": false
+      },
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.599,
+        "in_scope": false
+      },
+      {
+        "section": "211.87",
+        "title": "211.87 Retesting of approved components, drug product containers, and closures.",
+        "score": 0.596,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.596,
+        "in_scope": false
+      },
+      {
+        "section": "211.194",
+        "title": "211.194 Laboratory records.",
+        "score": 0.595,
+        "in_scope": false
+      },
+      {
+        "section": "211.42",
+        "title": "211.42 Design and construction features.",
+        "score": 0.594,
+        "in_scope": false
+      },
+      {
+        "section": "211.122",
+        "title": "211.122 Materials examination and usage criteria.",
+        "score": 0.572,
+        "in_scope": false
+      },
+      {
+        "section": "211.160",
+        "title": "211.160 General requirements.",
+        "score": 0.571,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 41,
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 41,
+    "in": 50288,
+    "out": 5182,
+    "dollars": 0.00381,
+    "dollars_per_requirement": 9.3e-05,
+    "batch_calls": 41
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 41,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.137(a)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "To assure that a drug product meets applicable standards of identity, strength, quality, and purity at the time of use, it shall bear an expiration date determined by appropriate stability testing described in § 211.166.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions assure, drug, meets, applicable, standards, identity."
+      },
+      "model": {
+        "status": "met",
+        "quote": "The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data.",
+        "reason": "The SOP requires expiry dates to be set from long-term stability data derived from the stability programme and printed on every label, which addresses the requirement that the expiration date be determined by appropriate stability testing and borne on the product, though the tentative 24-month dating from accelerated data alone is a weaker basis that could be questioned."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(b)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Expiration dates shall be related to any storage conditions stated on the labeling, as determined by stability studies described in § 211.166.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 27% of the terms; missing: expiration, related, storage, conditions, stated."
+      },
+      "model": {
+        "status": "met",
+        "quote": "The expiry date of each product is set from its long-term stability data and is printed on every label. The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture.",
+        "reason": "The SOP requires expiry dates to be set from long-term stability data and requires the label to state the storage condition the expiry date depends on, which satisfies the requirement that expiry dates relate to stated storage conditions determined by stability studies."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(c)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "If the drug product is to be reconstituted at the time of dispensing, its labeling shall bear expiration information for both the reconstituted and unreconstituted drug products.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes reconstituted products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP scope excludes products reconstituted before use, and the SOP covers only tablets and capsules, so a product reconstituted at the time of dispensing is outside its scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(d)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Expiration dates shall appear on labeling in accordance with the requirements of § 201.17 of this chapter.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 40% of the terms; missing: expiration, dates, labeling."
+      },
+      "model": {
+        "status": "met",
+        "quote": "5.3 The expiry date appears on the label in the form required by 21 CFR 201.17.",
+        "reason": "The SOP explicitly requires the expiry date to appear on the label in the form required by 21 CFR 201.17, and in scope for tablets and capsules."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(e)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Homeopathic drug products shall be exempt from the requirements of this section.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes homeopathic products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's stated scope expressly excludes homeopathic products, so the homeopathic exemption in 211.137(e) is outside the SOP's coverage and the requirement does not need to be addressed by it."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(f)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Allergenic extracts that are labeled “No U.S. Standard of Potency” are exempt from the requirements of this section.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes allergenic products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's stated scope expressly excludes allergenic extracts, so the requirement exempting allergenic extracts labeled 'No U.S. Standard of Potency' is outside the SOP's coverage."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(g), sentence 1",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "New drug products for investigational use are exempt from the requirements of this section, provided that they meet appropriate standards or specifications as demonstrated by stability studies during their use in clinical investigations.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes investigational products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's stated scope expressly excludes investigational products, so the investigational-use exemption in 211.137(g) does not need to be addressed by this SOP."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(g), sentence 2",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Where new drug products for investigational use are to be reconstituted at the time of dispensing, their labeling shall bear expiration information for the reconstituted drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes investigational products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP scope explicitly excludes investigational products and products reconstituted before use, so the requirement for expiration information on reconstituted investigational products falls outside the SOP's stated scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.137(h)",
+      "section_title": "211.137 Expiration dating.",
+      "context": "211.137 Expiration dating.",
+      "text": "Pending consideration of a proposed exemption, published in the Federal Register of September 29, 1978, the requirements in this section shall not be enforced for human OTC drug products if their labeling does not bear dosage limitations and they are stable for at least 3 years as supported by appropriate stability data.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions pending, consideration, proposed, exemption, published, federal."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP applies expiry dating to every commercial tablet and capsule product and sets expiry on all products, so the 211.137(h) exemption for OTC products without dosage limitations and stable for at least 3 years is not invoked or permitted by the SOP."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a), sentence 1",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "There shall be a written testing program designed to assess the stability characteristics of drug products.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Responsibilities\n\nThe QC manager writes and approves each stability protocol. QA approves the protocol, reviews every stability report and owns this procedure. Stores keeps the retention room."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: testing, designed, assess, characteristics, drug."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study.",
+        "reason": "The SOP requires a written stability protocol for every product that is approved by QA and followed for every batch placed on study, which fits the requirement for a written testing program designed to assess stability characteristics; scope covers tablets and capsules and the scope exclusions do not remove this requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a), sentence 2",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: testing, determining, storage, expiration, dates."
+      },
+      "model": {
+        "status": "met",
+        "quote": "5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture.",
+        "reason": "The SOP explicitly requires stability data to set each product's expiry date and requires the storage condition the expiry date depends on to be stated on the label, so stability results drive both expiry dating and storage conditions for the in-scope tablets and capsules."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a), sentence 3",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "The written program shall be followed and shall include:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Responsibilities\n\nThe QC manager writes and approves each stability protocol. QA approves the protocol, reviews every stability report and owns this procedure. Stores keeps the retention room."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study.",
+        "reason": "The SOP requires a written stability protocol for every product and states that the protocol is followed for every batch placed on study, which matches the requirement that the written program shall be followed and shall include its elements."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a)(1)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > There shall be a written testing program designed to assess the stability characteristics of drug products. The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates. The written program shall be followed and shall include:",
+      "text": "Sample size and test intervals based on statistical criteria for each attribute examined to assure valid estimates of stability;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 54% of the terms; missing: size, based, criteria, examined, assure."
+      },
+      "model": {
+        "status": "met",
+        "quote": "The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months.",
+        "reason": "The SOP requires sample sizes and test intervals to be chosen statistically for each attribute tested, which satisfies the requirement, and the scope covers tablets and capsules."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a)(2)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > There shall be a written testing program designed to assess the stability characteristics of drug products. The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates. The written program shall be followed and shall include:",
+      "text": "Storage conditions for samples retained for testing;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label.",
+        "reason": "Section 6.1 states that retained samples are stored at the label storage condition, but it does not specify the temperature/humidity conditions or require the retained samples to be controlled and verified as the requirement implies, so the storage conditions for retained samples are only partly addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a)(3)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > There shall be a written testing program designed to assess the stability characteristics of drug products. The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates. The written program shall be followed and shall include:",
+      "text": "Reliable, meaningful, and specific test methods;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Responsibilities\n\nThe QC manager writes and approves each stability protocol. QA approves the protocol, reviews every stability report and owns this procedure. Stores keeps the retention room."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 40% of the terms; missing: reliable, meaningful, specific."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Only validated, stability-indicating test methods are used (SOP-QC-002).",
+        "reason": "The SOP requires only validated, stability-indicating test methods, which satisfies the requirement for reliable, meaningful, and specific test methods."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a)(4)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > There shall be a written testing program designed to assess the stability characteristics of drug products. The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates. The written program shall be followed and shall include:",
+      "text": "Testing of the drug product in the same container-closure system as that in which the drug product is marketed;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 71% of the requirement's terms."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.5 Stability samples are packed in the same container-closure system as the marketed product.",
+        "reason": "The SOP explicitly requires stability samples to be packed in the same container-closure system as the marketed product, which satisfies the requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(a)(5)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > There shall be a written testing program designed to assess the stability characteristics of drug products. The results of such stability testing shall be used in determining appropriate storage conditions and expiration dates. The written program shall be followed and shall include:",
+      "text": "Testing of drug products for reconstitution at the time of dispensing (as directed in the labeling) as well as after they are reconstituted.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes reconstituted products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP scope explicitly excludes products reconstituted before use, so testing of drug products for reconstitution at dispensing does not apply to the SOP's covered products."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(b), sentence 1",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "An adequate number of batches of each drug product shall be tested to determine an appropriate expiration date and a record of such data shall be maintained.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 45% of the terms; missing: number, drug, determine, expiration, date."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.6 At least three production batches of each product are placed on stability, and every result is recorded in the stability database.",
+        "reason": "The SOP requires at least three production batches of each product on stability with every result recorded, and the expiry date is set from long-term stability data, which satisfies testing an adequate number of batches and maintaining a record to determine the expiration date."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(b), sentence 2",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "Accelerated studies, combined with basic stability information on the components, drug products, and container-closure system, may be used to support tentative expiration dates provided full shelf life studies are not available and are being conducted.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions studies, combined, basic, information, components, drug."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data.",
+        "reason": "The SOP permits setting a tentative expiry from accelerated data for new products, but it does not state the regulatory condition that full shelf life studies must be unavailable and still being conducted, so the requirement is only partly addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(b), sentence 3",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "Where data from accelerated studies are used to project a tentative expiration date that is beyond a date supported by actual shelf life studies, there must be stability studies conducted, including drug product testing at appropriate intervals, until the tentative expiration date is verified or the appropriate expiration date determined.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 29% of the terms; missing: studies, project, expiration, beyond, supported."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data.",
+        "reason": "The SOP permits a tentative expiry beyond supporting data from accelerated studies but never states that stability studies must continue with drug product testing until the tentative date is verified or the appropriate expiration date determined, so the requirement is only partly addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(c)(1)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > For homeopathic drug products, the requirements of this section are as follows:",
+      "text": "There shall be a written assessment of stability based at least on testing or examination of the drug product for compatibility of the ingredients, and based on marketing experience with the drug product to indicate that there is no degradation of the product for the normal or expected period of use.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 29% of the terms; missing: assessment, based, testing, examination, drug."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's stated scope expressly excludes homeopathic products, and the requirement applies only to homeopathic drug products, so the SOP does not govern them."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(c)(2)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing. > For homeopathic drug products, the requirements of this section are as follows:",
+      "text": "Evaluation of stability shall be based on the same container-closure system in which the drug product is being marketed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 60% of the terms; missing: evaluation, based, drug, being."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The requirement applies only to homeopathic drug products, which the SOP's stated scope expressly excludes, so the SOP does not need to address this requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.166(d)",
+      "section_title": "211.166 Stability testing.",
+      "context": "211.166 Stability testing.",
+      "text": "Allergenic extracts that are labeled “No U.S. Standard of Potency” are exempt from the requirements of this section.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes allergenic products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP scope expressly excludes allergenic extracts, so the SOP is not applicable to them and the exemption for allergenic extracts labeled 'No U.S. Standard of Potency' is outside its coverage."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a), sentence 1",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: shipment, active, ingredient, retained."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label.",
+        "reason": "The SOP requires an identified, representative reserve sample for each batch of finished product, but the requirement covers each lot in each shipment of each active ingredient, and the SOP addresses only finished product batches, not active ingredients or shipments."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a), sentence 2",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: consists, necessary, tests, required, determine."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Each reserve sample holds at least twice the quantity needed for full release testing.",
+        "reason": "SOP section 6.2 requires at least twice the quantity needed for full release testing, which matches the requirement's twice-the-quantity-for-specification-tests standard, and the SOP applies to tablets and capsules in scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a)(1)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained. The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing. The retention time is as follows:",
+      "text": "For an active ingredient in a drug product other than those described in paragraphs (a) (2) and (3) of this section, the reserve sample shall be retained for 1 year after the expiration date of the last lot of the drug product containing the active ingredient.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 47% of the terms; missing: active, ingredient, drug, paragraphs, retained."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness.",
+        "reason": "The SOP retains reserve samples for six months after batch expiry rather than the one year after the last lot's expiration date required by 211.170(a)(1), though it covers tablets and capsules within scope and applies to a finished product rather than an active ingredient specifically."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a)(2)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained. The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing. The retention time is as follows:",
+      "text": "For an active ingredient in a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes radioactive products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's scope expressly excludes radioactive drugs, so the radioactive-drug retention requirement does not apply to this SOP's products."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a)(2)(i)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained. The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing. The retention time is as follows: > For an active ingredient in a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "text": "Three months after the expiration date of the last lot of the drug product containing the active ingredient if the expiration dating period of the drug product is 30 days or less; or",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 31% of the terms; missing: three, after, expiration, last, drug."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The requirement applies only to radioactive drug products, which the SOP's stated scope expressly excludes."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a)(2)(ii)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained. The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing. The retention time is as follows: > For an active ingredient in a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "text": "Six months after the expiration date of the last lot of the drug product containing the active ingredient if the expiration dating period of the drug product is more than 30 days.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: after, expiration, last, drug, containing."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The requirement applies only to radioactive drug products, which the SOP scope expressly excludes, so the SOP's reserve sample retention rules for tablets and capsules do not address this radioactive-product requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(a)(3)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot in each shipment of each active ingredient shall be retained. The reserve sample consists of at least twice the quantity necessary for all tests required to determine whether the active ingredient meets its established specifications, except for sterility and pyrogen testing. The retention time is as follows:",
+      "text": "For an active ingredient in an OTC drug product that is exempt from bearing an expiration date under § 211.137, the reserve sample shall be retained for 3 years after distribution of the last lot of the drug product containing the active ingredient.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: active, ingredient, drug, exempt, bearing."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "The requirement covers active ingredients in OTC drug products exempt from expiration dating under 211.137, but the SOP scope limits it to commercial batches of tablets and capsules and the SOP dates every product (reserve samples kept until six months after expiry), so the exempt-product condition is not part of the SOP's stated scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 1",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 58% of the terms; missing: drug, retained, stored, consistent, labeling."
+      },
+      "model": {
+        "status": "met",
+        "quote": "An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label.",
+        "reason": "The SOP requires an identified, batch-representative reserve sample stored under the label storage condition, which matches the requirement's retention and storage-consistency language."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 2",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 58% of the terms; missing: reserve, immediate, drug, essentially, characteristics."
+      },
+      "model": {
+        "status": "met",
+        "quote": "6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label.",
+        "reason": "Section 6.1 requires the reserve sample to be kept in its market pack, which is the same container-closure system in which the product is marketed, satisfying the requirement."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 3",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "The reserve sample consists of at least twice the quantity necessary to perform all the required tests, except those for sterility and pyrogens.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: consists, necessary, perform, required, tests."
+      },
+      "model": {
+        "status": "met",
+        "quote": "6.2 Each reserve sample holds at least twice the quantity needed for full release testing.",
+        "reason": "The SOP requires each reserve sample to hold at least twice the quantity needed for full release testing, which matches the requirement's twice-the-quantity standard for tablets and capsules in scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 4",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "Except for those for drug products described in paragraph (b)(2) of this section, reserve samples from representative sample lots or batches selected by acceptable statistical procedures shall be examined visually at least once a year for evidence of deterioration unless visual examination would affect the integrity of the reserve sample.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 28% of the terms; missing: except, drug, reserve, representative, lots."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP's reserve sample section (6.1 to 6.3) contains no requirement for a periodic visual examination for deterioration, and no annual examination is described anywhere in the passages provided."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 5",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "Any evidence of reserve sample deterioration shall be investigated in accordance with § 211.192.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: evidence, deterioration, investigated, 211.192."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP's reserve sample section (6.1 to 6.3) covers retention, quantity and disposal but says nothing about investigating evidence of reserve sample deterioration under 211.192."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b), sentence 6",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples.",
+      "text": "The results of the examination shall be recorded and maintained with other stability data on the drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "4. Stability programme\n\n4.1 Every product has a written stability protocol, approved by QA, and the protocol is followed for every batch placed on study. 4.2 The protocol states how many units are pulled at each time point, chosen statistically for each attribute tested, and the test intervals: 0, 3, 6, 9, 12, 18, 24 and 36 months. 4.3 Samples are stored in qualified chambers at 30 C / 75% RH (long term) and 40 C / 75% RH (accelerated); chamber conditions are logged every 15 minutes. 4.4 Only validated, stability-indicating test methods are used (SOP-QC-002). 4.5 Stability samples are packed i"
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 62% of the terms; missing: examination, maintained, drug."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP's reserve sample section (6.1 to 6.3) requires no annual visual examination of reserve samples, and nothing in the SOP says examination results are recorded and maintained with stability data; the only related text is record retention in section 7, which does not cover visual examination results."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b)(1)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling. The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics. The reserve sample consists of at least ...",
+      "text": "For a drug product other than those described in paragraphs (b) (2) and (3) of this section, the reserve sample shall be retained for 1 year after the expiration date of the drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 62% of the terms; missing: drug, paragraphs, retained, year, expiration."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness.",
+        "reason": "The SOP retains reserve samples for six months after expiry, which is shorter than the one-year post-expiration retention required by 211.170(b)(1)."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b)(2)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling. The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics. The reserve sample consists of at least ...",
+      "text": "For a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "not_applicable",
+        "reason": "The SOP's scope excludes radioactive products."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "Applies to commercial batches of tablets and capsules. It does not apply to sterile products, products reconstituted before use, homeopathic products, allergenic extracts, radioactive drugs or investigational products.",
+        "reason": "The SOP's scope expressly excludes radioactive drugs, so the radioactive drug product reserve retention requirement does not apply to the products this SOP covers."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b)(2)(i)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling. The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics. The reserve sample consists of at least ... > For a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "text": "Three months after the expiration date of the drug product if the expiration dating period of the drug product is 30 days or less; or",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 42% of the terms; missing: three, after, expiration, drug, period."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "The requirement applies only to radioactive drug products, which the SOP's scope expressly excludes (\"It does not apply to ... radioactive drugs\"), so the three-months-after-expiry rule for a 30-day-or-less expiry does not apply."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b)(2)(ii)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling. The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics. The reserve sample consists of at least ... > For a radioactive drug product, except for nonradioactive reagent kits, the reserve sample shall be retained for:",
+      "text": "Six months after the expiration date of the drug product if the expiration dating period of the drug product is more than 30 days.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "5. Expiry dating\n\n5.1 The expiry date of each product is set from its long-term stability data and is printed on every label. For a new product, a tentative expiry date of 24 months may be set from six months of accelerated data. 5.2 The label states the storage condition the expiry date depends on, for example Store below 30 C, protect from moisture. 5.3 The expiry date appears on the label in the form required by 21 CFR 201.17."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 45% of the terms; missing: after, expiration, drug, period, more."
+      },
+      "model": {
+        "status": "met",
+        "quote": "6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness.",
+        "reason": "The SOP retains reserve samples until six months after the batch expiry date for products with expiry dating, which matches the requirement; the scope excludes radioactive drugs, but the requirement is being checked for the SOP's in-scope tablets and capsules, which are dated (5.1), so the requirement applies and is met."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.170(b)(3)",
+      "section_title": "211.170 Reserve samples.",
+      "context": "211.170 Reserve samples. > An appropriately identified reserve sample that is representative of each lot or batch of drug product shall be retained and stored under conditions consistent with product labeling. The reserve sample shall be stored in the same immediate container-closure system in which the drug product is marketed or in one that has essentially the same characteristics. The reserve sample consists of at least ...",
+      "text": "For an OTC drug product that is exempt for bearing an expiration date under § 211.137, the reserve sample must be retained for 3 years after the lot or batch of drug product is distributed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how stability studies are planned and run, how expiry dates are assigned and printed, and how reserve samples of finished product are kept, for products made at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Reserve samples\n\n6.1 An identified reserve sample, representative of each batch of finished product, is kept in its market pack in the retention room at the storage condition on the label. 6.2 Each reserve sample holds at least twice the quantity needed for full release testing. 6.3 Reserve samples are kept until six months after the expiry date of the batch, then destroyed under QA witness."
+        },
+        {
+          "page": 2,
+          "text": "7. Records\n\nStability protocols, results, reports and the retention room log are kept for the life of the product plus one year."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 47% of the terms; missing: drug, exempt, bearing, expiration, 211.137."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "The SOP's scope covers commercial batches of tablets and capsules, and it dates every product (section 6.3 ties retention to the expiry date), so the OTC expiry-date-exempt retention rule under 211.137 is not addressed and does not apply to these products as described."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    }
+  ]
+}

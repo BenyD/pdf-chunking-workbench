@@ -1,0 +1,304 @@
+{
+  "sop": "SOP-QA-020 Returned goods and salvage (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.204"
+  ],
+  "scope": {
+    "how": "measured",
+    "threshold": 0.65,
+    "ranking": [
+      {
+        "section": "211.204",
+        "title": "211.204 Returned drug products.",
+        "score": 0.673,
+        "in_scope": true
+      },
+      {
+        "section": "211.208",
+        "title": "211.208 Drug product salvaging.",
+        "score": 0.637,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.598,
+        "in_scope": false
+      },
+      {
+        "section": "211.87",
+        "title": "211.87 Retesting of approved components, drug product containers, and closures.",
+        "score": 0.569,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.562,
+        "in_scope": false
+      },
+      {
+        "section": "211.89",
+        "title": "211.89 Rejected components, drug product containers, and closures.",
+        "score": 0.553,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.546,
+        "in_scope": false
+      },
+      {
+        "section": "211.82",
+        "title": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+        "score": 0.542,
+        "in_scope": false
+      },
+      {
+        "section": "211.122",
+        "title": "211.122 Materials examination and usage criteria.",
+        "score": 0.537,
+        "in_scope": false
+      },
+      {
+        "section": "211.180",
+        "title": "211.180 General requirements.",
+        "score": 0.53,
+        "in_scope": false
+      },
+      {
+        "section": "211.170",
+        "title": "211.170 Reserve samples.",
+        "score": 0.529,
+        "in_scope": false
+      },
+      {
+        "section": "211.125",
+        "title": "211.125 Labeling issuance.",
+        "score": 0.528,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 6,
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 6,
+    "in": 7819,
+    "out": 785,
+    "dollars": 0.00059,
+    "dollars_per_requirement": 9.8e-05,
+    "batch_calls": 6
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 6,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.204, sentence 1",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "Returned drug products shall be identified as such and held.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Receipt\n\n3.1 Returned goods are received only against a return authorisation number issued by Sales. 3.2 They are identified as returned goods and kept in the locked returns cage until QA has assessed them."
+        },
+        {
+          "page": 1,
+          "text": "5. Records\n\nA returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of. If the reason for return implicates other batches, QA opens an investigation."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 60% of the terms; missing: drug, identified."
+      },
+      "model": {
+        "status": "met",
+        "quote": "They are identified as returned goods and kept in the locked returns cage until QA has assessed them.",
+        "reason": "The SOP requires returned goods to be identified as returned goods and held in a locked returns cage pending QA assessment, which satisfies the identify-and-hold requirement for tablets and capsules within its scope."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.204, sentence 2",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "If the conditions under which returned drug products have been held, stored, or shipped before or during their return, or if the condition of the drug product, its container, carton, or labeling, as a result of storage or shipping, casts doubt on the safety, identity, strength, quality or purity of the drug product, the returned drug product shall be destroyed unless examination, testing, or other investigations prove the drug product meets appropriate standards of safety, identity, strength, quality, or purity.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment\n\n4.1 QA reviews the reason for return, the time the goods spent outside the site's control, and any evidence of storage outside the label condition, such as heat, humidity or flood. 4.2 Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification. 4.3 Goods that were held under improper conditions, for example during a fire or a refrigeration failure, are never salvaged and returned to the market."
+        },
+        {
+          "page": 1,
+          "text": "5. Records\n\nA returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of. If the reason for return implicates other batches, QA opens an investigation."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 42% of the terms; missing: drug, stored, shipped, before, container."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.2 Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification. 4.3 Goods that were held under improper conditions, for example during a fire or a refrigeration failure, are never salvaged and returned to the market.",
+        "reason": "The SOP requires destruction of returned goods where storage or handling casts doubt on quality, unless testing shows they meet every specification, and bars salvage of goods held under improper conditions, which covers the requirement's destruction rule."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.204, sentence 3",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "A drug product may be reprocessed provided the subsequent drug product meets appropriate standards, specifications, and characteristics.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all tablets and capsules returned by distributors, wholesalers and hospitals."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment\n\n4.1 QA reviews the reason for return, the time the goods spent outside the site's control, and any evidence of storage outside the label condition, such as heat, humidity or flood. 4.2 Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification. 4.3 Goods that were held under improper conditions, for example during a fire or a refrigeration failure, are never salvaged and returned to the market."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions drug, provided, subsequent, meets, standards, specifications."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers receipt, holding, assessment and destruction of returned tablets and capsules but contains no procedure for reprocessing returned product or requiring the reprocessed product to meet appropriate standards, specifications and characteristics; section 4.3 in fact prohibits salvaging improperly held goods."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.204, sentence 4",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "Records of returned drug products shall be maintained and shall include the name and label potency of the drug product dosage form, lot number (or control number or batch number), reason for the return, quantity returned, date of disposition, and ultimate disposition of the returned drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all tablets and capsules returned by distributors, wholesalers and hospitals."
+        },
+        {
+          "page": 1,
+          "text": "5. Records\n\nA returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of. If the reason for return implicates other batches, QA opens an investigation."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: drug, maintained, name, label, potency."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "A returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of.",
+        "reason": "The SOP's returned goods record covers product, batch number, quantity, reason for return, and disposition, but it omits the label potency and the date of disposition that the requirement explicitly lists."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.204, sentence 5",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "If the reason for a drug product being returned implicates associated batches, an appropriate investigation shall be conducted in accordance with the requirements of § 211.192.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment\n\n4.1 QA reviews the reason for return, the time the goods spent outside the site's control, and any evidence of storage outside the label condition, such as heat, humidity or flood. 4.2 Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification. 4.3 Goods that were held under improper conditions, for example during a fire or a refrigeration failure, are never salvaged and returned to the market."
+        },
+        {
+          "page": 1,
+          "text": "5. Records\n\nA returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of. If the reason for return implicates other batches, QA opens an investigation."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 55% of the terms; missing: drug, being, associated, conducted, 211.192."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "If the reason for return implicates other batches, QA opens an investigation.",
+        "reason": "The SOP requires QA to open an investigation when a return implicates other batches but does not state that it must follow the requirements of 211.192 (investigations of unexplained discrepancies), so the investigation standard is not specified."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.204, sentence 6",
+      "section_title": "211.204 Returned drug products.",
+      "context": "211.204 Returned drug products.",
+      "text": "Procedures for the holding, testing, and reprocessing of returned drug products shall be in writing and shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how products returned from the market are received, held, assessed and either destroyed or reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "4. Assessment\n\n4.1 QA reviews the reason for return, the time the goods spent outside the site's control, and any evidence of storage outside the label condition, such as heat, humidity or flood. 4.2 Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification. 4.3 Goods that were held under improper conditions, for example during a fire or a refrigeration failure, are never salvaged and returned to the market."
+        },
+        {
+          "page": 1,
+          "text": "5. Records\n\nA returned goods record gives the product, the batch number, the quantity, the reason for return, QA's decision and how the goods were disposed of. If the reason for return implicates other batches, QA opens an investigation."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: holding, testing, drug, writing, followed."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Where there is doubt about the product's quality, the goods are destroyed unless laboratory testing shows that they still meet every specification.",
+        "reason": "The SOP covers assessment and disposition of returned goods with some written procedure, but it does not contain a written procedure for holding returned products, nor specify testing or reprocessing procedures, so only part of the requirement is addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    }
+  ]
+}

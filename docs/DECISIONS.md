@@ -722,7 +722,7 @@ is found with no AI; Figure 5 (numbers in the photo) only with it.
 
 **Why.** The interviewers' example: thousands of company SOPs, each to be
 checked against the regulation sentence by sentence, saying what is
-missing and why.
+missing and why, as cheaply as possible.
 
 **Decision.** `scripts/gap_check.py`, shown on the SOP check page.
 - The regulation comes from the eCFR's XML, where each paragraph carries
@@ -730,33 +730,161 @@ missing and why.
   sentence 4) and keeps its parents' lead-ins: hierarchical chunking
   driven by the document's own numbering. Declarative sentences count ("The
   reserve sample consists of at least twice the quantity..."); lead-ins
-  that only introduce a list do not.
-- Each requirement is searched for in the SOP with the app's search; the
-  three closest passages go to the judges.
+  that only introduce a list do not. A section with no paragraph markers at
+  all (211.192, 211.182, 211.204 and 17 others) used to be dropped; it is
+  now one requirement. Part 211 is 394 sentences in 59 sections.
+- Which sections apply to an SOP is measured, not given (below).
+- Each requirement's three closest SOP passages are its evidence (below for
+  how they are picked).
 - Rules decide what they can with no model: lines for products the SOP's
   scope excludes, and lines whose terms are plainly present or absent.
 - A small model returns met, partly met, not met or not applicable, the
   SOP's words it relied on, and one sentence saying why.
+- Every verdict is kept under its evidence, so a line whose evidence has
+  not changed is never paid for twice, and `--batch` sends the rest through
+  the Message Batches API at half price.
 
 **Measured** on a synthetic SOP written with known gaps (no reserve
 samples of active ingredients, no yearly visual examination, six months'
 retention where the rule says a year, a tentative expiry with no
 verification), 41 requirement sentences across 211.137, 211.166 and
-211.170:
+211.170, the sections now chosen automatically:
 
 | Judge | right | cost for this SOP |
 |---|---|---|
 | Rules, no AI | 13 of the 15 it was sure of (26 left unsure) | $0 |
-| Claude Haiku 5.5 | 35 to 37 of 41 across runs | $0.0075 |
+| Claude Haiku 5.5, the app's search as evidence (before) | 34 to 36 of 41 over four runs | $0.0075 |
+| Claude Haiku 5.5, evidence from the SOP's own words (now) | 34 or 35 of 41 over five runs | $0.0076, or $0.0038 through the Batch API |
 | Claude Sonnet 5.5 | 38 of 41 | $0.146 |
 
-Haiku's misses are "partly met" where "not met" was expected, with the
-reason still right ("applies to finished product rather than active
-ingredient"). Judging a sentence without its paragraph cost three more
-misses: the same binding problem as in chunking. At this scope, 5,000 SOPs
-cost about $38 with Haiku, half that through the Batch API; checking every
-SOP against all of Part 211 is roughly ten times the sentences.
+Haiku's misses are "partly met" or "not applicable" where "not met" was
+expected, with the reason still right ("applies to finished product rather
+than active ingredient"). Haiku cannot be run at temperature 0 (it rejects
+sampling settings), so the same evidence gives a line or two either way
+between runs. Judging a sentence without its paragraph cost three more
+misses: the same binding problem as in chunking.
 
-Not built yet: choosing which sections apply to each SOP automatically
-(today they are given), and caching verdicts by requirement and passage so
-a revised SOP only re-checks what changed.
+**Which sections apply.** Every requirement sentence is compared with every
+passage of the SOP: the sentences' vectors are the ones the check needs
+anyway (embedded once for the whole Part and cached), the passages' are the
+ones stored at ingest. A section scores the mean of its two closest
+sentences and is in scope at 0.65 or more. No model call, and nothing to
+pay per SOP.
+
+| Document | sections in scope | next below the line |
+|---|---|---|
+| SOP-QC-014, the sample | 211.170 (0.71), 211.137 (0.68), 211.166 (0.68), the three it was written against | 211.194 Laboratory records (0.62) |
+| SOP-QC-014 revision B | the same three | 211.22 (0.62) |
+| SOP-PR-021 equipment cleaning, written after the line was set | 211.182 Equipment cleaning and use log (0.77), 211.67 Equipment cleaning and maintenance (0.67) | 211.105 Equipment identification (0.64) |
+| WHO GMP guide (TRS 986 Annex 2) | 33 sections: it covers all of GMP | |
+| Maintenance manual, inspection report, monograph, bills, price list, CV | none (best 0.60) | |
+
+Embedding each whole section as one text was tried first and failed: on the
+sample 211.137 Expiration dating (0.737) and 211.142 Warehousing (0.723)
+came out level, and Distribution records topped even a pharmacy bill. A
+whole section holds the vocabulary of all of GMP, so every section looks a
+bit like every pharma document; one sentence is specific. Subtracting each
+section's usual score in the other documents made it worse (expiry dates
+are on every label and price list, so 211.137 fell out of the top seven).
+The mean of the two best sentences, not the best one, keeps a long section
+from getting in on one stray sentence.
+
+**Held out.** The sample set the line, so five more SOPs were written after
+it (complaints, batch record review, incoming materials, label issuance and
+line clearance, returned goods), with the sections each should get written
+down before any was ingested: core sections that must be chosen, and
+neighbours a reviewer would accept. Over all seven SOPs:
+
+| Line | core sections found | accepted neighbours | other extras |
+|---|---|---|---|
+| 0.68 | 9 of 13 | 0 | 0 |
+| 0.65 | 12 of 13 | 1 | 0 |
+| 0.62 | 13 of 13 | 11 | 6 |
+
+The miss at 0.65 is 211.82 Receipt and storage on the incoming-materials SOP
+(0.633), under 211.110 in-process sampling (0.643), which shares the word
+sampling. Lowering the line looks cheap, since an extra section only adds
+lines, but it is not: checked at 0.62 through one batch, Haiku called 25 of
+the 39 lines from unexpected sections gaps, and 55 of the 78 from accepted
+neighbours ("the batch record review SOP says nothing about destroying
+excess labels"). It judges each SOP alone and cannot know another SOP
+covers the point, so every extra section is gaps a reviewer has to dismiss.
+0.65 stays. The cure for both the miss and the false gaps is to check a
+company's whole SOP library at once (a requirement is a gap only when no
+SOP covers it), not a lower line.
+
+**A verdict kept by its evidence.** The key is (citation, hash of the three
+passages and the SOP's scope line, hash of the model, the prompt and the
+requirement's wording), in `scripts/benchmarks/gap-cache.sqlite`. Same
+evidence, same verdict; a new model, prompt or regulation text never gets
+an old one. The key does not include the SOP, so another site's copy of the
+same template costs nothing, and a revision only pays for the lines whose
+passages changed.
+
+The app's search could not feed such a cache. It ranks by the context line
+Haiku writes for each passage at ingest, and two uploads of the same text
+get different lines, so its second and third passages swap. Revision B
+(section 6 gains a yearly visual examination, the version line moves on)
+kept its evidence on 7 of 41 lines, and in 23 of the other 34 only the
+filler passages had traded places. So the evidence is now picked on the
+SOP's own words only: the cosine of each passage's text vector (cached by
+text) plus 0.3 times
+the app's keyword rank (`ts_rank_cd`) on the passage text, added, not fused
+by rank, so an unchanged passage scores the same against a requirement in
+every revision. The title block is left out (it is never evidence and its
+version line changes every time), and passages are shown in the SOP's
+order. Cosine alone lost section 4 from 211.137(a) and Haiku said "partly
+met" three times in three; the keyword rank brings it back. The cost is
+about a line of 41 against the app's search.
+
+| Run | lines from the cache | model calls | paid |
+|---|---|---|---|
+| SOP-QC-014, first time | 0 | 41 | $0.0076 |
+| The same, again | 41 | 0 | $0 |
+| Revision B | 17 | 24 | $0.0046 |
+| The unchanged SOP uploaded again for a second site (new context lines) | 41 | 0 | $0 |
+
+Every one of the 24 re-judged lines had the edited section among its
+passages. Three verdicts changed, the three sentences the revision
+addressed: the yearly examination is now met, its investigation and its
+record partly met (the SOP points to another SOP and a different log).
+
+**Batch.** `--batch` sends every line not in the cache as one Message Batch
+(the custom id is the cache key, results are matched by it) and records the
+batch in the cache first, so a run that dies while it is out picks the
+results up next time instead of paying again. Measured: the four SOPs
+above in one batch (the sample, revision B, the second site's copy and the
+cleaning SOP), 138 lines but 80 requests, since
+58 lines had the same evidence as a line already in it and were judged
+once. It ended after 207 s and cost $0.0075 in all.
+
+| SOP | lines | sent | cost as bought | paid by this run |
+|---|---|---|---|---|
+| SOP-QC-014 | 41 | 41 | $0.0038 (50,288 tokens in, 5,182 out) | $0.0038 |
+| Revision B | 41 | 24 | $0.0039 | $0.0023 |
+| Second site's copy | 41 | 0 | $0.0038 | $0 |
+| SOP-PR-021 cleaning | 15 | 15 | $0.0014 | $0.0014 |
+
+The sample's $0.0038 is exactly half of the $0.0076 the same calls cost one
+by one, and Haiku got 35 of 41 through the batch, as it does directly. The
+same command run again sent nothing.
+
+**What it costs.** A new SOP like the sample costs $0.0038 through the batch
+API, about $0.00009 a line, and its scope sets the bill: 6 to 21 lines for
+the six held-out SOPs ($0.0006 to $0.0018 each, measured), 41 for the
+sample, 394 if an SOP touched every section of the Part. 5,000 SOPs like
+the sample come to about $19 through the batch API ($38 one by one); 5,000
+like the held-out ones (15 lines on average), about $6. After that a
+revision pays only for the lines whose passages it touched (24 of 41 here,
+as the edited section was evidence for every reserve-sample line), and
+copies of one template at other sites pay nothing. Choosing the sections
+calls no model; embedding a new SOP's passages by their own words costs
+about $0.0001 (voyage-4), again only for passages not seen before.
+
+The SOP check page still shows the snapshot of the hand-scoped run;
+`--publish` replaces it with the latest run of the sample.
+
+Not built yet: the library-level check above, and a run over real SOPs
+(these seven are synthetic and one page or two each). Prompt caching does
+not apply: the instructions are about 170 tokens, far below the smallest
+cacheable prefix.

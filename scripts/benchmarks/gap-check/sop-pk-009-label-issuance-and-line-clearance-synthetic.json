@@ -1,0 +1,584 @@
+{
+  "sop": "SOP-PK-009 Label issuance and line clearance (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.125",
+    "211.130"
+  ],
+  "scope": {
+    "how": "measured",
+    "threshold": 0.65,
+    "ranking": [
+      {
+        "section": "211.125",
+        "title": "211.125 Labeling issuance.",
+        "score": 0.682,
+        "in_scope": true
+      },
+      {
+        "section": "211.130",
+        "title": "211.130 Packaging and labeling operations.",
+        "score": 0.662,
+        "in_scope": true
+      },
+      {
+        "section": "211.122",
+        "title": "211.122 Materials examination and usage criteria.",
+        "score": 0.648,
+        "in_scope": false
+      },
+      {
+        "section": "211.134",
+        "title": "211.134 Drug product inspection.",
+        "score": 0.625,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.611,
+        "in_scope": false
+      },
+      {
+        "section": "211.186",
+        "title": "211.186 Master production and control records.",
+        "score": 0.61,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.609,
+        "in_scope": false
+      },
+      {
+        "section": "211.105",
+        "title": "211.105 Equipment identification.",
+        "score": 0.605,
+        "in_scope": false
+      },
+      {
+        "section": "211.182",
+        "title": "211.182 Equipment cleaning and use log.",
+        "score": 0.583,
+        "in_scope": false
+      },
+      {
+        "section": "211.180",
+        "title": "211.180 General requirements.",
+        "score": 0.582,
+        "in_scope": false
+      },
+      {
+        "section": "211.184",
+        "title": "211.184 Component, drug product container, closure, and labeling records.",
+        "score": 0.572,
+        "in_scope": false
+      },
+      {
+        "section": "211.42",
+        "title": "211.42 Design and construction features.",
+        "score": 0.559,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 15,
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 15,
+    "in": 15853,
+    "out": 2031,
+    "dollars": 0.0013,
+    "dollars_per_requirement": 8.7e-05,
+    "batch_calls": 15
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 15,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.125(a)",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Strict control shall be exercised over labeling issued for use in drug product labeling operations.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: strict, exercised, over, labeling, drug."
+      },
+      "model": {
+        "status": "met",
+        "quote": "3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded.",
+        "reason": "The SOP strictly controls label issue through a locked store, quantity-matched issuing, reconciliation with investigation of discrepancies, and recorded destruction of excess labels."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(b)",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Labeling materials issued for a batch shall be carefully examined for identity and conformity to the labeling specified in the master or batch production records.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: labeling, issued, carefully, examined, identity."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "The store keeper issues the number of labels stated on the packaging order and records the quantity on the order.",
+        "reason": "The SOP covers controlled issue of approved labels and a supervisor line-clearance check, but it does not require that issued labeling be carefully examined for identity and conformity to the labeling specified in the master or batch production records."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(c), sentence 1",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Procedures shall be used to reconcile the quantities of labeling issued, used, and returned, and shall require evaluation of discrepancies found between the quantity of drug product finished and the quantity of labeling issued when such discrepancies are outside narrow preset limits based on historical operating data.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions reconcile, labeling, require, evaluation, discrepancies, found."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released.",
+        "reason": "The SOP reconciles labels issued, used and returned and investigates discrepancies, but it compares against a limit stated on each packaging order rather than a narrow preset limit based on historical operating data, and it does not reconcile against the quantity of drug product finished."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(c), sentence 2",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Such discrepancies shall be investigated in accordance with § 211.192.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 33% of the terms; missing: discrepancies, 211.192."
+      },
+      "model": {
+        "status": "met",
+        "quote": "if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released",
+        "reason": "The SOP requires that label count discrepancies beyond the order limit be investigated before batch release, which covers the requirement that discrepancies be investigated, though it does not explicitly cite 211.192 or specify the investigation content required by that section."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(c), sentence 3",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Labeling reconciliation is waived for cut or roll labeling if a 100-percent examination for correct labeling is performed in accordance with § 211.122(g)(2).",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions labeling, reconciliation, waived, roll, 100, percent."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "The SOP scope covers only the four blister and bottle lines and says nothing about cut or roll labeling, so the waiver condition for cut or roll labeling does not arise and the requirement does not apply to these operations."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(d)",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "All excess labeling bearing lot or control numbers shall be destroyed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 67% of the terms; missing: labeling, control."
+      },
+      "model": {
+        "status": "met",
+        "quote": "3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded.",
+        "reason": "The SOP requires excess labels bearing a batch number to be destroyed and the destruction recorded, which covers the requirement that excess labeling bearing lot or control numbers be destroyed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(e)",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Returned labeling shall be maintained and stored in a manner to prevent mixups and provide proper identification.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions returned, labeling, maintained, manner, mixups, provide."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "3.3 After packing, the labels used, damaged and returned are counted",
+        "reason": "The SOP covers counting returned labels and locked storage of approved labels, but it does not state that returned labeling is itself stored separately and identified to prevent mixups."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.125(f)",
+      "section_title": "211.125 Labeling issuance.",
+      "context": "211.125 Labeling issuance.",
+      "text": "Procedures shall be written describing in sufficient detail the control procedures employed for the issuance of labeling; such written procedures shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions describing, sufficient, detail, employed, issuance, labeling."
+      },
+      "model": {
+        "status": "met",
+        "quote": "3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order.",
+        "reason": "The SOP describes detailed control procedures for label issuance (locked store, issue quantity per packaging order, recorded quantities, reconciliation and destruction of excess), which covers the requirement for written, detailed, and followed procedures."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130, sentence 1",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "There shall be written procedures designed to assure that correct labels, labeling, and packaging materials are used for drug products; such written procedures shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 40% of the terms; missing: designed, assure, correct, labeling, drug."
+      },
+      "model": {
+        "status": "met",
+        "quote": "To prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked.",
+        "reason": "The SOP establishes written procedures controlling label storage, issue, reconciliation, and line clearance to ensure correct labels and packaging materials are used, and the requirement that procedures be followed is implied by the mandatory signed clearance and count records."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130, sentence 2",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "These procedures shall incorporate the following features:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions incorporate, features."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed.",
+        "reason": "The SOP's features on line clearance, supervisor inspection with sign-off, and identification of the product and batch on each line cover the requirement's intent to prevent mix-ups during packaging and labeling operations."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130(b), sentence 1",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "Identification and handling of filled drug product containers that are set aside and held in unlabeled condition for future labeling operations to preclude mislabeling of individual containers, lots, or portions of lots.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions identification, handling, filled, drug, containers, aside."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch.",
+        "reason": "The SOP addresses preventing label and product mix-ups through label control, line clearance and line identification boards, but it does not describe how filled containers set aside unlabeled are identified, handled and held pending future labeling operations."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130(b), sentence 2",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "Identification need not be applied to each individual container but shall be sufficient to determine name, strength, quantity of contents, and lot or control number of each container.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to the four blister and bottle lines in the packaging hall."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions identification, need, applied, individual, container, sufficient."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers label storage, issue, reconciliation and destruction but contains no requirement that unlabeled containers be identified with name, strength, quantity of contents, and lot or control number."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130(e), sentence 1",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "Inspection of the packaging and labeling facilities immediately before use to assure that all drug products have been removed from previous operations.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 42% of the terms; missing: labeling, facilities, immediately, assure, drug."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record.",
+        "reason": "The SOP requires clearing each packaging line of the previous batch's products and a supervisor inspection before a new batch starts, which covers the requirement to inspect immediately before use for removal of previous products."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130(e), sentence 2",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "Inspection shall also be made to assure that packaging and labeling materials not suitable for subsequent operations have been removed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo prevent mix-ups of labels and products on the packaging lines by controlling how labels are stored and issued and how each line is cleared and checked."
+        },
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 27% of the terms; missing: also, made, assure, labeling, suitable."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record.",
+        "reason": "The SOP requires inspection before a new batch to confirm the line is cleared of previous labels and packaging materials, which covers the requirement, but it does not specify that inspection must assure removal of materials unsuitable for subsequent operations, and it is limited to pre-batch clearance rather than checking for unsuitable materials generally."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.130(e), sentence 3",
+      "section_title": "211.130 Packaging and labeling operations.",
+      "context": "211.130 Packaging and labeling operations.",
+      "text": "Results of inspection shall be documented in the batch production records.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "3. Label storage and issue\n\n3.1 Approved labels are kept in the locked label store, each version separately. 3.2 The store keeper issues the number of labels stated on the packaging order and records the quantity on the order. 3.3 After packing, the labels used, damaged and returned are counted; if the count does not match the number issued beyond the limit on the order, the difference is investigated before the batch is released. 3.4 Excess labels bearing a batch number are destroyed and the destruction is recorded."
+        },
+        {
+          "page": 1,
+          "text": "4. Line clearance\n\n4.1 Before a new batch is started, the line is cleared of all products, labels and packaging materials of the previous batch. 4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record. 4.3 Only one product is packed on a line at a time, and each line carries a board showing the product name and batch being packed."
+        },
+        {
+          "page": 1,
+          "text": "5. In-process checks\n\nDuring packing, an operator checks every 30 minutes that the batch number and expiry date printed on the blister and carton are correct and legible, and records the check."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 67% of the terms; missing: results, documented."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.2 The supervisor inspects the line and signs the clearance checklist on the packaging record.",
+        "reason": "The SOP requires the line clearance inspection to be signed on the packaging record, which is the batch production record, so the results are documented there."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    }
+  ]
+}

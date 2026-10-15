@@ -1,0 +1,709 @@
+{
+  "sop": "SOP-QA-012 Batch record review and release (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.192",
+    "211.188",
+    "211.186"
+  ],
+  "scope": {
+    "how": "measured",
+    "threshold": 0.65,
+    "ranking": [
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.735,
+        "in_scope": true
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.703,
+        "in_scope": true
+      },
+      {
+        "section": "211.186",
+        "title": "211.186 Master production and control records.",
+        "score": 0.661,
+        "in_scope": true
+      },
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.635,
+        "in_scope": false
+      },
+      {
+        "section": "211.184",
+        "title": "211.184 Component, drug product container, closure, and labeling records.",
+        "score": 0.63,
+        "in_scope": false
+      },
+      {
+        "section": "211.134",
+        "title": "211.134 Drug product inspection.",
+        "score": 0.626,
+        "in_scope": false
+      },
+      {
+        "section": "211.125",
+        "title": "211.125 Labeling issuance.",
+        "score": 0.623,
+        "in_scope": false
+      },
+      {
+        "section": "211.105",
+        "title": "211.105 Equipment identification.",
+        "score": 0.621,
+        "in_scope": false
+      },
+      {
+        "section": "211.130",
+        "title": "211.130 Packaging and labeling operations.",
+        "score": 0.621,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.614,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.606,
+        "in_scope": false
+      },
+      {
+        "section": "211.194",
+        "title": "211.194 Laboratory records.",
+        "score": 0.595,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 19,
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 19,
+    "in": 20559,
+    "out": 2152,
+    "dollars": 0.00157,
+    "dollars_per_requirement": 8.2e-05,
+    "batch_calls": 19
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 19,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.186(a), sentence 1",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "To assure uniformity from batch to batch, master production and control records for each drug product, including each batch size thereof, shall be prepared, dated, and signed (full signature, handwritten) by one person and independently checked, dated, and signed by a second person.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 38% of the terms; missing: assure, uniformity, control, drug, size."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers review of executed batch records but does not address the preparation of master production and control records or require them to be prepared, dated, and signed by one person and independently checked, dated, and signed by a second person."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(a), sentence 2",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "The preparation of master production and control records shall be described in a written procedure and such written procedure shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 67% of the terms; missing: preparation, control."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers review of executed batch records and says batch records are accurate copies of the approved master record, but it does not describe how master production and control records are prepared and does not require their preparation to follow a written procedure."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "Master production and control records shall include:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 75% of the requirement's terms."
+      },
+      "model": {
+        "status": "not_applicable",
+        "quote": "",
+        "reason": "Requirement 211.186(b) applies to master production and control records, but this SOP only governs the review of executed batch records and does not address the master records themselves, and the stated scope covers commercial batches rather than the master record's required contents."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(1)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "The name and strength of the product and a description of the dosage form;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every commercial batch of tablets and capsules made or packed at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions name, strength, description, dosage, form."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP addresses review of executed batch records but does not state that the master production and control record must include the product name, strength, and dosage form description; it only says each batch record is a copy of the approved master record."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(2)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "The name and weight or measure of each active ingredient per dosage unit or per unit of weight or measure of the drug product, and a statement of the total weight or measure of any dosage unit;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 27% of the terms; missing: name, active, ingredient, dosage, unit."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Each batch record is an accurate copy of the approved master record for the product.",
+        "reason": "The SOP requires batch records to copy the approved master record and to log weights and measures of each component, but never explicitly requires the master record itself to state each active ingredient's name and per-dosage-unit or per-weight quantity, nor the total weight of a dosage unit."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(3)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A complete list of components designated by names or codes sufficiently specific to indicate any special quality characteristic;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions list, components, designated, names, codes, sufficiently."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers batch record review and mentions the master record, but it does not require the master production record to contain a complete list of components designated by names or codes indicating special quality characteristics."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(4), sentence 1",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "An accurate statement of the weight or measure of each component, using the same weight system (metric, avoirdupois, or apothecary) for each component.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 36% of the terms; missing: statement, using, same, system, metric."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield",
+        "reason": "The SOP requires the batch record to capture weights and measures of each component, but it does not require a single consistent weight system (metric, avoirdupois, or apothecary) across components, so that part of the requirement is not addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(4), sentence 2",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "Reasonable variations may be permitted, however, in the amount of components necessary for the preparation in the dosage form, provided they are justified in the master production and control records;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions reasonable, variations, permitted, however, amount, necessary."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP covers review of executed batch records against the master record but says nothing about permitting reasonable variations in component amounts or requiring such variations to be justified in the master production and control records."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(5)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement concerning any calculated excess of component;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions statement, concerning, calculated, excess."
+      },
+      "model": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP's batch record and review sections cover weights and measures of components, yields, and label reconciliation, but nothing requires a statement of any calculated excess of component in the master production record."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(6)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement of theoretical weight or measure at appropriate phases of processing;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 50% of the terms; missing: statement, theoretical, phases."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield",
+        "reason": "The SOP requires recording actual weights and measures of components and actual yield, but does not require a statement of theoretical weight or measure at each appropriate phase of processing, so only part of the requirement is addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(7)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement of theoretical yield, including the maximum and minimum percentages of theoretical yield beyond which investigation according to § 211.192 is required;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        },
+        {
+          "page": 1,
+          "text": "5. Release\n\n5.1 QA releases the batch only when the review is complete, every investigation is closed and the laboratory has approved the finished product test results. 5.2 The QA reviewer signs and dates the release statement on the batch record."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "reason": "No SOP passage mentions statement, theoretical, maximum, minimum, percentages, beyond."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "the actual yield, and the signatures of the person who did and the person who checked each significant step",
+        "reason": "The SOP requires recording the actual yield and says yields outside the stated limits are investigated, but it never states a theoretical yield or the maximum and minimum percentages of theoretical yield in the master production and control record."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(8)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A description of the drug product containers, closures, and packaging materials, including a specimen or copy of each label and all other labeling signed and dated by the person or persons responsible for approval of such labeling;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 47% of the terms; missing: description, drug, containers, closures, materials."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "The packaging part of the record holds a specimen of every label used and the label reconciliation.",
+        "reason": "The SOP requires a specimen of every label in the batch record but does not mention a description of containers, closures, and packaging materials, nor a signed and dated approval of labeling by the responsible person."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.186(b)(9)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "Complete manufacturing and control instructions, sampling and testing procedures, specifications, special notations, and precautions to be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 27% of the terms; missing: manufacturing, control, instructions, sampling, testing."
+      },
+      "model": {
+        "status": "partly_met",
+        "quote": "3.1 Each batch record is an accurate copy of the approved master record for the product.",
+        "reason": "The SOP covers batch record review against the master record and specifications, but it does not itself require the master record to contain complete manufacturing and control instructions, sampling and testing procedures, specifications, special notations, and precautions, so this element is only partly addressed."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.188, sentence 1",
+      "section_title": "211.188 Batch production and control records.",
+      "context": "211.188 Batch production and control records.",
+      "text": "Batch production and control records shall be prepared for each batch of drug product produced and shall include complete information relating to the production and control of each batch.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 55% of the terms; missing: control, prepared, drug, information, relating."
+      },
+      "model": {
+        "status": "met",
+        "quote": "Each batch record is an accurate copy of the approved master record for the product. ... Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step.",
+        "reason": "The SOP requires a batch record for each commercial tablet and capsule batch containing complete production and control information, including steps, components, in-process results, yield, and signatures, and reviews it for completeness."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.188, sentence 2",
+      "section_title": "211.188 Batch production and control records.",
+      "context": "211.188 Batch production and control records.",
+      "text": "These records shall include:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": {
+        "status": "met",
+        "quote": "3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step.",
+        "reason": "The SOP requires batch records to capture the production and control information (equipment, component weights, lot numbers, in-process results, yield, signatures) that 211.188 says these records shall include, applying to every commercial batch at the site."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.192, sentence 1",
+      "section_title": "211.192 Production record review.",
+      "context": "211.192 Production record review.",
+      "text": "All drug product production and control records, including those for packaging and labeling, shall be reviewed and approved by the quality control unit to determine compliance with all established, approved written procedures before a batch is released or distributed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 47% of the terms; missing: drug, control, packaging, labeling, approved."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.2 QA then checks every entry against the master record and the specifications.",
+        "reason": "The SOP has QA check every entry in the batch record against the master record and specifications, which covers review by the quality control unit for compliance with approved procedures, though it does not explicitly state that the record must be approved before release or distribution."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.192, sentence 2",
+      "section_title": "211.192 Production record review.",
+      "context": "211.192 Production record review.",
+      "text": "Any unexplained discrepancy (including a percentage of theoretical yield exceeding the maximum or minimum percentages established in master production and control records) or the failure of a batch or any of its components to meet any of its specifications shall be thoroughly investigated, whether or not the batch has already been distributed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 41% of the terms; missing: unexplained, discrepancy, percentage, theoretical, exceeding."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected.",
+        "reason": "The SOP requires investigation of deviations, out-of-specification results, and yield outside stated limits regardless of whether the batch has been distributed, which matches the requirement's scope for unexplained discrepancies and specification failures."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.192, sentence 3",
+      "section_title": "211.192 Production record review.",
+      "context": "211.192 Production record review.",
+      "text": "The investigation shall extend to other batches of the same drug product and other drug products that may have been associated with the specific failure or discrepancy.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how the executed batch manufacturing and packaging records of each batch are reviewed before the batch is released for sale."
+        },
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "reason": "The closest passage holds 55% of the terms; missing: same, drug, associated, failure, discrepancy."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected.",
+        "reason": "The SOP requires investigations of deviations, OOS results and yield excursions to extend to other batches that may be affected, which covers the requirement's extension to other batches of the same drug product; it does not explicitly mention other drug products, but the requirement's core obligation to extend the investigation is clearly stated."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    },
+    {
+      "cite": "211.192, sentence 4",
+      "section_title": "211.192 Production record review.",
+      "context": "211.192 Production record review.",
+      "text": "A written record of the investigation shall be made and shall include the conclusions and followup.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "3. The batch record\n\n3.1 Each batch record is an accurate copy of the approved master record for the product. 3.2 Operators record each step as it is done: equipment used, weights and measures of each component, lot numbers, in-process results, the actual yield, and the signatures of the person who did and the person who checked each significant step. 3.3 The packaging part of the record holds a specimen of every label used and the label reconciliation."
+        },
+        {
+          "page": 1,
+          "text": "4. Review\n\n4.1 Production reviews the record for completeness within two working days of packing. 4.2 QA then checks every entry against the master record and the specifications. 4.3 Any deviation, out-of-specification result or yield outside the stated limits is investigated before release, whether or not the batch has already been distributed, and the investigation is extended to other batches that may be affected. 4.4 The written record of each investigation states its conclusion and follow-up."
+        },
+        {
+          "page": 1,
+          "text": "5. Release\n\n5.1 QA releases the batch only when the review is complete, every investigation is closed and the laboratory has approved the finished product test results. 5.2 The QA reviewer signs and dates the release statement on the batch record."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "model": {
+        "status": "met",
+        "quote": "4.4 The written record of each investigation states its conclusion and follow-up.",
+        "reason": "The SOP requires a written record of each investigation that states its conclusion and follow-up, matching the requirement's conclusions and followup content."
+      },
+      "expected": null,
+      "verdict_from": "cache"
+    }
+  ]
+}

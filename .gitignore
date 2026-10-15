@@ -25,3 +25,6 @@ samples/work/
 # misc
 .DS_Store
 *.log
+
+# gap_check.py: cached verdicts and vectors, local to each machine
+scripts/benchmarks/gap-cache.sqlite

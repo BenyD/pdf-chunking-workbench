@@ -1,37 +1,57 @@
 #!/usr/bin/env python3
-"""Check a company SOP, requirement by requirement, against 21 CFR Part 211, and say why a gap is a gap.
+"""Check company SOPs, requirement by requirement, against 21 CFR Part 211, and say why a gap is a gap.
 
     cd worker
-    .venv/bin/python ../scripts/gap_check.py --sop "SOP-QC-014" --sections 211.137 211.166 211.170
+    .venv/bin/python ../scripts/gap_check.py                                  # the sample SOP, sections chosen for it
+    .venv/bin/python ../scripts/gap_check.py --sop SOP-QC-014 SOP-PR-021 --batch   # many SOPs, at half price
+    .venv/bin/python ../scripts/gap_check.py --sections 211.137 211.166 211.170    # sections given by hand
+    .venv/bin/python ../scripts/gap_check.py --scope-only                     # which sections apply, then stop
 
 1. The regulation is read from the official eCFR XML (scripts/regulations/21cfr211.xml, fetched from
    https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?part=211). Every paragraph carries its
    own marker, (a), (1), (i), (A), so each sentence that imposes something becomes one requirement with its
    exact citation, e.g. 211.170(b)(1), and the lead-in of its parents as context ("The written program shall
    be followed and shall include: (2) Storage conditions for samples retained for testing").
-2. Each requirement is searched for in the SOP with the app's own search (keywords and meaning, fused),
-   which returns the three closest SOP passages.
-3. Two judges, side by side:
+2. Which sections apply to an SOP is measured, not given: every requirement sentence of the Part is embedded
+   once, each is compared with every passage of the SOP, and a section is in scope when its two best sentences
+   come within SCOPE_THRESHOLD of some passage. Whole sections embedded as one text were tried first and could
+   not tell expiry dating from warehousing (DECISIONS section 24).
+3. Each requirement is compared with every passage of the SOP, by meaning and by keywords, on the SOP's own
+   words only, and the three closest are its evidence. (Not the app's search as it is: that one also ranks by
+   the context lines written at ingest, which change with every upload, so a revised SOP would get different
+   evidence for lines it never touched.)
+4. Two judges, side by side:
    rules  no model. A requirement aimed at products the SOP's scope excludes is "not applicable"; most of its
           distinctive terms present in one passage is "met"; almost none present is "not met", and the reason
           names the terms that are missing. Everything in between is left "unsure".
    model  a small model reads the requirement and the three passages and returns met, partly met, not met or
           not applicable, a quote from the SOP, and one sentence saying why.
-4. Both are scored against the gaps the sample SOP was written with (EXPECTED below), and the model cost is
-   measured, so the bill for thousands of SOPs is arithmetic, not a guess.
+5. A verdict is kept in scripts/benchmarks/gap-cache.sqlite under (citation, hash of the SOP words the model
+   saw, hash of the model and prompt). A revised SOP, or another site's copy of the same template, only goes
+   to the model for the lines whose passages changed. --batch sends the rest through the Message Batches API
+   at half price; a run that dies while a batch is out picks the batch up again the next time.
+6. The sample SOP is scored against the gaps it was written with (EXPECTED below), and the model cost is
+   measured per SOP, so the bill for thousands of SOPs is arithmetic, not a guess.
 """
 from __future__ import annotations
 
 import argparse
 import asyncio
+import hashlib
 import html
 import json
 import re
+import sqlite3
 import sys
+import time
 import xml.etree.ElementTree as ET
-from dataclasses import asdict, dataclass, field
+from collections import defaultdict
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
+import anthropic
+import numpy as np
 import psycopg
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,9 +61,16 @@ from app.config import settings  # noqa: E402
 from app.llm import claude, voyage  # noqa: E402
 
 XML = ROOT / "scripts" / "regulations" / "21cfr211.xml"
-OUT = ROOT / "scripts" / "benchmarks" / "gap-check.json"
-WEB_OUT = ROOT / "web" / "src" / "data" / "gap-check.json"
+OUT = ROOT / "scripts" / "benchmarks" / "gap-check.json"            # the sample SOP's report
+RUNS = ROOT / "scripts" / "benchmarks" / "gap-check"                 # one report per other SOP
+WEB_OUT = ROOT / "web" / "src" / "data" / "gap-check.json"           # what the SOP check page shows; --publish only
+CACHE = ROOT / "scripts" / "benchmarks" / "gap-cache.sqlite"
 PRICE = {"claude-haiku-5-5": (0.10, 0.50), "claude-sonnet-5-5": (2.0, 10.0), "claude-opus-5-5": (4.0, 20.0)}   # $ per million in/out, read 2026-10-15
+BATCH_DISCOUNT = 0.5                                                 # Message Batches API: half of every token price
+SCOPE_THRESHOLD = 0.65                                               # cosine; see DECISIONS section 24 for how it was set
+
+SAMPLE = "SOP-QC-014 Stability and reserve samples (synthetic)"
+SAMPLE_SECTIONS = {"211.137", "211.166", "211.170"}                 # what the sample SOP was written against
 
 # What the sample SOP (samples/generate/make_samples.py, SOP_SECTIONS) was written to do. Citations not listed
 # are lead-ins with nothing to check.
@@ -114,9 +141,11 @@ def read_part(xml_path: Path = XML) -> list[Requirement]:
             while (m := _MARK.match(rest)):
                 markers.append(m.group(1))
                 rest = rest[m.end():]
-            if not markers:                              # an unmarked paragraph continues the one before it
+            if not markers:                              # an unmarked paragraph continues the one before it,
                 if out and out[-1].section == num:
                     out[-1].text += " " + raw
+                else:                                    # or is the whole section (211.192 has no (a) at all)
+                    out.append(Requirement(num, num, title, raw, title))
                 continue
             for mk in markers:
                 lvl = _level(mk, len(stack) and stack[-1][0] or 0)
@@ -169,41 +198,175 @@ def units(reqs: list[Requirement]) -> list[Requirement]:
 
 
 # ---------------------------------------------------------------------------
-# 2. search the SOP
+# 2. the SOP: its passages, which sections apply, and the three passages each requirement is judged on
 # ---------------------------------------------------------------------------
 
 def _conn():
     return psycopg.connect(settings.database_url, autocommit=True)
 
 
-def find_sop(name_part: str) -> tuple[str, str]:
-    with _conn() as c:
-        row = c.execute("select id::text, name from documents where name ilike %s and status = 'ready' order by created_at desc limit 1",
-                        (f"%{name_part}%",)).fetchone()
+def find_sop(c: psycopg.Connection, name_part: str) -> tuple[str, str]:
+    row = c.execute("select id::text, name from documents where name ilike %s and status = 'ready' order by created_at desc limit 1",
+                    (f"%{name_part}%",)).fetchone()
     if not row:
         raise SystemExit(f"no ready document matches {name_part!r}")
     return row
 
 
-def search(doc_id: str, query: str, emb: list[float], strategy: str, k: int = 3) -> list[dict]:
-    with _conn() as c:
-        rows = c.execute(
-            """select raw_text, page_start, chunk_type from hybrid_search(%s, %s::vector, %s, %s::uuid, %s)
-                where chunk_type <> 'table_row'""",
-            (query, "[" + ",".join(f"{x:.6f}" for x in emb) + "]", strategy, doc_id, k),
-        ).fetchall()
-    return [{"text": r[0], "page": r[1], "type": r[2]} for r in rows]
+def passages(c: psycopg.Connection, doc_id: str, strategy: str) -> list[dict]:
+    """The SOP's passages as written, front matter left out: a passage whose breadcrumb names no heading is the
+    title block ("Version 3   Effective 01-Jul-2026"), which is never evidence for a requirement and changes with
+    every revision, so it would make every line look new."""
+    rows = c.execute("""select ordinal, raw_text, page_start, chunk_type, coalesce(metadata->>'breadcrumb', '') from chunks
+                         where document_id = %s and strategy = %s and chunk_type <> 'table_row' order by ordinal""",
+                     (doc_id, strategy)).fetchall()
+    out = [{"ordinal": o, "text": t, "page": pg, "type": ty, "front": " > " not in crumb} for o, t, pg, ty, crumb in rows]
+    return [p for p in out if not p["front"]] or out
 
 
-def sop_scope_exclusions(doc_id: str, strategy: str) -> str:
-    with _conn() as c:
-        rows = c.execute("select raw_text from chunks where document_id = %s and strategy = %s and raw_text ~* 'does not apply|not applicable|excluded'",
-                         (doc_id, strategy)).fetchall()
-    return " ".join(r[0] for r in rows).lower()
+KEYWORDS = """with p as (select i, to_tsvector('english', t) as v from unnest(%s::text[]) with ordinality as x(t, i)),
+                   q as (select j, coalesce((select to_tsquery('english', string_agg(quote_literal(lexeme), ' | '))
+                                               from unnest(to_tsvector('english', t))),
+                                            websearch_to_tsquery('english', t)) as q
+                           from unnest(%s::text[]) with ordinality as y(t, j))
+              select ts_rank_cd(p.v, q.q, 1) from q, p order by q.j, p.i"""
+KEYWORD_WEIGHT = 0.3            # cosine + 0.3 x keyword rank; see DECISIONS section 24
+
+
+def keyword_scores(c: psycopg.Connection, queries: list[str], texts: list[str]) -> np.ndarray:
+    """The app's keyword rank (any word of the requirement, by cover density), on each passage's own words."""
+    if not queries or not texts:
+        return np.zeros((len(queries), len(texts)))
+    rows = c.execute(KEYWORDS, (texts, queries)).fetchall()
+    return np.array([r[0] for r in rows], dtype=np.float32).reshape(len(queries), len(texts))
+
+
+def closest(sop: list[dict], sop_vectors: np.ndarray, query_vector: list[float], keywords: np.ndarray, k: int = 3) -> list[dict]:
+    """The k passages closest to a requirement: meaning and keywords, both measured on the SOP's own words only.
+    The app's search also ranks by the context line written for each passage at ingest; those are rewritten at
+    every ingest, so its second and third passages swap between two uploads of the same text. Here a passage's
+    score depends on nothing but its own words, and the scores are added rather than fused by rank, so an
+    unchanged passage scores the same in every revision and at every site and a line's evidence changes only
+    when the SOP's words do."""
+    q = np.asarray(query_vector, dtype=np.float32)
+    score = sop_vectors @ (q / np.linalg.norm(q)) + KEYWORD_WEIGHT * keywords
+    best = sorted(range(len(sop)), key=lambda i: (-round(float(score[i]), 6), sop[i]["ordinal"]))[:k]
+    return [sop[i] for i in sorted(best, key=lambda i: sop[i]["ordinal"])]      # shown in the SOP's own order
+
+
+def sop_scope(c: psycopg.Connection, doc_id: str, strategy: str) -> tuple[str, str]:
+    """The SOP's own scope statement (shown to the model), and every sentence that excludes something (for the rules)."""
+    row = c.execute("select raw_text from chunks where document_id = %s and strategy = %s and raw_text ilike %s order by ordinal limit 1",
+                    (doc_id, strategy, "%applies to%")).fetchone()
+    rows = c.execute("select raw_text from chunks where document_id = %s and strategy = %s and raw_text ~* 'does not apply|not applicable|excluded'",
+                     (doc_id, strategy)).fetchall()
+    return (row[0] if row else ""), " ".join(r[0] for r in rows).lower()
+
+
+def choose_sections(c: psycopg.Connection, doc_id: str, strategy: str, reqs: list[Requirement], vectors: list[list[float]],
+                    threshold: float) -> list[dict]:
+    """Every section of the Part, scored for this SOP and best first. Each requirement sentence (embedded as a
+    query) is compared with every passage's stored vector, the one the app searches by, whose context line names
+    the passage's topic; a section scores the mean of its two closest sentences, so one stray sentence in a long
+    section does not pull it in. The passages' own words alone separate 211.137 from 211.22 less well (0.69 and
+    0.65 on the sample, against 0.68 and 0.62)."""
+    rows = c.execute("""select embedding::text from chunks where document_id = %s and strategy = %s and chunk_type <> 'table_row'
+                         and embedding is not null""", (doc_id, strategy)).fetchall()
+    if not rows:
+        return []
+    P = np.array([json.loads(r[0]) for r in rows], dtype=np.float32)
+    Q = np.array(vectors, dtype=np.float32)
+    P /= np.linalg.norm(P, axis=1, keepdims=True)
+    Q /= np.linalg.norm(Q, axis=1, keepdims=True)
+    nearest = (P @ Q.T).max(axis=0)                     # each sentence's best passage
+    per: dict[str, list[float]] = defaultdict(list)
+    titles: dict[str, str] = {}
+    for r, v in zip(reqs, nearest):
+        per[r.section].append(float(v))
+        titles[r.section] = r.section_title
+    out = []
+    for sec, v in per.items():
+        v.sort(reverse=True)
+        score = sum(v[:2]) / len(v[:2])
+        out.append({"section": sec, "title": titles[sec], "score": round(score, 3), "in_scope": score >= threshold})
+    return sorted(out, key=lambda x: -x["score"])
 
 
 # ---------------------------------------------------------------------------
-# 3a. the rules judge: no model
+# 3. the cache: verdicts by evidence, vectors by text, batches still out
+# ---------------------------------------------------------------------------
+
+def _hash(*parts: object) -> str:
+    return hashlib.sha256(json.dumps(parts, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+
+
+class Cache:
+    """One SQLite file. A verdict is stored under (citation, evidence, judge): evidence hashes the SOP words the
+    model is shown (the three passages, in any order, and the scope line), judge hashes the model, the prompt and
+    the requirement's wording, so a new model, prompt or regulation text never gets an old verdict. Requirement
+    vectors are stored by their text, since every SOP is checked against the same sentences."""
+
+    def __init__(self, path: Path = CACHE):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        self.db = sqlite3.connect(path)
+        self.db.executescript("""
+            create table if not exists verdicts (key text primary key, cite text, evidence text, judge text, verdict text,
+                tokens_in integer, tokens_out integer, dollars real, mode text, made_at text);
+            create table if not exists vectors (key text primary key, vector blob);
+            create table if not exists pending (key text primary key, batch_id text, cite text, evidence text, judge text,
+                model text, made_at text);
+        """)
+
+    def verdicts(self, keys: list[str]) -> dict[str, dict]:
+        out: dict[str, dict] = {}
+        for i in range(0, len(keys), 500):
+            part = keys[i:i + 500]
+            for k, v, ti, to, d, m in self.db.execute(
+                    f"select key, verdict, tokens_in, tokens_out, dollars, mode from verdicts where key in ({','.join('?' * len(part))})", part):
+                out[k] = {"verdict": json.loads(v), "in": ti, "out": to, "dollars": d, "mode": m}
+        return out
+
+    def put_verdict(self, key: str, cite: str, evidence: str, judge: str, verdict: dict, tin: int, tout: int, dollars: float, mode: str) -> None:
+        self.db.execute("insert or replace into verdicts values (?,?,?,?,?,?,?,?,?,?)",
+                        (key, cite, evidence, judge, json.dumps(verdict, ensure_ascii=False), tin, tout, dollars, mode,
+                         datetime.now(timezone.utc).isoformat(timespec="seconds")))
+        self.db.commit()
+
+    def embed(self, texts: list[str], input_type: str) -> list[list[float]]:
+        if settings.fake_embeddings:                    # fake vectors are not worth keeping
+            return voyage.embed(texts, input_type=input_type)
+        keys = [_hash(settings.embedding_model, settings.embedding_dim, input_type, t) for t in texts]
+        have: dict[str, list[float]] = {}
+        for i in range(0, len(keys), 500):
+            part = keys[i:i + 500]
+            for k, blob in self.db.execute(f"select key, vector from vectors where key in ({','.join('?' * len(part))})", part):
+                have[k] = np.frombuffer(blob, dtype=np.float32).tolist()
+        missing = [i for i, k in enumerate(keys) if k not in have]
+        if missing:
+            new = voyage.embed([texts[i] for i in missing], input_type=input_type)
+            for i, v in zip(missing, new):
+                have[keys[i]] = v
+                self.db.execute("insert or replace into vectors values (?, ?)", (keys[i], np.asarray(v, dtype=np.float32).tobytes()))
+            self.db.commit()
+        return [have[k] for k in keys]
+
+    def pending(self) -> dict[str, dict]:
+        return {k: {"batch_id": b, "cite": c, "evidence": e, "judge": j, "model": m}
+                for k, b, c, e, j, m in self.db.execute("select key, batch_id, cite, evidence, judge, model from pending")}
+
+    def add_pending(self, batch_id: str, lines: list["Line"], model: str) -> None:
+        now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        self.db.executemany("insert or replace into pending values (?,?,?,?,?,?,?)",
+                            [(x.key, batch_id, x.req.cite, x.evidence, x.judge, model, now) for x in lines])
+        self.db.commit()
+
+    def drop_pending(self, key: str) -> None:
+        self.db.execute("delete from pending where key = ?", (key,))
+        self.db.commit()
+
+
+# ---------------------------------------------------------------------------
+# 4a. the rules judge: no model
 # ---------------------------------------------------------------------------
 
 STOP = set("""a an and are as at be been by for from has have in is it its of on or such that the their there these this those to
@@ -252,7 +415,7 @@ def rules_judge(req: Requirement, passages: list[dict], exclusions: str) -> tupl
 
 
 # ---------------------------------------------------------------------------
-# 3b. the model judge
+# 4b. the model judge
 # ---------------------------------------------------------------------------
 
 JUDGE_SYSTEM = (
@@ -276,102 +439,307 @@ JUDGE_SCHEMA = {
 }
 
 
-async def model_judge(req: Requirement, passages: list[dict], scope: str, usage: dict, model: str) -> dict:
+JUDGE_PROMPT = "Requirement {cite} ({context}):{para}\nCheck only this: {text}\n\nSOP scope: {scope}\n\nSOP passages:\n{passages}"
+MAX_TOKENS = 400
+UNREAD = {"status": "unsure", "quote": "", "reason": "The model's reply could not be read."}
+
+
+def judge_params(req: Requirement, passages: list[dict], scope: str, model: str) -> dict:
+    """One Messages API request, the same whether it is sent now or inside a batch."""
     para = f"\nThe whole paragraph, for context only: {req.paragraph}\n" if req.paragraph else ""
-    msg = (f"Requirement {req.cite} ({req.context}):{para}\nCheck only this: {req.text}\n\nSOP scope: {scope or 'not stated'}\n\nSOP passages:\n"
-           + "\n\n".join(f"[page {p['page']}] {p['text']}" for p in passages))
-    resp = await claude.client().messages.create(
-        # No thinking on either: Haiku takes "disabled"; Sonnet 5.5 asks for "between_tools" to mean the same here.
-        model=model, max_tokens=400, thinking={"type": "disabled" if "haiku" in model else "between_tools"}, system=JUDGE_SYSTEM,
-        output_config={"format": {"type": "json_schema", "schema": JUDGE_SCHEMA}},
-        messages=[{"role": "user", "content": msg}],
-    )
-    usage["in"] += resp.usage.input_tokens
-    usage["out"] += resp.usage.output_tokens
-    usage["calls"] += 1
+    msg = JUDGE_PROMPT.format(cite=req.cite, context=req.context, para=para, text=req.text, scope=scope or "not stated",
+                              passages="\n\n".join(f"[page {p['page']}] {p['text']}" for p in passages))
+    params: dict = {"model": model, "max_tokens": MAX_TOKENS, "system": JUDGE_SYSTEM,
+                    "output_config": {"format": {"type": "json_schema", "schema": JUDGE_SCHEMA}},
+                    "messages": [{"role": "user", "content": msg}]}
+    # No thinking: Haiku takes "disabled"; Sonnet 5.5 asks for "between_tools" to mean the same; Opus 5.5 cannot turn
+    # it off, so it thinks as little as it can.
+    if "haiku" in model:
+        params["thinking"] = {"type": "disabled"}
+    elif "sonnet" in model:
+        params["thinking"] = {"type": "between_tools"}
+    else:
+        params["output_config"]["effort"] = "low"
+    return params
+
+
+def read_verdict(message) -> dict | None:
+    if message.stop_reason == "refusal":
+        return None
     try:
-        return json.loads("".join(b.text for b in resp.content if b.type == "text"))
+        v = json.loads("".join(b.text for b in message.content if b.type == "text"))
     except json.JSONDecodeError:
-        return {"status": "unsure", "quote": "", "reason": "The model's reply could not be read."}
+        return None
+    return v if v.get("status") in JUDGE_SCHEMA["properties"]["status"]["enum"] else None
+
+
+def dollars(model: str, tokens_in: int, tokens_out: int, mode: str) -> float:
+    p_in, p_out = PRICE[model]
+    return (tokens_in * p_in + tokens_out * p_out) / 1e6 * (BATCH_DISCOUNT if mode == "batch" else 1.0)
+
+
+@dataclass
+class Line:
+    """One requirement of one SOP, the evidence it is judged on, and where its verdict came from."""
+    sop: str
+    req: Requirement
+    passages: list[dict]
+    rules: tuple[str, str]
+    params: dict
+    evidence: str
+    judge: str
+    key: str
+    verdict: dict | None = None
+    source: str = ""                    # cache | shared (same evidence as a line judged for another SOP this run) | model | failed
+    tokens: tuple[int, int] = (0, 0)
+    dollars: float = 0.0                # what this verdict cost when it was bought
+    mode: str = ""                      # standard | batch
+
+
+def settle(cache: Cache, x: Line, verdict: dict | None, tokens_in: int, tokens_out: int, mode: str) -> None:
+    x.tokens, x.mode = (tokens_in, tokens_out), mode
+    x.dollars = dollars(x.params["model"], tokens_in, tokens_out, mode)
+    if verdict is None:                 # paid for, but not kept: the next run asks again
+        x.verdict, x.source = UNREAD, "failed"
+        return
+    x.verdict, x.source = verdict, "model"
+    cache.put_verdict(x.key, x.req.cite, x.evidence, x.judge, verdict, tokens_in, tokens_out, x.dollars, mode)
+
+
+async def judge_live(cache: Cache, todo: list[Line]) -> None:
+    sem = asyncio.Semaphore(6)
+
+    async def one(x: Line) -> None:
+        async with sem:
+            try:
+                resp = await claude.client().messages.create(**x.params)
+            except anthropic.APIError as e:
+                print(f"  {x.sop} {x.req.cite}: {type(e).__name__}: {e}", file=sys.stderr)
+                x.verdict, x.source = UNREAD, "failed"
+                return
+        settle(cache, x, read_verdict(resp), resp.usage.input_tokens, resp.usage.output_tokens, "standard")
+
+    await asyncio.gather(*(one(x) for x in todo))
+
+
+def judge_in_batches(cache: Cache, todo: list[Line], poll: float = 20.0) -> float:
+    """Send the lines as one Message Batch (custom_id is the cache key), wait, and keep what comes back. A line
+    already out in a batch from an earlier run that died is not sent again: that batch is waited for instead.
+    Returns the seconds spent waiting."""
+    client = anthropic.Anthropic(api_key=settings.anthropic_api_key, max_retries=4, timeout=120.0)
+    out = cache.pending()
+    new = [x for x in todo if x.key not in out]
+    batches = {out[x.key]["batch_id"] for x in todo if x.key in out}
+    if new:
+        b = client.messages.batches.create(requests=[{"custom_id": x.key, "params": x.params} for x in new])
+        cache.add_pending(b.id, new, new[0].params["model"])
+        batches.add(b.id)
+        print(f"batch {b.id}: {len(new)} requests sent")
+    by_key = {x.key: x for x in todo}
+    pend = cache.pending()
+    t0 = time.monotonic()
+    for bid in sorted(batches):
+        while (b := client.messages.batches.retrieve(bid)).processing_status != "ended":
+            n = b.request_counts
+            print(f"  batch {bid}: {n.processing} processing, {n.succeeded} done ({time.monotonic() - t0:.0f} s)", flush=True)
+            time.sleep(poll)
+        for r in client.messages.batches.results(bid):
+            x, p = by_key.get(r.custom_id), pend.get(r.custom_id)
+            if r.result.type == "succeeded":
+                msg = r.result.message
+                v, tin, tout = read_verdict(msg), msg.usage.input_tokens, msg.usage.output_tokens
+                if x:
+                    settle(cache, x, v, tin, tout, "batch")
+                elif p and v:           # a line of an earlier run's batch that this run does not need: keep it anyway
+                    cache.put_verdict(r.custom_id, p["cite"], p["evidence"], p["judge"], v, tin, tout,
+                                      dollars(p["model"], tin, tout, "batch"), "batch")
+            elif x:                     # errored, canceled or expired: not kept, so the next run sends it again
+                x.verdict, x.source = {"status": "unsure", "quote": "", "reason": f"The batch request {r.result.type}."}, "failed"
+            cache.drop_pending(r.custom_id)
+    waited = time.monotonic() - t0
+    print(f"batches ended after {waited:.0f} s of waiting")
+    return waited
 
 
 # ---------------------------------------------------------------------------
 # run
 # ---------------------------------------------------------------------------
 
-async def run(sop: str, sections: list[str], strategy: str, model: str) -> None:
-    doc_id, doc_name = find_sop(sop)
-    reqs = units([r for r in read_part() if r.section in sections])
-    print(f"{doc_name}: {len(reqs)} requirements in {', '.join(sections)}")
-    queries = [f"{r.section_title}. {r.text}" for r in reqs]
-    embs = voyage.embed(queries, input_type="query")
-    exclusions = sop_scope_exclusions(doc_id, strategy)
-    with _conn() as c:
-        scope_row = c.execute("select raw_text from chunks where document_id = %s and strategy = %s and raw_text ilike %s limit 1",
-                              (doc_id, strategy, "%applies to%")).fetchone()
-    scope = scope_row[0] if scope_row else ""
+def prepare(c: psycopg.Connection, cache: Cache, name_part: str, reqs: list[Requirement], vectors: list[list[float]],
+            sections: list[str] | None, strategy: str, model: str, threshold: float) -> dict:
+    """Scope one SOP and find the evidence for each of its lines. No model is called here."""
+    doc_id, doc_name = find_sop(c, name_part)
+    stem = doc_name.rsplit(".", 1)[0]
+    ranking = [] if sections else choose_sections(c, doc_id, strategy, reqs, vectors, threshold)
+    chosen = list(sections) if sections else [s["section"] for s in ranking if s["in_scope"]]
+    scope, exclusions = sop_scope(c, doc_id, strategy)
+    sop = passages(c, doc_id, strategy)
+    P = np.array(cache.embed([p["text"] for p in sop], "document"), dtype=np.float32)   # by text: a revision re-embeds only what changed
+    P /= np.linalg.norm(P, axis=1, keepdims=True)
+    mine = [(r, v) for r, v in zip(reqs, vectors) if r.section in chosen]
+    K = keyword_scores(c, [f"{r.section_title}. {r.text}" for r, _ in mine], [p["text"] for p in sop])
+    lines: list[Line] = []
+    for (r, v), kw in zip(mine, K):
+        found = closest(sop, P, v, kw)
+        params = judge_params(r, found, scope, model)
+        evidence = _hash(sorted(p["text"] for p in found), scope)
+        judge = _hash({name: val for name, val in params.items() if name != "messages"}, JUDGE_PROMPT, r.cite, r.context, r.paragraph, r.text)
+        lines.append(Line(stem, r, found, rules_judge(r, found, exclusions), params, evidence, judge, _hash(r.cite, evidence, judge)))
+    return {"doc_id": doc_id, "name": doc_name, "stem": stem, "sections": chosen, "ranking": ranking, "lines": lines}
 
-    usage = {"in": 0, "out": 0, "calls": 0}
-    sem = asyncio.Semaphore(6)
-    rows: list[dict] = []
 
-    async def one(r: Requirement, q: str, e: list[float]) -> dict:
-        passages = search(doc_id, q, e, strategy)
-        rs, rr = rules_judge(r, passages, exclusions)
-        async with sem:
-            m = await model_judge(r, passages, scope, usage, model)
-        return {"cite": r.cite, "section_title": r.section_title, "context": r.context, "text": r.text,
-                "passages": [{"page": p["page"], "text": p["text"][:600]} for p in passages],
-                "rules": {"status": rs, "reason": rr}, "model": m, "expected": EXPECTED.get(r.cite)}
-
-    rows = await asyncio.gather(*(one(r, q, e) for r, q, e in zip(reqs, queries, embs)))
-
+def score(rows: list[dict], key: str) -> dict:
     graded = [x for x in rows if x["expected"]]
-    def score(key: str) -> dict:
-        decided = [x for x in graded if x[key]["status"] != "unsure"]
-        right = [x for x in decided if x[key]["status"] == x["expected"]
-                 or (x["expected"] == "partly_met" and x[key]["status"] in ("partly_met", "not_met") and key == "rules")]
-        return {"graded": len(graded), "decided": len(decided), "right": len(right),
-                "unsure": len(graded) - len(decided)}
-    cost = (usage["in"] * PRICE[model][0] + usage["out"] * PRICE[model][1]) / 1e6
-    report = {
-        "sop": doc_name.rsplit(".", 1)[0], "regulation": "21 CFR Part 211", "regulation_as_of": "2026-10-13",
-        "sections": sections, "requirements": len(rows), "rules_score": score("rules"), "model_score": score("model"),
-        "model_usage": {**usage, "model": model, "dollars": round(cost, 5), "dollars_per_requirement": round(cost / max(1, usage["calls"]), 6)},
+    decided = [x for x in graded if x[key]["status"] != "unsure"]
+    right = [x for x in decided if x[key]["status"] == x["expected"]
+             or (x["expected"] == "partly_met" and x[key]["status"] in ("partly_met", "not_met") and key == "rules")]
+    return {"graded": len(graded), "decided": len(decided), "right": len(right), "unsure": len(graded) - len(decided)}
+
+
+def report(s: dict, model: str, threshold: float, given: bool) -> dict:
+    expected = EXPECTED if s["stem"] == SAMPLE else {}
+    lines: list[Line] = s["lines"]
+    rows = [{"cite": x.req.cite, "section_title": x.req.section_title, "context": x.req.context, "text": x.req.text,
+             "passages": [{"page": p["page"], "text": p["text"][:600]} for p in x.passages],
+             "rules": {"status": x.rules[0], "reason": x.rules[1]}, "model": x.verdict, "expected": expected.get(x.req.cite),
+             "verdict_from": x.source} for x in lines]
+    bought = [x for x in lines if x.mode]
+    new = [x for x in lines if x.source in ("model", "failed")]
+    full = sum(x.dollars for x in bought)
+    scope: dict = {"how": "given" if given else "measured", "threshold": threshold, "ranking": s["ranking"][:12]}
+    if not given and s["stem"] == SAMPLE:
+        picked = set(s["sections"])
+        scope["graded"] = {"expected": sorted(SAMPLE_SECTIONS), "found": sorted(SAMPLE_SECTIONS & picked),
+                           "missed": sorted(SAMPLE_SECTIONS - picked), "extra": sorted(picked - SAMPLE_SECTIONS)}
+    return {
+        "sop": s["stem"], "regulation": "21 CFR Part 211", "regulation_as_of": "2026-10-13",
+        "sections": s["sections"], "scope": scope, "requirements": len(rows),
+        "rules_score": score(rows, "rules"), "model_score": score(rows, "model"),
+        # What judging this SOP took, whenever each verdict was bought; this_run is what this run paid.
+        "model_usage": {"model": model, "calls": len(bought), "in": sum(x.tokens[0] for x in bought), "out": sum(x.tokens[1] for x in bought),
+                        "dollars": round(full, 5), "dollars_per_requirement": round(full / max(1, len(bought)), 6),
+                        "batch_calls": sum(1 for x in bought if x.mode == "batch")},
+        "this_run": {"calls": len(new), "from_cache": sum(1 for x in lines if x.source == "cache"),
+                     "shared": sum(1 for x in lines if x.source == "shared"),
+                     "in": sum(x.tokens[0] for x in new), "out": sum(x.tokens[1] for x in new),
+                     "dollars": round(sum(x.dollars for x in new), 5)},
         "rows": rows,
     }
-    # Keep the score of every model run so far, so the page can compare them; the rows are this run's.
+
+
+def write(rep: dict, model: str, publish: bool) -> Path:
+    if rep["sop"] != SAMPLE:
+        path = RUNS / (re.sub(r"[^a-z0-9]+", "-", rep["sop"].lower()).strip("-") + ".json")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(rep, indent=2, ensure_ascii=False) + "\n")
+        return path
+    # The sample keeps the score of every model run so far, so the page can compare them; the rows are this run's.
     models: dict[str, dict] = {}
     if OUT.exists():
         try:
             models = {m["model"]: m for m in json.loads(OUT.read_text()).get("models", [])}
         except (json.JSONDecodeError, KeyError):
             models = {}
-    models[model] = {"model": model, **report["model_score"], "dollars": report["model_usage"]["dollars"], "calls": usage["calls"]}
-    report["models"] = sorted(models.values(), key=lambda m: m["dollars"])
-    for path in (OUT, WEB_OUT):
+    u = rep["model_usage"]
+    models[model] = {"model": model, **rep["model_score"], "dollars": u["dollars"], "calls": u["calls"], "batch_calls": u["batch_calls"]}
+    rep["models"] = sorted(models.values(), key=lambda m: m["dollars"])
+    for path in (OUT, WEB_OUT) if publish else (OUT,):
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
+        path.write_text(json.dumps(rep, indent=2, ensure_ascii=False) + "\n")
+    return OUT
 
-    print(f"\n{'citation':20} {'expected':15} {'rules':15} {'model':15}")
-    for x in rows:
-        print(f"{x['cite']:20} {str(x['expected']):15} {x['rules']['status']:15} {x['model']['status']:15}")
-    print("\nrules:", report["rules_score"], "\nmodel:", report["model_score"])
-    print(f"model: {usage['calls']} calls, {usage['in']:,} in / {usage['out']:,} out tokens, ${cost:.4f}")
-    print(f"wrote {OUT.relative_to(ROOT)} and {WEB_OUT.relative_to(ROOT)}")
+
+def print_ranking(stem: str, ranking: list[dict], top: int = 8) -> None:
+    picked = [s for s in ranking if s["in_scope"]]
+    print(f"\n{stem}: {len(picked)} of {len(ranking)} sections in scope")
+    for s in ranking[:max(top, len(picked) + 2)]:
+        print(f"  {'*' if s['in_scope'] else ' '} {s['score']:.3f}  {s['title'][:70]}")
+
+
+async def run(names: list[str], sections: list[str] | None, strategy: str, model: str, threshold: float,
+              batch: bool, no_cache: bool, publish: bool, scope_only: bool) -> None:
+    cache = Cache()
+    reqs = units(read_part())
+    queries = [f"{r.section_title}. {r.text}" for r in reqs]
+    vectors = cache.embed(queries, "query")             # every sentence of the Part, embedded once for all SOPs
+    with _conn() as c:
+        if scope_only:
+            for n in names:
+                doc_id, doc_name = find_sop(c, n)
+                print_ranking(doc_name.rsplit(".", 1)[0], choose_sections(c, doc_id, strategy, reqs, vectors, threshold))
+            return
+        sops = [prepare(c, cache, n, reqs, vectors, sections, strategy, model, threshold) for n in names]
+
+    lines = [x for s in sops for x in s["lines"]]
+    known = {} if no_cache else cache.verdicts(sorted({x.key for x in lines}))
+    first: dict[str, Line] = {}
+    for x in lines:
+        if x.key in known:
+            k = known[x.key]
+            x.verdict, x.source, x.tokens, x.dollars, x.mode = k["verdict"], "cache", (k["in"], k["out"]), k["dollars"], k["mode"]
+        elif x.key in first:
+            x.source = "shared"
+        else:
+            first[x.key] = x
+    todo = list(first.values())
+    print(f"{len(sops)} SOPs, {len(lines)} lines: {sum(x.source == 'cache' for x in lines)} from the cache, "
+          f"{sum(x.source == 'shared' for x in lines)} sharing their evidence with another line, {len(todo)} to judge"
+          + (" in a batch" if batch and todo else ""))
+    if todo:
+        if batch:
+            judge_in_batches(cache, todo)
+        else:
+            await judge_live(cache, todo)
+    for x in lines:
+        if x.source == "shared":
+            y = first[x.key]
+            x.verdict, x.tokens, x.dollars, x.mode = y.verdict, y.tokens, y.dollars, y.mode
+
+    summary = []
+    for s in sops:
+        rep = report(s, model, threshold, given=bool(sections))
+        path = write(rep, model, publish)
+        if s["ranking"]:
+            print_ranking(s["stem"], s["ranking"])
+        if "graded" in rep["scope"]:
+            g = rep["scope"]["graded"]
+            print(f"  scope: found {len(g['found'])} of {len(g['expected'])} expected sections, missed {g['missed'] or 'none'}, extra {g['extra'] or 'none'}")
+        print(f"\n{'citation':24} {'expected':15} {'rules':15} {'model':15} verdict from")
+        for x in rep["rows"]:
+            print(f"{x['cite']:24} {str(x['expected']):15} {x['rules']['status']:15} {x['model']['status']:15} {x['verdict_from']}")
+        if rep["rules_score"]["graded"]:
+            print("rules:", rep["rules_score"], "\nmodel:", rep["model_score"])
+        u, t = rep["model_usage"], rep["this_run"]
+        print(f"this SOP: {u['calls']} verdicts, {u['in']:,} in / {u['out']:,} out tokens, ${u['dollars']:.4f} as bought"
+              f" ({u['batch_calls']} through the batch API)")
+        print(f"this run: {t['calls']} model calls, {t['from_cache']} from the cache, {t['shared']} shared with another SOP, ${t['dollars']:.4f}")
+        print(f"wrote {path.relative_to(ROOT)}" + (f" and {WEB_OUT.relative_to(ROOT)}" if publish and path == OUT else ""))
+        summary.append((s["stem"], len(s["sections"]), u["calls"], t["from_cache"] + t["shared"], t["calls"], t["dollars"], u["dollars"]))
+
+    if len(summary) > 1:
+        print(f"\n{'SOP':60} {'sections':>8} {'lines':>6} {'reused':>6} {'asked':>6} {'paid now':>9} {'per SOP':>9}")
+        for stem, nsec, nl, reused, asked, paid, per in summary:
+            print(f"{stem[:60]:60} {nsec:8} {nl:6} {reused:6} {asked:6} {paid:9.4f} {per:9.4f}")
+        print(f"{'total':60} {'':8} {sum(r[2] for r in summary):6} {sum(r[3] for r in summary):6} {sum(r[4] for r in summary):6}"
+              f" {sum(r[5] for r in summary):9.4f}")
 
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sop", default="SOP-QC-014")
-    ap.add_argument("--sections", nargs="+", default=["211.137", "211.166", "211.170"])
+    ap.add_argument("--sop", nargs="+", default=[SAMPLE], help="name fragments; each picks the newest ready document it matches")
+    ap.add_argument("--sections", nargs="+", help="check these sections instead of choosing them for each SOP")
+    ap.add_argument("--threshold", type=float, default=SCOPE_THRESHOLD, help="how close a section must come to be in scope")
+    ap.add_argument("--scope-only", action="store_true", help="print which sections apply to each SOP and stop")
+    ap.add_argument("--batch", action="store_true", help="send the model calls through the Message Batches API: half price, minutes to hours")
+    ap.add_argument("--no-cache", action="store_true", help="judge every line again (the new verdicts replace the cached ones)")
+    ap.add_argument("--publish", action="store_true", help=f"also write the sample's report to {WEB_OUT.relative_to(ROOT)}, which the SOP check page shows")
     ap.add_argument("--strategy", default="contextual", help="which chunks of the SOP to search")
-    ap.add_argument("--model", default="claude-haiku-5-5", choices=["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"])
-    ap.add_argument("--list", action="store_true", help="print the requirements of the sections and stop")
+    ap.add_argument("--model", default="claude-haiku-5-5", choices=list(PRICE))
+    ap.add_argument("--list", action="store_true", help="print the requirements of the sections (all of them without --sections) and stop")
     a = ap.parse_args()
     if a.list:
-        for r in read_part():
-            if r.section in a.sections:
-                print(f"{r.cite:22} {r.text[:110]}")
+        for r in units(read_part()):
+            if not a.sections or r.section in a.sections:
+                print(f"{r.cite:26} {r.text[:110]}")
         raise SystemExit(0)
-    asyncio.run(run(a.sop, a.sections, a.strategy, a.model))
+    asyncio.run(run(a.sop, a.sections, a.strategy, a.model, a.threshold, a.batch, a.no_cache, a.publish, a.scope_only))
