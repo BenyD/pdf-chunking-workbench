@@ -1,0 +1,21 @@
+{
+  // The worker runs as a container on Cloudflare: this small Worker takes every request and hands it to
+  // one long-lived container built from worker/Dockerfile. Secrets are set with `wrangler secret put`.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "chunklab-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "observability": { "enabled": true },
+  "containers": [
+    {
+      "class_name": "ChunklabWorker",
+      "image": "../../worker/Dockerfile",
+      "max_instances": 2,
+      "instance_type": "standard"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "class_name": "ChunklabWorker", "name": "WORKER" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ChunklabWorker"] }]
+}
