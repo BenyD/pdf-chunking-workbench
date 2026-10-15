@@ -650,3 +650,113 @@ two at a time into one table with a check count per row, a "Show" that
 puts the scan with its boxes beside the list of values and their check
 words, and a CSV download. Inline correction of a read value, with the
 correction saved, is the next step this layout leaves room for.
+
+## 22. What the AI adds, measured against the chunking Bedrock offers
+
+**Why.** The interviewers asked why AI is needed at all, suggested
+hierarchical chunking on Amazon Bedrock, and want any AI justified by
+showing the cheaper approaches failing. `scripts/compare_chunking.py`
+chunks every benchmark document each way, embeds them all with the same
+model (voyage-4) and runs every question through the same Postgres search,
+so the chunking is the only thing that differs. A hit is the expected
+phrase in the document's own words (never in a model-written sentence) on
+the expected page, in the top five.
+
+| Setup (129 questions, 14 documents) | recall@5 | MRR | tokens in top 5 |
+|---|---|---|---|
+| Fixed-size 300 tokens, meaning search (Bedrock default) | 84% | 0.78 | 1,324 |
+| Fixed-size 300 tokens, hybrid search | 83% | 0.73 | 1,331 |
+| Semantic chunking (Bedrock semantic) | 82% | 0.73 | 1,045 |
+| Hierarchical 1,500 / 300 (Bedrock hierarchical), meaning | 88% | 0.84 | 3,461 |
+| Hierarchical 1,500 / 300, hybrid | 90% | 0.82 | 3,545 |
+| Structure-aware, keywords only: no AI at any step | 85% | 0.69 | 1,596 |
+| Structure-aware + embeddings: nothing generated | 95% | 0.84 | 1,355 |
+| Structure-aware + model context, keywords only | 90% | 0.77 | 1,978 |
+| Structure-aware + model context + embeddings (the app) | 98% | 0.88 | 1,790 |
+
+**What it shows.**
+- Tables are where generic chunking breaks. On the 4,500-row price
+  schedule, fixed-size windows find 33%, semantic chunking 11% and
+  hierarchical 44 to 78%; cutting at rows finds 100% even with no AI.
+- Hierarchical chunking is the best of Bedrock's options, but partly by
+  handing back 1,500-token parents: a reader, or the model writing the
+  answer, gets through twice as many tokens for it. Bedrock's own docs
+  also advise against hierarchical chunking on its cheapest vector store
+  (S3 Vectors).
+- With no AI at all, cutting along the document's structure (85%) already
+  matches the Bedrock defaults. Adding an embedding model, which generates
+  nothing and can run on our own server, takes it to 95%.
+- Generated text earns its keep in two places: figures (the Humira label
+  goes from 64% to 91%, the maintenance manual from 67% to 100%) and
+  isolated rows and passages, through the context line.
+- The benchmark questions were written by Sonnet from the app's own
+  passages, and five of the expected phrases use the "Header: value" form
+  of a table row, which favours our chunking a little. The real Bedrock
+  service was not run (the AWS session had expired); the methods are
+  rebuilt from Bedrock's documented settings, with our embedding model.
+
+## 23. A bare label on a figure, bound to a key elsewhere
+
+**Why.** Manuals mark parts with a lone letter or number and explain them
+somewhere else: "Table 6. Key to Figure 4" two pages on. On its own the
+figure says "A, B, C, D" and the table never says where the part is.
+
+**Decision.** `worker/app/chunk/legend.py`. The labels are the short tokens
+printed on the figure (A, (b), 3, but never the 4 in "Figure 4" or a lone
+"a"). A key is any table whose first or second column holds those labels,
+or a run of "A - text" items in the text. It must share at least two
+labels and cover most of them; one that names the figure wins; then the
+nearest. Bare numbers are everywhere (row numbers, axis ticks), so a
+numbered key must name the figure or sit on the same page. The key is
+written into the figure's passage, every key row records which figure it
+labels, and the key goes to the vision model, which then names each arrow
+by it ("arrow C points to the lower punch").
+
+Letters printed as PDF text bind with no model at all. Letters drawn into a
+photo are not text; Tesseract could not read circled digits, so they bind
+only after the vision model reads them, through the same lookup. The
+synthetic tablet press manual has one of each: Figure 4 (printed letters)
+is found with no AI; Figure 5 (numbers in the photo) only with it.
+
+## 24. An SOP checked line by line against 21 CFR Part 211
+
+**Why.** The interviewers' example: thousands of company SOPs, each to be
+checked against the regulation sentence by sentence, saying what is
+missing and why.
+
+**Decision.** `scripts/gap_check.py`, shown on the SOP check page.
+- The regulation comes from the eCFR's XML, where each paragraph carries
+  its marker, so every sentence is cut at its exact citation (211.170(b),
+  sentence 4) and keeps its parents' lead-ins: hierarchical chunking
+  driven by the document's own numbering. Declarative sentences count ("The
+  reserve sample consists of at least twice the quantity..."); lead-ins
+  that only introduce a list do not.
+- Each requirement is searched for in the SOP with the app's search; the
+  three closest passages go to the judges.
+- Rules decide what they can with no model: lines for products the SOP's
+  scope excludes, and lines whose terms are plainly present or absent.
+- A small model returns met, partly met, not met or not applicable, the
+  SOP's words it relied on, and one sentence saying why.
+
+**Measured** on a synthetic SOP written with known gaps (no reserve
+samples of active ingredients, no yearly visual examination, six months'
+retention where the rule says a year, a tentative expiry with no
+verification), 41 requirement sentences across 211.137, 211.166 and
+211.170:
+
+| Judge | right | cost for this SOP |
+|---|---|---|
+| Rules, no AI | 13 of the 15 it was sure of (26 left unsure) | $0 |
+| Claude Haiku 5.5 | 35 to 37 of 41 across runs | $0.0075 |
+| Claude Sonnet 5.5 | 38 of 41 | $0.146 |
+
+Haiku's misses are "partly met" where "not met" was expected, with the
+reason still right ("applies to finished product rather than active
+ingredient"). Judging a sentence without its paragraph cost three more
+misses: the same binding problem as in chunking. At this scope, 5,000 SOPs
+cost about $38 with Haiku, half that through the Batch API; checking every
+SOP against all of Part 211 is roughly ten times the sentences.
+
+Not built yet: choosing which sections apply to each SOP automatically
+(today they are given), and caching verdicts by requirement and passage so
+a revised SOP only re-checks what changed.

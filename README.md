@@ -5,10 +5,12 @@ came from. Built for documents that break ordinary search: 300-page acts with
 schedules, 150-page price tables, inspection reports with annotated figures,
 scanned bills.
 
-Three pages:
+Pages:
 
 - **Documents**: upload a PDF or load the samples; each one is read, split into passages and indexed within minutes.
 - **Search**: a question across all documents or one of them; a short answer with numbered sources, each opening the page it came from.
+- **Compare**: one question asked three ways (no AI, embeddings only, the app) side by side, and every chunking method Amazon Bedrock offers scored on the same 129 questions.
+- **SOP check**: a company SOP checked sentence by sentence against 21 CFR Part 211, each gap with the SOP's words and the reason.
 - **Forms** (hidden unless `NEXT_PUBLIC_FORMS=1` in `web/.env.local`): teach it a form once, then read every scan of that form into a table.
 
 How a document is processed (one pipeline, chosen after measuring three):
@@ -31,6 +33,8 @@ supabase/  Postgres schema (pgvector + full text + hybrid_search function) and l
 samples/   Generator for the synthetic sample PDFs. Output lands in web/public/samples.
 docs/      Internal design notes.
 scripts/   eval.py: recall@k on the question sets, against a running deployment. make_questions.py: writes a labelled set per document with Claude. benchmarks/: the saved sets.
+           compare_chunking.py: builds fixed-size, semantic, hierarchical and structure-only chunks beside the live ones and scores them all.
+           gap_check.py: checks an SOP against 21 CFR Part 211, line by line (regulations/21cfr211.xml is the eCFR text).
 ```
 
 ## Run locally
@@ -196,6 +200,24 @@ image hash and context lines by passage hash would make it free.
 Retrieval itself is a single Postgres function (full text + vector, reciprocal rank fusion) and costs nothing per query.
 
 ## Measured
+
+**Against the alternatives.** `scripts/compare_chunking.py` rebuilds every
+benchmark document the ways Amazon Bedrock chunks (fixed-size, semantic,
+hierarchical) and with our chunker and no AI, embeds all of them with the
+same model and scores them with the same search. Right passage in the top
+five, 129 questions:
+
+| Setup | recall@5 |
+|---|---|
+| Fixed-size 300 tokens (Bedrock default) | 84% |
+| Semantic chunking | 82% |
+| Hierarchical 1,500 / 300 | 88 to 90%, reading twice the tokens |
+| Our structure, no AI at all | 85% |
+| Our structure + embeddings, nothing generated | 95% |
+| The app | 98% |
+
+The full table, per document, is on the Compare page and in
+docs/DECISIONS.md section 22.
 
 `scripts/make_questions.py` writes a labelled question set for every document
 with Claude: passages are sampled across each document's pages and kinds (text,
