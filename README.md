@@ -9,7 +9,7 @@ Three pages:
 
 - **Documents**: upload a PDF or load the samples; each one is read, split into passages and indexed within minutes.
 - **Search**: a question across all documents or one of them; a short answer with numbered sources, each opening the page it came from.
-- **Forms**: mark the fields once on a sample form, then read any scan of the same form.
+- **Forms** (hidden unless `NEXT_PUBLIC_FORMS=1` in `web/.env.local`): teach it a form once, then read every scan of that form into a table.
 
 How a document is processed (one pipeline, chosen after measuring three):
 pages are rendered; the layout is parsed so headings, tables (whole and row by

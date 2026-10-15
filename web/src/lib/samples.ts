@@ -11,10 +11,10 @@ export const SAMPLES: { key: string; file: string; name: string; blurb: string; 
     blurb: "One ruled price table of 4,500 rows across 150 pages.", pages: 151 },
   { key: "inspection-report", file: "inspection-report.pdf", name: "QC Inspection Report (synthetic).pdf",
     blurb: "Photos of utensils with arrows and labels, and the findings.", pages: 4 },
-  { key: "pharmacy-bill-1", file: "pharmacy-bill-1.pdf", name: "Pharmacy bill 1 (synthetic).pdf", blurb: "A clean digital bill, the one to mark up on Forms.", pages: 1 },
+  { key: "pharmacy-bill-1", file: "pharmacy-bill-1.pdf", name: "Pharmacy bill 1 (synthetic).pdf", blurb: "A clean digital bill.", pages: 1 },
   { key: "pharmacy-bill-2", file: "pharmacy-bill-2.pdf", name: "Pharmacy bill 2 (synthetic).pdf", blurb: "The same bill with a different patient and items.", pages: 1 },
   { key: "pharmacy-bill-3-scan", file: "pharmacy-bill-3-scan.pdf", name: "Pharmacy bill 3 scanned (synthetic).pdf",
-    blurb: "A crooked, shifted scan of the same bill, the one to read on Forms.", pages: 1 },
+    blurb: "A crooked, shifted scan of the same bill, with no text layer.", pages: 1 },
 ];
 
 // A4 is 595 x 842 pt. Boxes are fractions of the page. Values printed at x=120 (labels at 50).
