@@ -15,6 +15,7 @@ import copy
 
 from ..config import settings
 from ..llm import claude
+from . import legend
 from .model import ChunkDraft, link_sequence
 
 
@@ -62,8 +63,16 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
                         usage["figures_dropped"] += 1
                         desc = None
                     else:
-                        desc = await claude.describe_figure(c.image_png or b"", c.metadata.get("caption"), c.metadata.get("labels", []), c.context or doc_title)
+                        key = c.metadata.get("key")
+                        key_text = legend.Key(key["source"], key["page"], key["title"], key["entries"]).text() if key else None
+                        desc = await claude.describe_figure(c.image_png or b"", c.metadata.get("caption"), c.metadata.get("labels", []), c.context or doc_title, key_text)
                         usage["vision_calls"] += 1
+                        if desc and not key:
+                            # Letters drawn inside a photo are not text in the PDF; the vision model reads them,
+                            # and the same key lookup runs on what it read.
+                            read = [a.get("text", "") for a in desc.get("annotations", [])] + list(desc.get("text_in_image", []))
+                            if legend.bind(c, legend.callouts(read), clones):
+                                usage["keys_bound_from_image"] = usage.get("keys_bound_from_image", 0) + 1
                     if desc:
                         c.metadata["vision"] = desc
                         ann = "; ".join(f"{a['marker']} -> {a['points_to']}" + (f" ({a['text']})" if a.get("text") else "") for a in desc.get("annotations", []))

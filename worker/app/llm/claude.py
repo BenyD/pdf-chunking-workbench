@@ -110,14 +110,17 @@ FIGURE_SCHEMA = {
 FIGURE_SYSTEM = (
     "You describe figures from technical, legal and medical documents so that they can be found by text search. "
     "Be literal and specific. Arrows and callouts are the most important content: for each one, say exactly what it "
-    "points at and transcribe its label. Do not speculate beyond what is drawn."
+    "points at and transcribe its label. When a key to the labels is given, name each labelled part by the key "
+    "(for example: arrow C points to the lower punch). Do not speculate beyond what is drawn."
 )
 
 
-async def describe_figure(png: bytes, caption: str | None, labels: list[str], breadcrumb: str) -> dict | None:
+async def describe_figure(png: bytes, caption: str | None, labels: list[str], breadcrumb: str, key: str | None = None) -> dict | None:
     hints = []
     if caption:
         hints.append(f"Caption from the document: {caption}")
+    if key:
+        hints.append(f"The labels on this figure are explained elsewhere in the document. {key}")
     if labels:
         hints.append("Text extracted near or inside the figure: " + "; ".join(labels[:30]))
     hints.append(f"Location in document: {breadcrumb}")

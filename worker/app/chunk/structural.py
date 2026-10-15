@@ -6,8 +6,9 @@ Rules, in order of what they protect:
   * A table is one chunk. If it is too big, it is split by rows and the header
     is repeated in every part. Every row is ALSO emitted as its own chunk,
     flattened to "Header: value" pairs, with the table part as its parent.
-  * A figure is one chunk made of its caption, the text found on it, and the
-    sentences elsewhere in the document that refer to it.
+  * A figure is one chunk made of its caption, the text found on it, the
+    sentences elsewhere in the document that refer to it, and the key to its
+    bare labels (A, B, 1, 2) when that key is a table or list elsewhere.
   * Prose inside a section is packed paragraph by paragraph up to the token
     budget; an oversized paragraph is cut at sentence boundaries.
 """
@@ -19,6 +20,7 @@ from dataclasses import dataclass, field
 from ..config import settings
 from ..parse.model import FigureBlock, PageLayout, TableBlock, TextBlock, frac, union
 from ..parse.tables import resolve_ditto, row_to_text, to_markdown
+from .legend import bind_all
 from .model import ChunkDraft, link_sequence
 from .tokens import count
 
@@ -87,6 +89,7 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
                 last_was_heading_only = False
                 chunks.append(_figure_chunk(block, crumbs.text(), dims, all_text_blocks))
     flush()
+    bind_all(chunks)          # a figure's bare labels (A, B, 1, 2) tied to the key that explains them, wherever it is
     link_sequence(chunks)
     return chunks
 
