@@ -521,3 +521,36 @@ amount (a currency mark or a figure with two decimals). "3. Findings",
 "CHAPTER II" and "Dosage and Administration" still become headings; "Invoice
 No: SP/2026/04452" and "Subtotal 447.00" never do. After re-processing, the
 totals passage of the bill reads subtotal, GST and grand total together.
+
+## 18. What it costs, measured
+
+**Why.** The question a business asks first. The worker now tallies the
+tokens of every model call made for a document (a context variable set for
+the ingest, read into `stats.llm.tokens`), so each document carries what it
+cost, and the README quotes measured figures against the prices read from
+the pricing pages on 2026-10-15 rather than remembered ones.
+
+**Two settings changed while measuring.** The one-word look at a figure
+was made with a ten-token output budget and low-effort thinking; the
+model's short thinking block used the budget and the word never came, so
+the look returned "unknown" and the expensive description ran anyway. With
+thinking disabled it answers in five tokens. The context line spent 187
+output tokens with low-effort thinking and 125 without, for the same two
+sentences; output is five times the price of input, so thinking is off for
+both bulk calls. The figure description and the OCR fallback keep
+medium-effort thinking: they are the judgement calls.
+
+**The shape of the bill.** Text and tables are cheap: a 297-page act is
+twelve cents, a 151-page table nine, a one-page bill a twentieth of a cent.
+A question on Search is four hundredths of a cent. Figures are the cost:
+each Opus description is about a cent and a half, so a 100-page label with
+49 illustrated steps is seventy cents, 95% of it figures. The cheap look
+before each description only pays when a document carries emblems or
+decorations; on photographs it is a tenth of a cent of insurance.
+
+**Levers, in order.** Batch API for bulk imports (50% off every ingest
+call, ingest is asynchronous already). Sonnet for figures where callouts do
+not matter (half of Opus). Caching by image hash and passage hash so a
+re-ingest costs nothing. None of these is switched on: the demo should
+show the best reading, and the numbers above are already small.
+

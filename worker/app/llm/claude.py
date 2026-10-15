@@ -13,6 +13,7 @@ parse-and-retry loop.
 from __future__ import annotations
 
 import base64
+import contextvars
 import json
 import logging
 from typing import Any
@@ -24,6 +25,17 @@ from ..config import settings
 log = logging.getLogger(__name__)
 
 _client: anthropic.AsyncAnthropic | None = None
+
+# Token tally for the ingest running in this context: {"haiku_in", "haiku_out", "opus_in", "opus_out"}.
+# chunk_contextual sets it before its calls and reads it after, so a document's stats carry what it cost.
+tally: contextvars.ContextVar[dict[str, int] | None] = contextvars.ContextVar("llm_tally", default=None)
+
+
+def _count(resp: Any, tier: str) -> None:
+    t = tally.get()
+    if t is not None and getattr(resp, "usage", None):
+        t[f"{tier}_in"] = t.get(f"{tier}_in", 0) + (resp.usage.input_tokens or 0)
+        t[f"{tier}_out"] = t.get(f"{tier}_out", 0) + (resp.usage.output_tokens or 0)
 
 
 def client() -> anthropic.AsyncAnthropic:
@@ -63,6 +75,7 @@ async def _opus_structured(system: str, content: list[dict], schema: dict, max_t
             raise
         log.warning("fallbacks parameter rejected, retrying without it: %s", e)
         resp = await client().messages.create(**kwargs)
+    _count(resp, "opus")
     if resp.stop_reason == "refusal":
         return None
     text = _text_of(resp)
@@ -137,13 +150,16 @@ async def triage_figure(png: bytes) -> str:
         {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": base64.standard_b64encode(png).decode()}},
         {"type": "text", "text": "Which kind of region is this? One word."},
     ]
+    # No thinking: with it on, a short thinking block used up the budget and the word never came,
+    # so every figure fell through to the expensive description.
     resp = await client().messages.create(
         model=settings.triage_model,
         max_tokens=10,
         system=TRIAGE_SYSTEM,
-        output_config={"effort": "low"},
+        thinking={"type": "disabled"},
         messages=[{"role": "user", "content": content}],
     )
+    _count(resp, "haiku")
     if resp.stop_reason == "refusal":
         return "unknown"
     word = _text_of(resp).strip().lower().split()
@@ -168,13 +184,15 @@ async def chunk_context(doc_title: str, breadcrumb: str, chunk_text: str, before
         f"<text_after>{after[:1500]}</text_after>\n\n"
         "Write the situating context for <chunk>."
     )
+    # No thinking: measured at 125 output tokens against 187 with low-effort thinking, for the same two sentences.
     resp = await client().messages.create(
         model=settings.context_model,
-        max_tokens=1500,
+        max_tokens=400,
         system=CONTEXT_SYSTEM,
-        output_config={"effort": "low"},
+        thinking={"type": "disabled"},
         messages=[{"role": "user", "content": prompt}],
     )
+    _count(resp, "haiku")
     if resp.stop_reason == "refusal":
         return ""
     return _text_of(resp).strip()

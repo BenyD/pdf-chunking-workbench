@@ -86,12 +86,48 @@ Uploads go straight from the browser to Supabase Storage through a signed URL, s
 
 | Step | Model | Notes |
 |---|---|---|
-| a look at each figure | `claude-haiku-5-5` | one cheap look at every figure crop at ingest; a logo, a border or a blank box gets no description and no passage |
+| a look at each figure | `claude-haiku-5-5` | one cheap look at every figure crop at ingest, thinking off; a logo, a border or a blank box gets no description and no passage |
 | figure descriptions | `claude-opus-5-5` | once per figure that carries information, structured JSON output |
-| passage context and suggested questions | `claude-haiku-5-5` | once per text/table passage at ingest |
+| passage context and suggested questions | `claude-haiku-5-5` | once per text/table passage at ingest, thinking off |
 | answer on the search page | `claude-haiku-5-5` | one short call per search, from the passages found |
 | OCR fallback | `claude-opus-5-5` | only for fields with low confidence or failed validation |
 | embeddings | Voyage `voyage-4` (1024 d) | documents at ingest, queries at search time |
+
+**What it costs.** Every document's stats carry the tokens its ingest spent
+(`stats.llm.tokens`), so the figure is measured, not guessed. Prices below
+were read from the Claude pricing page and Voyage's pricing page on
+2026-10-15: Haiku 5.5 $0.10 in / $0.50 out per million tokens, Opus 5.5
+$4 / $20, voyage-4 $0.06 per million with the first 200 million free.
+
+| One call | tokens in / out | cost |
+|---|---|---|
+| context line for a passage (Haiku) | ~530 / ~125 | $0.00012 |
+| a look at a figure (Haiku) | ~960 / 5 | $0.0001 |
+| a figure description (Opus) | ~1,500 / ~400 | $0.014 |
+| an answer on Search (Haiku, six passages) | ~800 to 2,500 / ~350 | $0.0004 |
+
+| One document | model calls | about |
+|---|---|---|
+| a one-page bill | 3 context lines | $0.0004 |
+| the 4-page inspection report, 2 photos | 9 context, 2 looks, 2 descriptions | $0.03 |
+| a 102-page act, no figures | 416 context lines, 145k embedding tokens | $0.06 |
+| a 297-page act | 768 context lines, 431k embedding tokens | $0.12 |
+| the 151-page price table | 182 context lines, 1.2M embedding tokens | $0.09 |
+| a 100-page drug label with 49 illustrated steps | 238 context, 49 looks, 49 descriptions | $0.73 |
+
+So text and tables cost well under a cent a page, questions cost a
+twentieth of a cent each, and the one thing that costs real money is a
+figure described by Opus, about a cent and a half each. The fixed costs are
+the hosting: Supabase (free tier, or $25 a month), Vercel (free, or $20),
+one small machine for the worker (about $5 to $10), Tesseract is free.
+
+**Where it can go lower.** The Batch API halves every ingest call and
+ingest is already asynchronous, so bulk imports can run through it for 50%
+off. Figure descriptions on Sonnet 5.5 would cost half of Opus, and on
+Haiku a fortieth; the current choice is Opus because arrows and callouts
+on inspection photos are where the smaller models miss, and that is what
+the demo is about. A re-ingest redoes every call; caching descriptions by
+image hash and context lines by passage hash would make it free.
 
 Retrieval itself is a single Postgres function (full text + vector, reciprocal rank fusion) and costs nothing per query.
 

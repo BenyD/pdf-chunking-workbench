@@ -41,6 +41,8 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
         return clones, usage
 
     sem = asyncio.Semaphore(settings.llm_concurrency)
+    tokens: dict[str, int] = {}
+    claude.tally.set(tokens)          # every call below adds its tokens here
     by_id = {c.id: c for c in clones}
     done = 0
     targets = [c for c in clones if c.chunk_type in ("text", "table", "figure")]
@@ -87,6 +89,7 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
                 on_progress(done, len(targets))
 
     await asyncio.gather(*(work(c, clones.index(c)) for c in targets))
+    usage["tokens"] = tokens
 
     # A figure the look dismissed leaves the document, and the sequence closes over the gap.
     if any(c.metadata.get("vision_skipped") for c in clones):
