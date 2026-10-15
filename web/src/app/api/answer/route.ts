@@ -25,7 +25,8 @@ export async function POST(req: Request) {
     .join("\n\n");
   try {
     const client = new Anthropic();
-    const msg = await client.messages.create({ model: "claude-haiku-5-5", max_tokens: 400, system: SYSTEM, messages: [{ role: "user", content: user }] });
+    // Thinking is off: the model thinks by default and a few hundred tokens of it would use up this short budget, leaving no answer at all.
+    const msg = await client.messages.create({ model: "claude-haiku-5-5", max_tokens: 400, thinking: { type: "disabled" }, system: SYSTEM, messages: [{ role: "user", content: user }] });
     const answer = msg.content.filter((b) => b.type === "text").map((b) => b.text).join("").trim();
     return NextResponse.json({ answer });
   } catch {
