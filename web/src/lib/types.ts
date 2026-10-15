@@ -73,6 +73,8 @@ export interface OcrTemplate {
   fields: OcrField[];
   anchors: OcrAnchor[];
   created_at: string;
+  /** How many scans have been read with it; set by the templates API. */
+  runs?: number;
 }
 
 export interface EvalQuestion {

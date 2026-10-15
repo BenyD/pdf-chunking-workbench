@@ -602,3 +602,51 @@ reads them two at a time with the same form, and fills one table as each
 lands: a row per scan, a column per value, a check count, and a "Show" that
 puts that scan's page with its boxes and sentence underneath. The table
 downloads as a CSV. A saved form can be deleted behind an alert dialog.
+
+## 21. Forms, rebuilt as four steps after looking at the field
+
+**Why.** Every rewrite of the Forms page so far kept one screen doing
+everything. Even its author called it confusing. Before rebuilding it a
+third time, the established document-capture products were read for how
+they structure the same job.
+
+**What they do.** Microsoft's AI Builder walks through define the fields,
+group documents into collections, let it analyse them, tag by drawing a
+rectangle and picking the field, then train and publish
+(learn.microsoft.com/ai-builder/create-form-processing-model). UiPath's
+Template Manager asks for a document type, a name "that reflects the
+version or layout", a sample document, zones with field names and data
+types, anchors with a tolerance, then test and publish
+(docs.uipath.com, data-extraction-form-extractor). Nanonets defines fields
+with descriptions, uploads samples, annotates, trains, and reviews per file
+with Approve or Review buttons, then exports (docs.nanonets.com, interface
+overview). Rossum's validation screen puts the value, its confidence, the
+source and the document side by side, marks fields it has already checked
+with a grey tick, and routes by threshold so a reviewer fixes only the
+flagged fields (knowledge-base.rossum.ai; lilting.ch on confidence-based
+review). The zonal-OCR explainers (ABBYY, Klippa, Lido, OpenKM) agree on
+the sequence: sample, zones named and typed, anchors, test, publish, and
+warn that layout drift is the main failure mode.
+
+**The shape chosen.** A forms list, a four-step wizard, and a reading page,
+each with its own address so the browser's back button works and a step
+can be linked to.
+
+1. *Clean copy*: name the form, pick the document it is taught on, see the
+   page. One name per layout, as UiPath advises.
+2. *Values*: "Find the values for me" turns every "label: value" line on
+   the page into a named, typed field in one press; a drag over a value or
+   a block of them does the same for that region; a drag over a bare value
+   gives one field to name. Labels become the words the form is found by.
+   The anchor tools stay behind "Change the words".
+3. *Test*: read one scan, see each value with its check word and the boxes
+   on the scan, go back if a box is off. The test does not store a record.
+4. *Save*: a summary of name, copy, values, words and the test, then one
+   button. Editing a saved form walks the same steps and saves in place,
+   so its past reads stay attached; deletion sits here behind an alert.
+
+The reading page is the Rossum pattern made small: tick scans, read them
+two at a time into one table with a check count per row, a "Show" that
+puts the scan with its boxes beside the list of values and their check
+words, and a CSV download. Inline correction of a read value, with the
+correction saved, is the next step this layout leaves room for.

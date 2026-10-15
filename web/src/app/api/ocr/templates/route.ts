@@ -3,9 +3,11 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export async function GET() {
   const sb = supabaseAdmin();
-  const { data, error } = await sb.from("ocr_templates").select("*").order("created_at", { ascending: false });
+  const { data, error } = await sb.from("ocr_templates").select("*, ocr_runs(count)").order("created_at", { ascending: false });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ templates: data });
+  // ocr_runs(count) comes back as [{count}]; the client wants a number
+  const templates = (data ?? []).map(({ ocr_runs, ...t }) => ({ ...t, runs: (ocr_runs as { count: number }[] | null)?.[0]?.count ?? 0 }));
+  return NextResponse.json({ templates });
 }
 
 export async function POST(req: Request) {

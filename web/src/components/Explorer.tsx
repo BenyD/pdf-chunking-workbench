@@ -255,7 +255,7 @@ export function Explorer({ id }: { id: string }) {
                     <CardTitle>Passages</CardTitle>
                     <CardMeta>{chunks === null ? (doc.status === "ready" ? "Loading" : stageLabel(doc.progress.stage)) : `${visible.length} on this page`}</CardMeta>
                     <CardAction>
-                      <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</label>
+                      <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Show each table row</label>
                     </CardAction>
                   </CardHeader>
                   <CardContent>
@@ -270,7 +270,7 @@ export function Explorer({ id }: { id: string }) {
                           <Empty variant="plain" size="sm">
                             <EmptyHeader>
                               <EmptyTitle>Nothing on this page</EmptyTitle>
-                              <EmptyDescription>This page has no text we could read, or only table rows. Tick Table rows to show those.</EmptyDescription>
+                              <EmptyDescription>This page has no text we could read, or only table rows. Tick Show each table row to list those.</EmptyDescription>
                             </EmptyHeader>
                           </Empty>
                         )}
