@@ -44,12 +44,14 @@ export function SearchView() {
   const [generation, setGeneration] = useState(0);
 
   useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setDocs(r.documents.filter((d) => d.status === "ready"))).catch(() => setDocs([])); }, []);
+  const initialQ = sp.get("q");
+  useEffect(() => { if (initialQ) void run(initialQ, sp.get("document_id")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     setSuggestions(null);
     api<{ suggestions: Suggestion[] }>(`/api/suggestions${docId ? `?document_id=${docId}` : ""}`).then((r) => setSuggestions(r.suggestions)).catch(() => setSuggestions([]));
   }, [docId]);
 
-  async function run(query: string) {
+  async function run(query: string, scope: string | null = docId) {
     const q = query.trim();
     if (!q) return;
     const gen = generation + 1;
@@ -57,7 +59,7 @@ export function SearchView() {
     setBusy(true); setErr(null); setAsked(q); setAnswer(null); setHits(null);
     let found: Hit[] = [];
     try {
-      const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: docId, k: 8 }) });
+      const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 8 }) });
       found = r.results; setHits(found);
     } catch (e) { setErr(String(e)); setHits([]); } finally { setBusy(false); }
     if (!found.length) return;
@@ -70,6 +72,11 @@ export function SearchView() {
   }
 
   const docItems = [{ value: ALL, label: "All documents" }, ...(docs ?? []).map((d) => ({ value: d.id, label: d.name.replace(/\.pdf$/i, "") }))];
+  function ask(s: Suggestion) {
+    const scope = docId ?? s.document_id;
+    if (!docId) setDocId(scope);
+    void run(s.text, scope);
+  }
   const status = busy ? "submitted" : answerBusy ? "streaming" : "ready";
 
   const header = (
@@ -77,7 +84,7 @@ export function SearchView() {
       <PageHeaderRow>
         <PageHeaderContent>
           <PageHeaderTitle>Search</PageHeaderTitle>
-          <PageHeaderDescription>Ask a question across your documents.</PageHeaderDescription>
+          <PageHeaderDescription>Ask a question and get an answer with its sources. Pick a question below or type your own.</PageHeaderDescription>
         </PageHeaderContent>
       </PageHeaderRow>
     </PageHeader>
@@ -103,27 +110,38 @@ export function SearchView() {
       {header}
       <div className="min-h-0 flex-1 overflow-y-auto">
         {!asked && (
-          <section aria-labelledby="ask-title" className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <h2 id="ask-title" className="type-heading">What do you want to know?</h2>
-              <p className="type-body text-text-2">{docId ? "Questions this document can answer" : "A few questions the documents can answer"}</p>
-            </div>
-            <SkeletonSwap loading={suggestions === null || docs === null} label="Loading suggestions" fallback={<SkeletonText type="body" lines={3} />}>
+          <section aria-labelledby="ask-title" className="flex w-full flex-col gap-2">
+            <h2 id="ask-title" className="type-label text-text-2">{docId ? "Questions this document can answer" : "Try one of these"}</h2>
+            <SkeletonSwap
+              loading={suggestions === null || docs === null}
+              label="Loading suggestions"
+              fallback={<ItemGroup><ul>{Array.from({ length: 5 }, (_, i) => <li key={i}><Item><ItemContent><SkeletonText type="body" className="w-96" /><SkeletonText type="body-sm" className="w-40" /></ItemContent></Item></li>)}</ul></ItemGroup>}
+            >
               {suggestions && suggestions.length > 0 && (
-                <ul className="flex flex-wrap gap-2">
-                  {suggestions.map((s, i) => (
-                    <li key={`${i}-${s.text}`}>
-                      <Button variant="secondary" size="sm" onClick={() => run(s.text)} title={docId ? undefined : s.document_name}>{s.text}</Button>
-                    </li>
-                  ))}
-                </ul>
+                <ItemGroup>
+                  <ul>
+                    {suggestions.map((s, i) => (
+                      <li key={`${i}-${s.text}`}>
+                        <Item>
+                          <ItemContent>
+                            {/* A question is a sentence, so it wraps instead of taking ItemTitle's one-line cut. */}
+                            <p className="type-label text-text-1">
+                              <ItemLink href={`/search?document_id=${s.document_id}&q=${encodeURIComponent(s.text)}`} onClick={(e) => { e.preventDefault(); ask(s); }} className="whitespace-normal">{s.text}</ItemLink>
+                            </p>
+                            {!docId && <ItemDescription>{s.document_name.replace(/\.pdf$/i, "")}</ItemDescription>}
+                          </ItemContent>
+                        </Item>
+                      </li>
+                    ))}
+                  </ul>
+                </ItemGroup>
               )}
               {suggestions?.length === 0 && <p className="type-body text-text-2">No suggestions for this document yet. Type a question below.</p>}
             </SkeletonSwap>
           </section>
         )}
         {asked && (
-          <div className="mx-auto flex w-full max-w-3xl flex-col gap-4">
+          <div className="flex w-full flex-col gap-4">
             <h2 className="type-heading">{asked}</h2>
             {err && <Alert status="fail"><AlertTitle>The search failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
             {(busy || answerBusy || answer !== null) && (
@@ -164,10 +182,10 @@ export function SearchView() {
         )}
       </div>
 
-      <div className="mx-auto w-full max-w-3xl pb-4">
+      <div className="w-full pb-4">
         <PromptInput
           label="Question"
-          placeholder="Ask something about the documents"
+          placeholder="Ask a question"
           status={status}
           generation={generation}
           onStop={() => { setBusy(false); setAnswerBusy(false); }}

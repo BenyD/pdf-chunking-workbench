@@ -10,7 +10,6 @@ import { Button } from "@/components/quartz/ui/button";
 import { Card, CardAction, CardContent, CardHeader, CardMeta, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
 import { Empty, EmptyDescription, EmptyHeader, EmptyRetry, EmptyStatus, EmptyTitle } from "@/components/quartz/ui/empty-state";
-import { Label } from "@/components/quartz/ui/field";
 import { Input } from "@/components/quartz/ui/input";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
@@ -67,6 +66,7 @@ export function Explorer({ id }: { id: string }) {
       <SkeletonSwap
         loading={!doc}
         label="Loading document"
+        className="flex flex-col gap-6"
         fallback={<div className="flex flex-col gap-2"><SkeletonText type="heading-lg" className="w-72" /><SkeletonText type="body" className="w-24" /></div>}
       >
         {doc && (
@@ -124,7 +124,7 @@ export function Explorer({ id }: { id: string }) {
                     <CardTitle>Passages</CardTitle>
                     <CardMeta>{chunks === null ? "Loading" : `${visible.length} on this page`}</CardMeta>
                     <CardAction>
-                      <Label className="flex items-center gap-2"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</Label>
+                      <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</label>
                     </CardAction>
                   </CardHeader>
                   <CardContent>
