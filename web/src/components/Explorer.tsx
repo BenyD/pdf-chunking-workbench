@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Close, Icon, Search } from "@/components/quartz/icon";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { Add, ChevronLeft, ChevronRight, Close, Icon, Search, Subtract } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { BreadcrumbTrail } from "@/components/quartz/ui/breadcrumb";
 import { Button } from "@/components/quartz/ui/button";
+import { ButtonGroup, ButtonGroupText } from "@/components/quartz/ui/button-group";
 import { Card, CardAction, CardContent, CardHeader, CardMeta, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
 import { Empty, EmptyDescription, EmptyHeader, EmptyRetry, EmptyStatus, EmptyTitle } from "@/components/quartz/ui/empty-state";
@@ -20,6 +21,9 @@ import { STRATEGY } from "@/lib/types";
 import { api, fmtNum, publicAsset, stageLabel } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel, type Overlay } from "./PageViewer";
 
+/** The widths a page can be shown at, as a share of the viewer; 1 fits the width. */
+const ZOOMS = [0.5, 0.75, 1, 1.5, 2, 3];
+
 export function Explorer({ id }: { id: string }) {
   const sp = useSearchParams();
   const [doc, setDoc] = useState<Document | null>(null);
@@ -28,7 +32,22 @@ export function Explorer({ id }: { id: string }) {
   const [chunks, setChunks] = useState<Chunk[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [showRows, setShowRows] = useState(false);
+  const [zoom, setZoom] = useState(1);
   const [err, setErr] = useState<string | null>(null);
+  const scroller = useRef<HTMLDivElement | null>(null);
+  // The viewer mounts a beat after the document arrives (SkeletonSwap holds its children until its
+  // skeleton has had its turn), so the effects that need its elements key on this state, not on the data.
+  const [viewer, setViewer] = useState<HTMLDivElement | null>(null);
+  const viewerRef = useCallback((el: HTMLDivElement | null) => { scroller.current = el; setViewer(el); }, []);
+  const pageEls = useRef(new Map<number, HTMLDivElement>());
+  const wanted = useRef(Math.max(1, Number(sp.get("page")) || 1));
+
+  /** Scroll the viewer so a page sits at the top. */
+  const scrollTo = useCallback((n: number, smooth = true) => {
+    const el = pageEls.current.get(n);
+    const sc = scroller.current;
+    if (el && sc) sc.scrollTo({ top: el.offsetTop - 12, behavior: smooth ? "smooth" : "auto" });
+  }, []);
 
   const loadDoc = useCallback(async () => {
     const r = await api<{ document: Document; pages: Page[] }>(`/api/documents/${id}`);
@@ -41,15 +60,37 @@ export function Explorer({ id }: { id: string }) {
     const t = setInterval(() => loadDoc().catch(() => {}), 2500);
     return () => clearInterval(t);
   }, [doc, loadDoc]);
+  // The passages of the page in view. A short wait lets a scroll settle before fetching.
   useEffect(() => {
     if (!doc || doc.status !== "ready") return;
     setChunks(null);
-    api<{ chunks: Chunk[] }>(`/api/documents/${id}/chunks?strategy=${STRATEGY}&page=${pageNo}&limit=1000`)
-      .then((r) => { setChunks(r.chunks); setSelected(null); })
-      .catch((e) => setErr(String(e)));
+    const t = setTimeout(() => {
+      api<{ chunks: Chunk[] }>(`/api/documents/${id}/chunks?strategy=${STRATEGY}&page=${pageNo}&limit=1000`)
+        .then((r) => { setChunks(r.chunks); setSelected(null); })
+        .catch((e) => setErr(String(e)));
+    }, 150);
+    return () => clearTimeout(t);
   }, [id, pageNo, doc]);
 
-  const page = pages.find((p) => p.page_number === pageNo);
+  // The page most in view is the current page. Observed inside the viewer, so the window's own scroll never counts.
+  const pageCount = pages.length;
+  useEffect(() => {
+    if (!viewer || !pageCount) return;
+    const ratios = new Map<number, number>();
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) ratios.set(Number((e.target as HTMLElement).dataset.page), e.intersectionRatio);
+      let best = 0, bestN = 0;
+      for (const [n, r] of ratios) if (r > best) { best = r; bestN = n; }
+      if (bestN) setPageNo(bestN);
+    }, { root: viewer, threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] });
+    for (const el of pageEls.current.values()) io.observe(el);
+    return () => io.disconnect();
+  }, [viewer, pageCount]);
+
+  // A page asked for in the address (?page=12) is scrolled to once the viewer is up.
+  useEffect(() => { if (viewer && pageCount && wanted.current > 1) { scrollTo(wanted.current, false); wanted.current = 1; } }, [viewer, pageCount, scrollTo]);
+
+  const zoomTo = (step: number) => setZoom((z) => ZOOMS[Math.min(ZOOMS.length - 1, Math.max(0, ZOOMS.indexOf(z) + step))]);
   const visible = useMemo(() => (chunks ?? []).filter((c) => showRows || c.chunk_type !== "table_row"), [chunks, showRows]);
   const overlays: Overlay[] = useMemo(() => visible.flatMap((c) => c.bboxes.filter((b) => b.page === pageNo).map((b, i) => ({
     id: `${c.id}:${i}`, type: c.chunk_type, box: b, selected: selected === c.id, label: `${typeLabel[c.chunk_type]} passage on page ${pageNo}`,
@@ -57,7 +98,7 @@ export function Explorer({ id }: { id: string }) {
   const sel = chunks?.find((c) => c.id === selected) ?? null;
   const total = doc?.page_count ?? 1;
   const title = doc ? doc.name.replace(/\.pdf$/i, "") : "";
-  const go = (n: number) => setPageNo(Math.min(Math.max(1, n), total));
+  const go = (n: number) => { const t = Math.min(Math.max(1, n), total); setPageNo(t); scrollTo(t); };
 
   return (
     <>
@@ -115,7 +156,33 @@ export function Explorer({ id }: { id: string }) {
                     </CardAction>
                   </CardHeader>
                   <CardContent>
-                    {page && <PageViewer imageUrl={page.image_url ?? publicAsset(page.image_path)} alt={`Page ${pageNo} of ${title}`} overlays={overlays} onSelect={(oid) => setSelected(oid.split(":")[0])} />}
+                    <div className="flex flex-col gap-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <p className="type-body-sm text-text-2">Scroll through the pages. Click a box to open its passage.</p>
+                        <ButtonGroup aria-label="Zoom">
+                          <Button variant="secondary" size="icon-sm" aria-label="Zoom out" disabled={zoom <= ZOOMS[0]} onClick={() => zoomTo(-1)}><Icon icon={Subtract} /></Button>
+                          <ButtonGroupText className="data w-14 justify-center">{Math.round(zoom * 100)}%</ButtonGroupText>
+                          <Button variant="secondary" size="icon-sm" aria-label="Zoom in" disabled={zoom >= ZOOMS[ZOOMS.length - 1]} onClick={() => zoomTo(1)}><Icon icon={Add} /></Button>
+                        </ButtonGroup>
+                      </div>
+                      {/* Every page in one scrolling column; images load as they near the view. Each page keeps its
+                          own aspect ratio, so the column has its full height before any image has arrived. */}
+                      <div ref={viewerRef} className="well relative max-h-[75dvh] overflow-auto rounded-soft p-3">
+                        <div className="flex w-(--zoom) flex-col gap-3" style={{ "--zoom": `${zoom * 100}%` } as CSSProperties}>
+                          {pages.map((p) => (
+                            <div
+                              key={p.page_number}
+                              data-page={p.page_number}
+                              ref={(el) => { if (el) pageEls.current.set(p.page_number, el); else pageEls.current.delete(p.page_number); }}
+                              className="aspect-(--ratio) w-full"
+                              style={{ "--ratio": `${p.width} / ${p.height}` } as CSSProperties}
+                            >
+                              <PageViewer fill imageUrl={p.image_url ?? publicAsset(p.image_path)} alt={`Page ${p.page_number} of ${title}`} overlays={p.page_number === pageNo ? overlays : []} onSelect={(oid) => setSelected(oid.split(":")[0])} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 

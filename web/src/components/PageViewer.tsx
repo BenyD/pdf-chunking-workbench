@@ -17,17 +17,19 @@ export interface Overlay { id: string; type: ChunkType; box: BBox; label: string
  * them at any width. Quartz has no hotspot component; each box is a kind-lined region holding a stretched
  * ItemLink to the selected passage, which brings the focus ring, the name and the keyboard press.
  */
-export function PageViewer({ imageUrl, alt, overlays, onSelect, className }: {
+export function PageViewer({ imageUrl, alt, overlays, onSelect, className, fill }: {
   imageUrl: string; alt: string; overlays: Overlay[]; onSelect?: (id: string) => void; className?: string;
+  /** Fill a parent that already has the page's aspect ratio, and load the image only when it nears the view. */
+  fill?: boolean;
 }) {
   const [loaded, setLoaded] = useState(false);
   // SkeletonSwap renders only its fallback while loading, which would keep the image out of the DOM and
   // it would never load; so the image is always mounted and a Skeleton covers it until it has.
   return (
-    <div className={cn("frame relative min-h-96 bg-paper select-none", className)}>
+    <div className={cn("frame relative bg-paper select-none", fill ? "h-full" : "min-h-96", className)}>
       {!loaded && <Skeleton className="absolute inset-0" />}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={imageUrl} alt={alt} className={cn("block w-full", !loaded && "invisible")} draggable={false} onLoad={() => setLoaded(true)} />
+      <img src={imageUrl} alt={alt} loading={fill ? "lazy" : undefined} decoding="async" className={cn("block h-full w-full", !loaded && "invisible")} draggable={false} onLoad={() => setLoaded(true)} />
       {loaded && overlays.map((o) => (
         <div
           key={o.id}

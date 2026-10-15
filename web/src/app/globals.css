@@ -1,1 +1,4 @@
-/* Quartz carries the tokens, base styles and Tailwind entry (src/components/quartz/styles.css). Nothing app-wide lives here. */
+/* Quartz carries the tokens, base styles and Tailwind entry (src/components/quartz/styles.css). Its reset is scoped under
+   .quartz, so the one rule that must reach the body itself lives here: without it the browser's 8px margin shows the canvas
+   around the page. */
+body { margin: 0; }

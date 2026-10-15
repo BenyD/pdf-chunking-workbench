@@ -117,26 +117,31 @@ export function SearchView() {
       {header}
       <div className="flex-1">
         {!asked && (
-          <section aria-labelledby="ask-title" className="flex w-full flex-col gap-4">
-            <h2 id="ask-title" className="type-label text-text-2">{docId ? "Questions this document can answer" : "Try one of these"}</h2>
-            <SkeletonSwap
-              loading={suggestions === null || docs === null}
-              label="Loading suggestions"
-              className="flex flex-col gap-4"
-              fallback={<div className="flex flex-col gap-4">{Array.from({ length: 3 }, (_, i) => <div key={i} className="flex flex-col gap-2"><SkeletonText type="body-sm" className="w-40" /><div className="flex gap-1"><Skeleton className="h-(--control-sm) w-72" /><Skeleton className="h-(--control-sm) w-56" /></div></div>)}</div>}
-            >
-              {groups.map((g) => (
-                <div key={g.id} className="flex min-w-0 flex-col gap-2">
-                  {!docId && <p className="type-body-sm text-text-2">{g.name}</p>}
-                  {/* Each question is a chip; on a phone the row scrolls sideways so no question is cut short. */}
-                  <ChipGroup aria-label={`Questions for ${g.name}`} className="max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]">
-                    {g.items.map((s) => <ChipButton key={s.text} onClick={() => ask(s)}>{s.text}</ChipButton>)}
-                  </ChipGroup>
-                </div>
-              ))}
-              {suggestions?.length === 0 && <p className="type-body text-text-2">No suggestions for this document yet. Type a question below.</p>}
-            </SkeletonSwap>
-          </section>
+          <Empty aria-labelledby="ask-title" className="before:border-dashed">
+            <EmptyHeader>
+              <EmptyTitle id="ask-title">Nothing asked yet</EmptyTitle>
+              <EmptyDescription>{docId ? "Pick a question this document can answer, or type your own below." : "Pick a question, or type your own below. Each one searches the document it was written for."}</EmptyDescription>
+            </EmptyHeader>
+            <EmptyContent className="max-w-full">
+              <SkeletonSwap
+                loading={suggestions === null || docs === null}
+                label="Loading suggestions"
+                className="flex w-full flex-col gap-4"
+                fallback={<div className="flex w-full flex-col gap-4">{Array.from({ length: 3 }, (_, i) => <div key={i} className="flex flex-col gap-2"><SkeletonText type="body-sm" className="w-40" /><div className="flex gap-1"><Skeleton className="h-(--control-sm) w-72" /><Skeleton className="h-(--control-sm) w-56" /></div></div>)}</div>}
+              >
+                {groups.map((g) => (
+                  <div key={g.id} className="flex min-w-0 flex-col gap-2">
+                    {!docId && <p className="type-body-sm text-text-2">{g.name}</p>}
+                    {/* Each question is a chip; on a phone the row scrolls sideways so no question is cut short. */}
+                    <ChipGroup aria-label={`Questions for ${g.name}`} className="max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]">
+                      {g.items.map((s) => <ChipButton key={s.text} onClick={() => ask(s)}>{s.text}</ChipButton>)}
+                    </ChipGroup>
+                  </div>
+                ))}
+                {suggestions?.length === 0 && <p className="type-body text-text-2">No suggestions for this document yet. Type a question below.</p>}
+              </SkeletonSwap>
+            </EmptyContent>
+          </Empty>
         )}
         {asked && (
           <div className="flex w-full flex-col gap-4">

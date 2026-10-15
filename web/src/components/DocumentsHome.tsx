@@ -1,8 +1,9 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Icon, OverflowMenuHorizontal, Renew, Upload } from "@/components/quartz/icon";
+import { Checkmark, ErrorOutline, Icon, OverflowMenuHorizontal, Renew, Time, Upload } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { AttachmentDrop, AttachmentDropTrigger, rejectionReason, type FileRejection } from "@/components/quartz/ui/attachment";
+import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
 import { Dialog, DialogAction, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/quartz/ui/dropdown-menu";
@@ -10,6 +11,7 @@ import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemStatus, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
 import type { Document } from "@/lib/types";
 import { api, fmtNum, stageLabel } from "@/lib/ui";
 import { SamplePicker } from "./SamplePicker";
@@ -23,6 +25,15 @@ function docStatus(d: Document): { status: "queued" | "running" | "ok" | "fail";
   if (d.status === "processing") return { status: "running", word: stageLabel(d.progress?.stage) };
   if (d.status === "uploading") return { status: "queued", word: "Uploading" };
   return { status: "queued", word: "Queued" };
+}
+
+/** The state as a badge with a mark: a tick once it is ready, the fail line when it failed, a clock while it waits. Running keeps the turning arc. */
+function DocBadge({ d }: { d: Document }) {
+  const s = docStatus(d);
+  if (s.status === "running") return <ItemStatus status="running">{s.word}</ItemStatus>;
+  if (s.status === "fail") return <Badge status="fail"><Icon icon={ErrorOutline} size={12} data-icon="inline-start" />{s.word}</Badge>;
+  if (s.status === "queued") return <Badge variant="outline"><Icon icon={Time} size={12} data-icon="inline-start" />{s.word}</Badge>;
+  return <Badge><Icon icon={Checkmark} size={12} data-icon="inline-start" />{s.word}</Badge>;
 }
 
 export function DocumentsHome() {
@@ -140,7 +151,6 @@ export function DocumentsHome() {
           <ItemGroup>
             <ul>
               {docs.map((d) => {
-                const s = docStatus(d);
                 const facts = [
                   d.page_count ? `${fmtNum(d.page_count)} ${d.page_count === 1 ? "page" : "pages"}` : null,
                   d.kind === "sample" ? "Sample" : null,
@@ -153,11 +163,14 @@ export function DocumentsHome() {
                         <ItemTitle><ItemLink href={`/documents/${d.id}`}>{title(d)}</ItemLink></ItemTitle>
                         {facts && <ItemDescription>{facts}</ItemDescription>}
                       </ItemContent>
-                      <ItemStatus status={s.status}>{s.word}</ItemStatus>
+                      <DocBadge d={d} />
                       <ItemActions>
-                        <Button variant="ghost" size="icon-sm" aria-label={`Process ${title(d)} again`} pending={pending[d.id] === "ingest"} onClick={() => act(d, "ingest")}>
-                          <Icon icon={Renew} />
-                        </Button>
+                        <Tooltip>
+                          <TooltipTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`Process ${title(d)} again`} pending={pending[d.id] === "ingest"} onClick={() => act(d, "ingest")} />}>
+                            <Icon icon={Renew} />
+                          </TooltipTrigger>
+                          <TooltipContent>Process again: read the PDF afresh and rebuild its passages</TooltipContent>
+                        </Tooltip>
                         <DropdownMenu>
                           <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`More actions for ${title(d)}`} pending={pending[d.id] === "embed" || pending[d.id] === "delete"} />}>
                             <Icon icon={OverflowMenuHorizontal} />
