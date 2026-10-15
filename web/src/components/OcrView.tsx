@@ -217,7 +217,7 @@ export function OcrView() {
                 {srcLoading && <Skeleton className="min-h-96" />}
                 {!srcLoading && sp && (
                   <DrawableViewer imageUrl={pageUrl(sp)} alt={`Page ${srcPage} of the clean copy`} onDraw={onDraw}>
-                    {showWords && (words ?? []).map((w, i) => <div key={i} title={`${w.text} (${w.conf})`} className={cn(BOX, "border border-hair")} style={at(w.box)} />)}
+                    {showWords && (words ?? []).map((w, i) => <div key={i} title={`${w.text} (${w.conf})`} className={cn(BOX, "border border-control bg-selected")} style={at(w.box)} />)}
                     {fields.filter((f) => f.page === srcPage).map((f, i) => (
                       <div key={`f${i}`} className={cn(BOX, "border-2 border-strong")} style={at(f.box)}><Badge size="sm" className="absolute -top-4 left-0">{f.name}</Badge></div>
                     ))}

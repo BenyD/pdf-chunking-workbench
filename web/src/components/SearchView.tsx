@@ -8,12 +8,13 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/aler
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/quartz/ui/card";
+import { ChipButton, ChipGroup } from "@/components/quartz/ui/chip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/quartz/ui/collapsible";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
-import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import type { Chunk, Document, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel } from "./PageViewer";
@@ -78,6 +79,12 @@ export function SearchView() {
     void run(s.text, scope);
   }
   const status = busy ? "submitted" : answerBusy ? "streaming" : "ready";
+  // Suggestions grouped by the document they were written for, in the order they arrive.
+  const groups = (suggestions ?? []).reduce<{ id: string; name: string; items: Suggestion[] }[]>((acc, s) => {
+    const g = acc.find((x) => x.id === s.document_id);
+    if (g) g.items.push(s); else acc.push({ id: s.document_id, name: s.document_name.replace(/\.pdf$/i, ""), items: [s] });
+    return acc;
+  }, []);
 
   const header = (
     <PageHeader size="sm">
@@ -108,34 +115,25 @@ export function SearchView() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-6">
       {header}
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="flex-1">
         {!asked && (
-          <section aria-labelledby="ask-title" className="flex w-full flex-col gap-2">
+          <section aria-labelledby="ask-title" className="flex w-full flex-col gap-4">
             <h2 id="ask-title" className="type-label text-text-2">{docId ? "Questions this document can answer" : "Try one of these"}</h2>
             <SkeletonSwap
               loading={suggestions === null || docs === null}
               label="Loading suggestions"
-              fallback={<ItemGroup><ul>{Array.from({ length: 5 }, (_, i) => <li key={i}><Item><ItemContent><SkeletonText type="body" className="w-96" /><SkeletonText type="body-sm" className="w-40" /></ItemContent></Item></li>)}</ul></ItemGroup>}
+              className="flex flex-col gap-4"
+              fallback={<div className="flex flex-col gap-4">{Array.from({ length: 3 }, (_, i) => <div key={i} className="flex flex-col gap-2"><SkeletonText type="body-sm" className="w-40" /><div className="flex gap-1"><Skeleton className="h-(--control-sm) w-72" /><Skeleton className="h-(--control-sm) w-56" /></div></div>)}</div>}
             >
-              {suggestions && suggestions.length > 0 && (
-                <ItemGroup>
-                  <ul>
-                    {suggestions.map((s, i) => (
-                      <li key={`${i}-${s.text}`}>
-                        <Item>
-                          <ItemContent>
-                            {/* A question is a sentence, so it wraps instead of taking ItemTitle's one-line cut. */}
-                            <p className="type-label text-text-1">
-                              <ItemLink href={`/search?document_id=${s.document_id}&q=${encodeURIComponent(s.text)}`} onClick={(e) => { e.preventDefault(); ask(s); }} className="whitespace-normal">{s.text}</ItemLink>
-                            </p>
-                            {!docId && <ItemDescription>{s.document_name.replace(/\.pdf$/i, "")}</ItemDescription>}
-                          </ItemContent>
-                        </Item>
-                      </li>
-                    ))}
-                  </ul>
-                </ItemGroup>
-              )}
+              {groups.map((g) => (
+                <div key={g.id} className="flex min-w-0 flex-col gap-2">
+                  {!docId && <p className="type-body-sm text-text-2">{g.name}</p>}
+                  {/* Each question is a chip; on a phone the row scrolls sideways so no question is cut short. */}
+                  <ChipGroup aria-label={`Questions for ${g.name}`} className="max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]">
+                    {g.items.map((s) => <ChipButton key={s.text} onClick={() => ask(s)}>{s.text}</ChipButton>)}
+                  </ChipGroup>
+                </div>
+              ))}
               {suggestions?.length === 0 && <p className="type-body text-text-2">No suggestions for this document yet. Type a question below.</p>}
             </SkeletonSwap>
           </section>
@@ -182,7 +180,8 @@ export function SearchView() {
         )}
       </div>
 
-      <div className="w-full pb-4">
+      {/* The composer stays at the bottom of the window while the answer and sources scroll under it. */}
+      <div className="sticky bottom-0 z-10 w-full bg-page pt-3 pb-4">
         <PromptInput
           label="Question"
           placeholder="Ask a question"

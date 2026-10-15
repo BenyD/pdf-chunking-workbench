@@ -14,14 +14,17 @@ export const viewport: Viewport = { width: "device-width", initialScale: 1, them
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full">
-      <body className="quartz flex min-h-full flex-col">
+    <html lang="en">
+      {/* Quartz scopes every utility under .quartz, so layout classes go on a div inside the body, never on body or html. */}
+      <body className="quartz">
         <QuartzPortalProvider>
-          <Suspense fallback={<div className="h-(--topbar)" />}>
-            <TopNav />
-          </Suspense>
-          <div className="flex min-h-0 flex-1 flex-col bg-page">
-            <main className="flex min-h-0 w-full flex-1 flex-col gap-6 px-(--gutter-sm) py-6 sm:px-(--gutter)">{children}</main>
+          <div className="flex min-h-dvh flex-col">
+            <Suspense fallback={<div className="h-(--topbar)" />}>
+              <TopNav />
+            </Suspense>
+            <div className="flex min-h-0 flex-1 flex-col bg-page">
+              <main className="flex min-h-0 w-full flex-1 flex-col gap-6 px-(--gutter-sm) py-6 sm:px-(--gutter)">{children}</main>
+            </div>
           </div>
         </QuartzPortalProvider>
       </body>
