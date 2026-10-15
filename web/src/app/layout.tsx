@@ -24,6 +24,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </Suspense>
             <div className="flex min-h-0 flex-1 flex-col bg-page">
               <main className="flex min-h-0 w-full flex-1 flex-col gap-6 px-(--gutter-sm) py-6 sm:px-(--gutter)">{children}</main>
+              <footer className="px-(--gutter-sm) pb-6 type-body-sm text-text-3 sm:px-(--gutter)">
+                Developed by <a href="https://beny.one" target="_blank" rel="noreferrer" className="text-text-2 underline decoration-1 underline-offset-4 hover:text-text-1">Beny Dishon K</a> as a demo for Quescenta.
+              </footer>
             </div>
           </div>
         </QuartzPortalProvider>
