@@ -265,6 +265,18 @@ def _union(boxes: list[BBox]) -> BBox:
 _WORDISH = re.compile(r"^[A-Za-z][A-Za-z'’\-]*[.,;:]?$")
 
 
+_AMOUNT = re.compile(r"(?:rs\.?|inr|₹|\$|€|£|usd|eur|gbp)\s*[\d,]+(?:\.\d+)?\s*$|\d[\d,]*\.\d{2}\s*$", re.I)
+
+
+def _labelled_value(text: str) -> bool:
+    """A line that carries a value is data, not a title, however bold or large it is set:
+    "Grand Total: Rs. 500.64", "Invoice No: SP/2026/04452", "Total 1,234.00"."""
+    head, sep, tail = text.partition(":")
+    if sep and len(head.strip()) <= 40 and re.search(r"\d", tail):
+        return True
+    return bool(_AMOUNT.search(text))
+
+
 def _wordish_ratio(text: str) -> float:
     toks = [t for t in re.split(r"\s+", text) if t]
     if not toks:
@@ -286,6 +298,8 @@ def _classify_heading(tb: TextBlock, stats: DocStats, W: float, is_toc: bool) ->
         return
     if short and (_wordish_ratio(text) < 0.8 or re.search(r"[\[\]/;@~^`|\\]", text)):
         return   # mis-decoded fonts, dingbats, transliterated scripts
+    if short and _labelled_value(text):
+        return   # a bold total or a key: value line is a fact to keep in the text, not a section title
     if CHAPTER.match(first.text) and short:
         tb.heading_level, tb.heading_only, tb.heading_title = 1, True, text
         return

@@ -505,3 +505,19 @@ passages, so they are phrased close to the document's own words, which flatters
 keyword search; a set written by the people who use these documents would be
 harder. The numbers are a floor to regress against, not a ceiling to quote.
 
+
+## 17. A labelled value is never a heading
+
+**Why.** On the second pharmacy bill the line "Grand Total: Rs. 500.64" is set
+bold and a size larger than the body, which is exactly what the heading rules
+look for, so it became a level-3 heading: the breadcrumb of the disclaimer
+under it carried "Grand Total: Rs. 500.64", and no passage's own text held
+the amount. A search for the grand total found the subtotal passage instead.
+
+**Rule.** Before any heading rule runs, a short block that reads as a
+labelled value is left as text: a "label: value" line whose label is at most
+forty characters and whose value holds a digit, or a line that ends in an
+amount (a currency mark or a figure with two decimals). "3. Findings",
+"CHAPTER II" and "Dosage and Administration" still become headings; "Invoice
+No: SP/2026/04452" and "Subtotal 447.00" never do. After re-processing, the
+totals passage of the bill reads subtotal, GST and grand total together.

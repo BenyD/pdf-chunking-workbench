@@ -2,18 +2,20 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { Add, ChevronLeft, ChevronRight, Close, Icon, Search, Subtract } from "@/components/quartz/icon";
+import { Add, ChevronDown, ChevronLeft, ChevronRight, Close, Icon, Search, Subtract } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
-import { BreadcrumbTrail } from "@/components/quartz/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/quartz/ui/breadcrumb";
 import { Button } from "@/components/quartz/ui/button";
 import { ButtonGroup, ButtonGroupText } from "@/components/quartz/ui/button-group";
-import { Card, CardAction, CardContent, CardHeader, CardMeta, CardTitle } from "@/components/quartz/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardMeta, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuLinkItem, DropdownMenuTrigger } from "@/components/quartz/ui/dropdown-menu";
 import { Empty, EmptyDescription, EmptyHeader, EmptyRetry, EmptyStatus, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Input } from "@/components/quartz/ui/input";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
+import { Progress, ProgressLabel, ProgressStep, ProgressStepDescription, ProgressStepIndicator, ProgressStepSeparator, ProgressStepText, ProgressStepTitle, ProgressStepTrigger, ProgressSteps, ProgressValue } from "@/components/quartz/ui/progress";
 import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
 import type { Chunk, Document, Page } from "@/lib/types";
@@ -24,9 +26,26 @@ import { chunkKind, PageViewer, typeLabel, type Overlay } from "./PageViewer";
 /** The widths a page can be shown at, as a share of the viewer; 1 fits the width. */
 const ZOOMS = [0.5, 0.75, 1, 1.5, 2, 3];
 
+/** The four things that happen to a document, in the words a reader needs; the worker's finer stages map onto them. */
+const STEPS = [
+  { title: "Read the pages", detail: "Fetch the file and render every page" },
+  { title: "Find the layout", detail: "Tables, figures, headings and scans" },
+  { title: "Describe the passages", detail: "A line of context for each one" },
+  { title: "Index", detail: "Make it searchable" },
+];
+function stepOf(stage?: string | null): number {
+  if (!stage || stage === "queued" || stage === "download" || stage === "render") return 1;
+  if (stage === "parse" || stage === "chunk") return 2;
+  if (stage === "context" || stage === "store") return 3;
+  if (stage.startsWith("embed")) return 4;
+  return 5;
+}
+const docTitle = (d: Document) => d.name.replace(/\.pdf$/i, "");
+
 export function Explorer({ id }: { id: string }) {
   const sp = useSearchParams();
   const [doc, setDoc] = useState<Document | null>(null);
+  const [others, setOthers] = useState<Document[]>([]);   // the other documents, for the switcher in the breadcrumb
   const [pages, setPages] = useState<Page[]>([]);
   const [pageNo, setPageNo] = useState(Math.max(1, Number(sp.get("page")) || 1));
   const [chunks, setChunks] = useState<Chunk[] | null>(null);
@@ -55,6 +74,7 @@ export function Explorer({ id }: { id: string }) {
   }, [id]);
 
   useEffect(() => { loadDoc().catch((e) => setErr(String(e))); }, [loadDoc]);
+  useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setOthers(r.documents.filter((d) => d.id !== id && d.status === "ready"))).catch(() => {}); }, [id]);
   useEffect(() => {
     if (!doc || ["ready", "error"].includes(doc.status)) return;
     const t = setInterval(() => loadDoc().catch(() => {}), 2500);
@@ -102,7 +122,26 @@ export function Explorer({ id }: { id: string }) {
 
   return (
     <>
-      <BreadcrumbTrail items={[{ label: "Documents", href: "/" }, { label: title || "Document" }]} renderLink={(href) => <Link href={href} />} />
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink render={<Link href="/" />}>Documents</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            {/* The current crumb opens the list of the other documents, so switching never needs the list page. */}
+            {others.length > 0 ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger render={<Button variant="ghost" size="sm" aria-label={`Switch document, now ${title || "this document"}`} />}>
+                  {title || "Document"}
+                  <Icon icon={ChevronDown} size={12} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="max-w-(--popover)">
+                  {others.map((d) => <DropdownMenuLinkItem key={d.id} render={<Link href={`/documents/${d.id}`} />}><span className="truncate">{docTitle(d)}</span></DropdownMenuLinkItem>)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : <BreadcrumbPage>{title || "Document"}</BreadcrumbPage>}
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       {err && <Alert status="fail"><AlertTitle>The page could not load</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
       <SkeletonSwap
         loading={!doc}
@@ -128,9 +167,34 @@ export function Explorer({ id }: { id: string }) {
             </PageHeader>
 
             {doc.status !== "ready" && doc.status !== "error" && (
-              <p className="type-body text-text-2">
-                {stageLabel(doc.progress.stage)}{doc.progress.total ? `, ${doc.progress.done ?? 0} of ${doc.progress.total}` : ""}. This page updates by itself.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Processing</CardTitle>
+                  <CardDescription>This page updates by itself. The pages show below as soon as they are read; the passages follow.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-col gap-5">
+                    <ProgressSteps value={stepOf(doc.progress.stage)} aria-label="Processing steps">
+                      {STEPS.map((st, i) => (
+                        <ProgressStep key={st.title} step={i + 1} state={i + 1 === stepOf(doc.progress.stage) ? "pending" : undefined}>
+                          <ProgressStepTrigger>
+                            <ProgressStepIndicator />
+                            <ProgressStepText>
+                              <ProgressStepTitle>{st.title}</ProgressStepTitle>
+                              <ProgressStepDescription className="max-sm:hidden">{st.detail}</ProgressStepDescription>
+                            </ProgressStepText>
+                          </ProgressStepTrigger>
+                          <ProgressStepSeparator />
+                        </ProgressStep>
+                      ))}
+                    </ProgressSteps>
+                    <Progress value={doc.progress.total ? ((doc.progress.done ?? 0) / doc.progress.total) * 100 : null} aria-label={stageLabel(doc.progress.stage)}>
+                      <ProgressLabel>{stageLabel(doc.progress.stage)}</ProgressLabel>
+                      <ProgressValue>{() => (doc.progress.total ? `${fmtNum(doc.progress.done ?? 0)} of ${fmtNum(doc.progress.total)}` : "Working")}</ProgressValue>
+                    </Progress>
+                  </div>
+                </CardContent>
+              </Card>
             )}
             {doc.status === "error" && (
               <Empty reason="error">
@@ -143,7 +207,7 @@ export function Explorer({ id }: { id: string }) {
               </Empty>
             )}
 
-            {doc.status === "ready" && (
+            {(doc.status === "ready" || (doc.status !== "error" && pages.length > 0)) && (
               <div className="grid gap-6 lg:grid-cols-2">
                 <Card>
                   <CardHeader>
@@ -189,7 +253,7 @@ export function Explorer({ id }: { id: string }) {
                 <Card>
                   <CardHeader>
                     <CardTitle>Passages</CardTitle>
-                    <CardMeta>{chunks === null ? "Loading" : `${visible.length} on this page`}</CardMeta>
+                    <CardMeta>{chunks === null ? (doc.status === "ready" ? "Loading" : stageLabel(doc.progress.stage)) : `${visible.length} on this page`}</CardMeta>
                     <CardAction>
                       <label className="flex items-center gap-2 type-label text-text-1 select-none"><Checkbox checked={showRows} onCheckedChange={(c) => setShowRows(!!c)} />Table rows</label>
                     </CardAction>
