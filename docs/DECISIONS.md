@@ -575,3 +575,30 @@ form is found by on a scan, so landmarks are never explained unless a
 person opens "Change the words". Patterns and word outlines left the
 screen; the data keeps them. The sample form's values are named in plain
 words ("Invoice number", "Grand total") rather than keys.
+
+## 20. One box over a block of values, and many scans at once
+
+**Why.** Drawing and naming one box per value is slow when a form has a
+header block of eight labelled lines, and reading one scan at a time is not
+what anyone does with a form template.
+
+**Splitting a box.** The printed words of the clean copy are already read
+once per page while teaching. A drawn box is now split by them: the words
+inside are grouped into lines, a line is cut into columns at wide gaps
+(never right after a label's colon, since a label and its value can sit
+far apart), and each piece is split into label and value at the colon or
+its widest gap. Every value becomes a field named by its label, with the
+kind the value's shape suggests (a date pattern, an amount with decimals or
+a currency mark, a bare integer, else text), and every label becomes a
+landmark word. Two drags over the sample bill, the header block and the
+totals block, yield Invoice No (text), Date (date), Patient, Patient ID,
+Subtotal, GST 12% and Grand Total (amounts), found by six printed words;
+read against the crooked scan and a second bill they come back 7 of 7
+checked on both. A box that holds no label is still one plain value to
+name, with the label beside it as its landmark, as before.
+
+**Many scans.** The read view takes a list of ticked scans rather than one,
+reads them two at a time with the same form, and fills one table as each
+lands: a row per scan, a column per value, a check count, and a "Show" that
+puts that scan's page with its boxes and sentence underneath. The table
+downloads as a CSV. A saved form can be deleted behind an alert dialog.

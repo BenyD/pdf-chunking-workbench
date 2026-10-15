@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { Close, Icon, ListChecked } from "@/components/quartz/icon";
+import { Close, Download, Icon, ListChecked } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
@@ -13,11 +13,12 @@ import { Dialog, DialogAction, DialogBody, DialogClose, DialogContent, DialogDes
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/quartz/ui/field";
 import { Input } from "@/components/quartz/ui/input";
-import { Item, ItemContent, ItemDescription, ItemGroup, ItemStatus, ItemTitle } from "@/components/quartz/ui/item";
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
 import { Skeleton, SkeletonSwap } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/quartz/ui/table";
 import { cn } from "@/lib/quartz/utils";
 import { SAMPLES } from "@/lib/samples";
 import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/types";
@@ -79,6 +80,78 @@ function labelBeside(box: Box, words: Word[]): Word | null {
   return best;
 }
 
+/** What kind of value a printed string looks like. */
+function kindOf(text: string): OcrField["type"] {
+  const t = text.trim();
+  if (/\b\d{1,2}[\/.-]\d{1,2}[\/.-]\d{2,4}\b/.test(t) || /\b\d{4}-\d{2}-\d{2}\b/.test(t) || /\b\d{1,2}\s+(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+\d{2,4}\b/i.test(t)) return "date";
+  if (/^(rs\.?|inr|₹|\$|€|£)?\s*[\d,]+\.\d{1,2}$/i.test(t)) return "amount";
+  if (/^\d{1,9}$/.test(t)) return "integer";
+  return "text";
+}
+
+/**
+ * The fields inside a drawn region, read off its printed words: the words are grouped into lines, a line is
+ * cut into columns at wide gaps, and each piece is split into a label and a value at the colon or at its
+ * widest gap. Each value becomes a field named by its label, with the kind the value's shape suggests; each
+ * label becomes a landmark word. Returns nothing when the region holds no label, so the caller treats it as
+ * one plain value.
+ */
+function splitRegion(region: Box, words: Word[], page: number): { fields: OcrField[]; anchors: OcrAnchor[] } {
+  const inside = words.filter((w) => {
+    const cx = w.box.x + w.box.w / 2, cy = w.box.y + w.box.h / 2;
+    return cx >= region.x && cx <= region.x + region.w && cy >= region.y && cy <= region.y + region.h && w.text.trim().length > 0;
+  });
+  if (inside.length < 2) return { fields: [], anchors: [] };
+  const heights = inside.map((w) => w.box.h).sort((a, b) => a - b);
+  const lineH = heights[Math.floor(heights.length / 2)];
+  // lines: words whose centres sit within a word's height of each other
+  const lines: Word[][] = [];
+  for (const w of [...inside].sort((a, b) => a.box.y + a.box.h / 2 - (b.box.y + b.box.h / 2))) {
+    const cy = w.box.y + w.box.h / 2;
+    const line = lines.find((l) => Math.abs(l[0].box.y + l[0].box.h / 2 - cy) < lineH * 0.7);
+    if (line) line.push(w); else lines.push([w]);
+  }
+  const union = (ws: Word[]): Box => {
+    const x0 = Math.min(...ws.map((w) => w.box.x)), y0 = Math.min(...ws.map((w) => w.box.y));
+    const x1 = Math.max(...ws.map((w) => w.box.x + w.box.w)), y1 = Math.max(...ws.map((w) => w.box.y + w.box.h));
+    return { x: x0 - 0.003, y: y0 - 0.003, w: x1 - x0 + 0.006, h: y1 - y0 + 0.006 };
+  };
+  const fields: OcrField[] = [];
+  const anchors: OcrAnchor[] = [];
+  for (const line of lines) {
+    line.sort((a, b) => a.box.x - b.box.x);
+    // columns: cut where the gap to the next word is a wide one, but never right after a label's colon,
+    // since a label and its value can sit far apart on a form
+    const columns: Word[][] = [[line[0]]];
+    for (let i = 1; i < line.length; i++) {
+      const prev = line[i - 1], gap = line[i].box.x - (prev.box.x + prev.box.w);
+      if (gap > 0.12 && !/[:：]$/.test(prev.text)) columns.push([line[i]]); else columns[columns.length - 1].push(line[i]);
+    }
+    for (const col of columns) {
+      // the label ends at the last word with a colon; failing that, at the widest gap if it is a real one
+      let cut = -1;
+      for (let i = 0; i < col.length - 1; i++) if (/[:：]$/.test(col[i].text)) cut = i;
+      if (cut < 0) {
+        let widest = 0;
+        for (let i = 0; i < col.length - 1; i++) {
+          const gap = col[i + 1].box.x - (col[i].box.x + col[i].box.w);
+          if (gap > widest) { widest = gap; cut = i; }
+        }
+        if (widest < 0.015) cut = -1;
+      }
+      if (cut < 0 || cut === col.length - 1) continue;   // no label and value pair here
+      const label = col.slice(0, cut + 1), value = col.slice(cut + 1);
+      const name = label.map((w) => w.text).join(" ").replace(/[:：\s]+$/, "").trim();
+      const text = value.map((w) => w.text).join(" ");
+      if (!name) continue;
+      fields.push({ name, type: kindOf(text), page, box: union(value) });
+      const first = label.find((w) => w.text.replace(/[^a-z0-9]/gi, "").length >= 3) ?? label[0];
+      anchors.push({ text: first.text.replace(/[:：.,;]+$/, ""), page, box: first.box });
+    }
+  }
+  return { fields, anchors };
+}
+
 export function OcrView() {
   const router = useRouter();
   const [seeding, setSeeding] = useState(false);
@@ -103,15 +176,17 @@ export function OcrView() {
   const [drawing, setDrawing] = useState<"field" | "anchor">("field");
   const [advanced, setAdvanced] = useState(false);
   const [fresh, setFresh] = useState<number | null>(null);   // the box just drawn, whose name takes the focus
+  const [found, setFound] = useState<string[] | null>(null); // the values the last box split into, to say so
   const [anchorDraft, setAnchorDraft] = useState<{ box: Box; text: string } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  // Reading: the scan and what was read off it.
-  const [tgtDoc, setTgtDoc] = useState<string | null>(null);
-  const [tgtPages, setTgtPages] = useState<Page[]>([]);
-  const [tgtLoading, setTgtLoading] = useState(false);
-  const [tgtPage, setTgtPage] = useState(1);
+  // Reading: the scans ticked, what was read off each, and the one whose page is shown.
+  const [scans, setScans] = useState<Set<string>>(new Set());
+  const [results, setResults] = useState<Record<string, RunResult | { error: string }>>({});
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
+  const [shown, setShown] = useState<string | null>(null);
+  const [shownPages, setShownPages] = useState<Record<string, Page[]>>({});
   const [fallback, setFallback] = useState(true);
-  const [result, setResult] = useState<RunResult | null>(null);
 
   const loadTemplates = useCallback(async () => {
     try { const r = await api<{ templates: OcrTemplate[] }>("/api/ocr/templates"); setTemplates(r.templates); return r.templates; }
@@ -123,7 +198,8 @@ export function OcrView() {
       const ready = r.documents.filter((d) => d.status === "ready");
       setDocs(ready);
       setSrcDoc(ready.find((d) => d.sample_key === "pharmacy-bill-1")?.id ?? ready[0]?.id ?? null);
-      setTgtDoc(ready.find((d) => d.sample_key === "pharmacy-bill-3-scan")?.id ?? ready[0]?.id ?? null);
+      const scan = ready.find((d) => d.sample_key === "pharmacy-bill-3-scan");
+      if (scan) setScans(new Set([scan.id]));
     }).catch(() => setDocs([]));
     loadTemplates().then((ts) => {
       const t = ts[0];
@@ -132,7 +208,11 @@ export function OcrView() {
     });
   }, [loadTemplates]);
   useEffect(() => { if (srcDoc) { setSrcLoading(true); api<{ pages: Page[] }>(`/api/documents/${srcDoc}`).then((r) => { setSrcPages(r.pages); setSrcPage(1); }).finally(() => setSrcLoading(false)); } }, [srcDoc]);
-  useEffect(() => { if (tgtDoc) { setTgtLoading(true); api<{ pages: Page[] }>(`/api/documents/${tgtDoc}`).then((r) => { setTgtPages(r.pages); setTgtPage(1); setResult(null); }).finally(() => setTgtLoading(false)); } }, [tgtDoc]);
+  // The page of the scan being shown, fetched once per scan.
+  useEffect(() => {
+    if (!shown || shownPages[shown]) return;
+    api<{ pages: Page[] }>(`/api/documents/${shown}`).then((r) => setShownPages((m) => ({ ...m, [shown]: r.pages }))).catch(() => {});
+  }, [shown, shownPages]);
   // The printed words of the clean copy, read once per page while teaching, so a box can take the label beside it.
   useEffect(() => {
     if (mode !== "teach" || !srcDoc) return;
@@ -145,13 +225,13 @@ export function OcrView() {
   }, [mode, srcDoc, srcPage]);
 
   function pick(t: OcrTemplate) {
-    setTemplateId(t.id); setName(t.name); setFields(t.fields); setAnchors(t.anchors); setResult(null);
+    setTemplateId(t.id); setName(t.name); setFields(t.fields); setAnchors(t.anchors); setResults({}); setShown(null);
     if (t.document_id && docs?.some((d) => d.id === t.document_id)) setSrcDoc(t.document_id);
   }
   function teach(from?: OcrTemplate) {
     if (from) pick(from);
     else { setTemplateId(null); setName("New form"); setFields([]); setAnchors([]); }
-    setResult(null); setAdvanced(false); setDrawing("field"); setFresh(null); setErr(null); setMode("teach");
+    setResults({}); setShown(null); setAdvanced(false); setDrawing("field"); setFresh(null); setFound(null); setErr(null); setMode("teach");
   }
   function backToReading() {
     const t = templates?.find((x) => x.id === templateId) ?? templates?.[0];
@@ -168,13 +248,22 @@ export function OcrView() {
       else setAnchorDraft({ box, text: "" });
       return;
     }
+    const known = (b: Box) => anchors.some((a) => a.page === srcPage && Math.abs(a.box.x - b.x) < 0.01 && Math.abs(a.box.y - b.y) < 0.01);
+    // A box over a block of "label: value" lines splits into one field per line, named and typed from the print.
+    const split = splitRegion(box, words ?? [], srcPage);
+    if (split.fields.length > 0) {
+      setFields([...fields, ...split.fields]);
+      setAnchors([...anchors, ...split.anchors.filter((a, i, all) => !known(a.box) && all.findIndex((b) => b.text === a.text) === i)]);
+      setFresh(null);
+      setFound(split.fields.map((f) => f.name));
+      return;
+    }
+    // A box over one value: a field to name, and the label printed beside it as the word the form is found by.
     setFields([...fields, { name: "", type: "text", page: srcPage, box }]);
     setFresh(fields.length);
-    // The label printed beside the value becomes the word the form is found by on a scan.
+    setFound(null);
     const label = labelBeside(box, words ?? []);
-    if (label && !anchors.some((a) => a.page === srcPage && Math.abs(a.box.x - label.box.x) < 0.01 && Math.abs(a.box.y - label.box.y) < 0.01)) {
-      setAnchors([...anchors, { text: label.text.replace(/[:：.,;]+$/, ""), page: srcPage, box: label.box }]);
-    }
+    if (label && !known(label.box)) setAnchors([...anchors, { text: label.text.replace(/[:：.,;]+$/, ""), page: srcPage, box: label.box }]);
   }
 
   async function save() {
@@ -191,13 +280,56 @@ export function OcrView() {
     } catch (e) { setErr(String(e)); } finally { setBusy(null); }
   }
 
+  /** Read every ticked scan with the form, two at a time, filling the table as each one lands. */
+  /** Forget the form being edited, then read with whichever form is left. */
+  async function remove() {
+    if (!templateId) return;
+    setBusy("save"); setErr(null);
+    try {
+      await api(`/api/ocr/templates/${templateId}`, { method: "DELETE" });
+      const ts = await loadTemplates();
+      setTemplateId(null); setFields([]); setAnchors([]); setName("New form");
+      if (ts[0]) { pick(ts[0]); setMode("read"); }
+    } catch (e) { setErr(String(e)); } finally { setBusy(null); setConfirmDelete(false); }
+  }
+
   async function run() {
     if (!fields.length) { setErr("Pick a form first, or teach a new one."); return; }
-    setBusy("run"); setErr(null); setResult(null);
-    try {
-      const r = await api<{ result: RunResult }>("/api/ocr/run", { method: "POST", body: JSON.stringify({ document_id: tgtDoc, page_number: tgtPage, template: { name, fields, anchors }, template_id: templateId, fallback, save: true }) });
-      setResult(r.result);
-    } catch (e) { setErr(String(e)); } finally { setBusy(null); }
+    const ids = [...scans];
+    if (!ids.length) { setErr("Tick at least one scan to read."); return; }
+    setBusy("run"); setErr(null); setResults({}); setShown(null); setProgress({ done: 0, total: ids.length });
+    const queue = [...ids];
+    let done = 0;
+    const worker = async () => {
+      for (let id = queue.shift(); id; id = queue.shift()) {
+        try {
+          const r = await api<{ result: RunResult }>("/api/ocr/run", { method: "POST", body: JSON.stringify({ document_id: id, page_number: 1, template: { name, fields, anchors }, template_id: templateId, fallback, save: true }) });
+          setResults((m) => ({ ...m, [id]: r.result }));
+        } catch (e) { setResults((m) => ({ ...m, [id]: { error: String(e) } })); }
+        done += 1; setProgress({ done, total: ids.length });
+      }
+    };
+    await Promise.all([worker(), worker()]);
+    setShown(ids[0]); setBusy(null); setProgress(null);
+  }
+
+  /** The table as a CSV file: one row per scan, one column per value, then how many passed their check. */
+  function downloadCsv() {
+    const ids = [...scans].filter((id) => results[id]);
+    const cell = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const head = ["Scan", ...fields.map((f) => f.name), "Checks passed"];
+    const rows = ids.map((id) => {
+      const r = results[id];
+      const doc = docs?.find((d) => d.id === id);
+      if ("error" in r) return [cell(doc ? docName(doc) : id), ...fields.map(() => cell("")), cell(`failed: ${r.error}`)];
+      return [cell(doc ? docName(doc) : id), ...fields.map((f) => cell(r.fields.find((x) => x.name === f.name)?.value)), cell(`${r.fields.filter((x) => x.valid).length} of ${r.fields.length}`)];
+    });
+    const csv = [head.map(cell).join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    a.download = `${name.replace(/[^a-z0-9]+/gi, "-").toLowerCase() || "form"}-values.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   }
 
   /** Start every sample processing and go to Documents, where the progress shows. */
@@ -244,10 +376,13 @@ export function OcrView() {
   }
 
   const docItems = (docs ?? []).map((d) => ({ value: d.id, label: docName(d) }));
+  const scanDocs = (docs ?? []).filter((d) => d.id !== (current?.document_id ?? srcDoc));   // the clean copy itself is not a scan of itself
+  const readIds = [...scans].filter((id) => results[id]);
+  const shownResult = shown && results[shown] && !("error" in results[shown]) ? (results[shown] as RunResult) : null;
+  const shownDoc = shown ? docs?.find((d) => d.id === shown) ?? null : null;
+  const shownPage = shown ? shownPages[shown]?.find((p) => p.page_number === 1) ?? null : null;
   const tplItems = (templates ?? []).map((t) => ({ value: t.id, label: `${t.name} (${plural(t.fields.length, "value")})` }));
   const sp = srcPages.find((p) => p.page_number === srcPage);
-  const tp = tgtPages.find((p) => p.page_number === tgtPage);
-  const tgtBoxes = result ? result.fields.map((f) => ({ box: f.box_used, label: f.name, ok: f.valid })) : fields.filter((f) => f.page === tgtPage).map((f, i) => ({ box: f.box, label: f.name || `Value ${i + 1}`, ok: true }));
 
   return (
     <>
@@ -258,92 +393,135 @@ export function OcrView() {
         {mode === "read" && (
           <Card>
             <CardHeader>
-              <CardTitle>Read a scan</CardTitle>
-              <CardDescription>Pick the form it is a scan of, then the scan. The boxes find the form on the scan, and each value is read and checked.</CardDescription>
+              <CardTitle>Read scans</CardTitle>
+              <CardDescription>Pick the form, tick the scans of it, and press Read. Every scan is read the same way: the form is found on it, each value is read and checked, and the values land in one table.</CardDescription>
               {current && <CardAction><Button variant="ghost" onClick={() => teach(current)}>Edit this form</Button></CardAction>}
             </CardHeader>
             <CardContent>
               <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-                  <Field orientation="horizontal" className="w-auto">
-                    <FieldLabel className="whitespace-nowrap">Form</FieldLabel>
-                    <Select items={tplItems} value={templateId} onValueChange={(v) => { const t = templates?.find((x) => x.id === v); if (t) pick(t); }}>
-                      <SelectTrigger size="sm" className="w-64"><SelectValue placeholder="Pick a form" /></SelectTrigger>
-                      <SelectContent>{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
-                    </Select>
-                  </Field>
-                  <Field orientation="horizontal" className="w-auto">
-                    <FieldLabel className="whitespace-nowrap">Scan</FieldLabel>
-                    <Select items={docItems} value={tgtDoc} onValueChange={(v) => setTgtDoc(v)}>
-                      <SelectTrigger size="sm" className="w-64"><SelectValue placeholder="Pick a scan" /></SelectTrigger>
-                      <SelectContent>{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
-                    </Select>
-                  </Field>
-                  {tgtPages.length > 1 && (
+                <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+                  <div className="flex min-w-0 flex-col gap-4">
                     <Field orientation="horizontal" className="w-auto">
-                      <FieldLabel className="whitespace-nowrap">Page</FieldLabel>
-                      <Input mode="number" size="sm" min={1} max={tgtPages.length} value={tgtPage} onValueChange={(v) => { if (v !== null) setTgtPage(Math.max(1, v)); }} className="w-20" />
+                      <FieldLabel className="whitespace-nowrap">Form</FieldLabel>
+                      <Select items={tplItems} value={templateId} onValueChange={(v) => { const t = templates?.find((x) => x.id === v); if (t) pick(t); }}>
+                        <SelectTrigger size="sm" className="w-64"><SelectValue placeholder="Pick a form" /></SelectTrigger>
+                        <SelectContent>{tplItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+                      </Select>
                     </Field>
-                  )}
-                </div>
-                <Field orientation="horizontal" className="w-auto">
-                  <Checkbox checked={fallback} onCheckedChange={(c) => setFallback(!!c)} />
-                  <FieldContent>
-                    <FieldLabel>Ask the model when a value cannot be read</FieldLabel>
-                    <FieldDescription>A value the scanner misses, or that fails its check, is read from the image by the model instead.</FieldDescription>
-                  </FieldContent>
-                </Field>
-                <div className="flex flex-wrap items-center gap-3">
-                  <Button size="sm" onClick={run} pending={busy === "run"} pendingLabel="Reading" disabled={!fields.length} focusableWhenDisabled aria-describedby={fields.length ? undefined : "run-hint"}>Read the scan</Button>
-                  {!fields.length && <span id="run-hint" className="type-body-sm text-text-2">Teach a form first.</span>}
-                  {busy === "run" && <Status status="running" live>Finding the form and reading each box</Status>}
+                    <Field orientation="horizontal" className="w-auto">
+                      <Checkbox checked={fallback} onCheckedChange={(c) => setFallback(!!c)} />
+                      <FieldContent>
+                        <FieldLabel>Ask the model when a value cannot be read</FieldLabel>
+                        <FieldDescription>A value the scanner misses, or that fails its check, is read from the image by the model instead.</FieldDescription>
+                      </FieldContent>
+                    </Field>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button size="sm" onClick={run} pending={busy === "run"} pendingLabel="Reading" disabled={!fields.length || scans.size === 0} focusableWhenDisabled aria-describedby={fields.length && scans.size ? undefined : "run-hint"}>
+                        Read {scans.size > 1 ? `${scans.size} scans` : "the scan"}
+                      </Button>
+                      {!fields.length && <span id="run-hint" className="type-body-sm text-text-2">Teach a form first.</span>}
+                      {fields.length > 0 && scans.size === 0 && <span id="run-hint" className="type-body-sm text-text-2">Tick a scan on the right.</span>}
+                      {progress && <Status status="running" live>Reading {progress.done + 1 > progress.total ? progress.total : progress.done + 1} of {progress.total}</Status>}
+                    </div>
+                  </div>
+                  <div className="flex min-w-0 flex-col gap-2">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="type-label text-text-2">Scans to read</p>
+                      <Button variant="ghost" size="xs" onClick={() => setScans(scans.size === scanDocs.length ? new Set() : new Set(scanDocs.map((d) => d.id)))}>{scans.size === scanDocs.length ? "Tick none" : "Tick all"}</Button>
+                    </div>
+                    <ItemGroup className="max-h-64 overflow-y-auto">
+                      <ul>
+                        {scanDocs.map((d) => (
+                          <li key={d.id}>
+                            <Item size="dense" render={<label />}>
+                              <Checkbox checked={scans.has(d.id)} onCheckedChange={(c) => setScans((cur) => { const n = new Set(cur); if (c) n.add(d.id); else n.delete(d.id); return n; })} />
+                              <ItemContent>
+                                <ItemTitle>{docName(d)}</ItemTitle>
+                                <ItemDescription>{plural(d.page_count ?? 1, "page")}{d.page_count && d.page_count > 1 ? ", first page read" : ""}</ItemDescription>
+                              </ItemContent>
+                            </Item>
+                          </li>
+                        ))}
+                      </ul>
+                    </ItemGroup>
+                  </div>
                 </div>
 
-                <div className="grid gap-6 lg:grid-cols-2">
-                  <div className="min-w-0">
-                    {tgtLoading && <Skeleton className="min-h-96" />}
-                    {!tgtLoading && tp && (
-                      <div className="frame relative bg-paper select-none">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={pageUrl(tp)} alt={`Page ${tgtPage} of the scan`} className="block w-full" draggable={false} />
-                        {tgtBoxes.map((b, i) => {
-                          const failed = !!result && !b.ok;
+                {readIds.length > 0 && (
+                  <div className="flex flex-col gap-3">
+                    <Table aria-label="Values read" title="Values read" count={`${readIds.length} of ${scans.size}`}>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Scan</TableHead>
+                          {fields.map((f) => <TableHead key={f.name}>{f.name}</TableHead>)}
+                          <TableHead>Checks</TableHead>
+                          <TableHead><span className="sr-only">Show</span></TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {readIds.map((id) => {
+                          const r = results[id];
+                          const doc = docs?.find((d) => d.id === id);
+                          const label = doc ? docName(doc) : id;
+                          if ("error" in r) return (
+                            <TableRow key={id}>
+                              <TableCell>{label}</TableCell>
+                              <TableCell colSpan={fields.length + 2}><Status status="fail">{r.error}</Status></TableCell>
+                            </TableRow>
+                          );
+                          const ok = r.fields.filter((f) => f.valid).length;
                           return (
-                            <div key={i} className={cn(BOX, "border-2 border-strong", !result && "border-dashed", failed && "border-warn")} style={at(b.box)}>
-                              <Badge size="sm" status={failed ? "warn" : undefined} className="absolute -top-4 left-0">{b.label}</Badge>
-                            </div>
+                            <TableRow key={id} data-selected={shown === id || undefined}>
+                              <TableCell>{label}</TableCell>
+                              {fields.map((f) => {
+                                const v = r.fields.find((x) => x.name === f.name);
+                                return <TableCell key={f.name}>{v && !v.valid ? <Status status="warn">{String(v.value ?? "") || "not read"}</Status> : String(v?.value ?? "")}</TableCell>;
+                              })}
+                              <TableCell><Status status={ok === r.fields.length ? "ok" : "warn"}>{ok} of {r.fields.length}</Status></TableCell>
+                              <TableCell><Button variant="ghost" size="xs" onClick={() => setShown(id)} pressed={shown === id} onPressedChange={() => setShown(id)}>Show</Button></TableCell>
+                            </TableRow>
                           );
                         })}
+                      </TableBody>
+                    </Table>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button variant="secondary" size="sm" onClick={downloadCsv}><Icon icon={Download} />Download as CSV</Button>
+                      <span className="type-body-sm text-text-2">{"Each scan's values are saved with it, so they can be searched."}</span>
+                    </div>
+                    {shownResult && shownDoc && (
+                      <div className="grid gap-6 lg:grid-cols-2">
+                        <div className="min-w-0">
+                          {!shownPage && <Skeleton className="min-h-96" />}
+                          {shownPage && (
+                            <div className="frame relative bg-paper select-none">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={pageUrl(shownPage)} alt={`Page 1 of ${docName(shownDoc)}`} className="block w-full" draggable={false} />
+                              {shownResult.fields.map((f, i) => {
+                                const failed = !f.valid;
+                                return (
+                                  <div key={i} className={cn(BOX, "border-2 border-strong", failed && "border-warn")} style={at(f.box_used)}>
+                                    <Badge size="sm" status={failed ? "warn" : undefined} className="absolute -top-4 left-0">{f.name}</Badge>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex min-w-0 flex-col gap-2">
+                          <p className="type-label text-text-1">{docName(shownDoc)}</p>
+                          <p className="type-body-sm text-text-2">{describe(shownResult)}</p>
+                          {shownResult.fields.some((f) => f.ocr_value !== undefined || (f.raw && f.raw !== String(f.value ?? ""))) && (
+                            <ul className="type-body-sm text-text-2">
+                              {shownResult.fields.map((f) => f.ocr_value !== undefined
+                                ? <li key={f.name}>{f.name}: the scanner read {String(f.ocr_value ?? "nothing")}, so the model read it from the image.</li>
+                                : f.raw && f.raw !== String(f.value ?? "") ? <li key={f.name}>{f.name}: read as {f.raw}.</li> : null)}
+                            </ul>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
-                  <div className="flex min-w-0 flex-col gap-3">
-                    {!result && fields.length > 0 && <p className="type-body-sm text-text-2">The dashed boxes are where {name} keeps its {plural(fields.length, "value")}. Press Read the scan to find the form and read them.</p>}
-                    {result && (
-                      <>
-                        <ItemGroup>
-                          <ul>
-                            {result.fields.map((f) => (
-                              <li key={f.name}>
-                                <Item>
-                                  <ItemContent>
-                                    <ItemTitle>{f.name}</ItemTitle>
-                                    <ItemDescription>{String(f.value ?? "") || "Nothing could be read"}</ItemDescription>
-                                    {f.ocr_value !== undefined
-                                      ? <ItemDescription>The scanner read {String(f.ocr_value ?? "nothing")}, so the model read it from the image.</ItemDescription>
-                                      : f.raw && f.raw !== String(f.value ?? "") ? <ItemDescription>Read as {f.raw}</ItemDescription> : null}
-                                  </ItemContent>
-                                  <ItemStatus status={f.valid ? "ok" : "warn"}>{f.valid ? "Checked" : f.note || "Check it"}</ItemStatus>
-                                </Item>
-                              </li>
-                            ))}
-                          </ul>
-                        </ItemGroup>
-                        <p className="type-body-sm text-text-2">{describe(result)} Saved with the scan, so these values can be searched.</p>
-                      </>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -384,7 +562,7 @@ export function OcrView() {
                       <DrawableViewer imageUrl={pageUrl(sp)} alt={`Page ${srcPage} of the clean copy`} onDraw={onDraw}>
                         {fields.length === 0 && (
                           <div className="pointer-events-none absolute inset-x-0 top-4 flex justify-center">
-                            <span className="well rounded-soft px-3 py-2 type-label">Drag a box around the first value to read</span>
+                            <span className="well rounded-soft px-3 py-2 type-label">Drag a box around a value, or around a whole block of labelled values</span>
                           </div>
                         )}
                         {advanced && (words ?? []).map((w, i) => <div key={i} className={cn(BOX, "border border-control bg-selected")} style={at(w.box)} />)}
@@ -410,6 +588,7 @@ export function OcrView() {
                     ) : (
                       <div className="flex flex-col gap-2">
                         <p className="type-label text-text-2">Values to read</p>
+                        {found && found.length > 0 && <Status status="ok">{plural(found.length, "value")} found in that box: {found.join(", ")}</Status>}
                         {fields.map((f, i) => (
                           <div key={i} className="flex flex-wrap items-center gap-2">
                             <Input size="sm" aria-label={`Name of value ${i + 1}`} placeholder={`Value ${i + 1}, e.g. Invoice number`} value={f.name} onValueChange={(v) => setFields(fields.map((x, j) => (j === i ? { ...x, name: v } : x)))} autoFocus={fresh === i} className="min-w-48 flex-1" />
@@ -454,6 +633,7 @@ export function OcrView() {
                     <div className="flex flex-wrap items-center gap-2">
                       <Button size="sm" onClick={save} pending={busy === "save"} pendingLabel="Saving" disabled={!fields.length} focusableWhenDisabled aria-describedby={fields.length ? undefined : "save-hint"}>Save the form</Button>
                       {templates && templates.length > 0 && <Button variant="ghost" size="sm" onClick={backToReading}>Cancel</Button>}
+                      {templateId && <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(true)}>Delete this form</Button>}
                       {!fields.length && <span id="save-hint" className="type-body-sm text-text-2">Draw a box first.</span>}
                     </div>
                   </div>
@@ -463,6 +643,19 @@ export function OcrView() {
           </Card>
         )}
       </SkeletonSwap>
+
+      <Dialog role="alertdialog" open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <DialogContent size="sm">
+          <DialogHeader>
+            <DialogTitle>Delete {name}?</DialogTitle>
+            <DialogDescription>Its boxes and words are gone for good. Values already read from scans stay with those scans.</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose>Keep the form</DialogClose>
+            <DialogAction variant="destructive" pendingLabel="Deleting" onAction={remove}>Delete the form</DialogAction>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={anchorDraft !== null} onOpenChange={(open) => { if (!open) setAnchorDraft(null); }}>
         <DialogContent size="sm">
