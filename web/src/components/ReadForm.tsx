@@ -145,7 +145,7 @@ export function ReadForm() {
                     </Empty>
                   )}
                   {scanDocs.length > 0 && (
-                    <ItemGroup className="max-h-72 overflow-y-auto">
+                    <ItemGroup>
                       <ul>
                         {scanDocs.map((d) => (
                           <li key={d.id}>
