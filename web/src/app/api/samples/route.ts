@@ -33,7 +33,13 @@ export async function POST(req: Request) {
       const { error: upErr } = await sb.storage.from(BUCKET).upload(path, bytes, { contentType: "application/pdf", upsert: true });
       if (upErr) throw new Error(upErr.message);
       await sb.from("documents").update({ storage_path: path, status: "queued", progress: { stage: "queued" } }).eq("id", doc.id);
-      await worker("/ingest", { document_id: doc.id });
+      try {
+        await worker("/ingest", { document_id: doc.id });
+      } catch (e) {
+        // The row would otherwise say "queued" for good; say what went wrong where the list shows it.
+        await sb.from("documents").update({ status: "error", progress: { stage: "error", message: String(e) } }).eq("id", doc.id);
+        throw e;
+      }
       created.push(s.key);
     } catch (e) {
       errors.push(`${s.key}: ${String(e)}`);
