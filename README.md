@@ -129,6 +129,9 @@ curl https://chunklab-worker.<account>.workers.dev/health
 The container sleeps two hours after its last request and wakes on the
 next one, which takes a few seconds; an ingest started before it sleeps
 runs to the end.
+A running container keeps the environment it started with, so after
+changing a secret bump `GENERATION` in `wrangler.jsonc` and deploy again:
+traffic moves to a fresh container that starts with the new values.
 
 **Web app: Vercel.** The `web` folder is the project root.
 
