@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PromptInput, type PromptValue } from "@/components/quartz/ai/prompt-input";
 import { Response, type InlineTag } from "@/components/quartz/ai/response";
 import { Icon, Launch, Search as SearchIcon } from "@/components/quartz/icon";
@@ -16,6 +16,7 @@ import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } fr
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
 import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { Status } from "@/components/quartz/ui/status";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
 import { SAMPLES } from "@/lib/samples";
 import type { Chunk, Document, SearchResult } from "@/lib/types";
@@ -42,6 +43,8 @@ export function SearchView() {
   const [docId, setDocId] = useState<string | null>(sp.get("document_id"));
   const [asked, setAsked] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[] | null>(null);
+  const [writing, setWriting] = useState(false);          // questions are being written for this document right now
+  const kicked = useRef(new Set<string>());               // documents asked for questions in this session
   const [hits, setHits] = useState<Hit[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);   // the source whose page shows on the right
   const [answer, setAnswer] = useState<string | null>(null);
@@ -53,9 +56,27 @@ export function SearchView() {
   useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setDocs(r.documents.filter((d) => d.status === "ready"))).catch(() => setDocs([])); }, []);
   const initialQ = sp.get("q");
   useEffect(() => { if (initialQ) void run(initialQ, sp.get("document_id")); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // A document with no questions yet (the call at ingest can fail) gets them written now, and the page waits for them.
   useEffect(() => {
-    setSuggestions(null);
-    api<{ suggestions: Suggestion[] }>(`/api/suggestions${docId ? `?document_id=${docId}` : ""}`).then((r) => setSuggestions(r.suggestions)).catch(() => setSuggestions([]));
+    setSuggestions(null); setWriting(false);
+    let gone = false;
+    let tries = 0;
+    const poll = async () => {
+      try {
+        const r = await api<{ suggestions: Suggestion[] }>(`/api/suggestions${docId ? `?document_id=${docId}` : ""}`);
+        if (gone) return;
+        if (r.suggestions.length === 0 && docId && tries < 12) {
+          if (!kicked.current.has(docId)) { kicked.current.add(docId); api(`/api/documents/${docId}/suggest`, { method: "POST" }).catch(() => {}); }
+          setWriting(true); setSuggestions([]);
+          tries += 1;
+          setTimeout(() => { if (!gone) void poll(); }, 4000);
+          return;
+        }
+        setWriting(false); setSuggestions(r.suggestions);
+      } catch { if (!gone) { setWriting(false); setSuggestions([]); } }
+    };
+    void poll();
+    return () => { gone = true; };
   }, [docId]);
 
   async function run(query: string, scope: string | null = docId) {
@@ -165,7 +186,8 @@ export function SearchView() {
                     </ChipGroup>
                   </div>
                 ))}
-                {suggestions?.length === 0 && <p className="type-body text-text-2">No suggestions for this document yet. Type a question below.</p>}
+                {writing && <Status status="running" live>Writing a few questions this document can answer</Status>}
+                {!writing && suggestions?.length === 0 && <p className="type-body text-text-2">No questions could be written for this document yet. Type your own below.</p>}
               </SkeletonSwap>
             </EmptyContent>
           </Empty>
