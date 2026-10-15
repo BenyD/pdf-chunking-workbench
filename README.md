@@ -228,6 +228,10 @@ where the search returned the section itself rather than the table-of-contents
 entry the label asked for; and which earlier annex the WHO document replaces, a
 sentence in its preamble. After a reset, `make_questions.py --seed` puts the
 saved sets back onto the documents by name.
+The same set against the hosted deployment, run after all thirteen documents
+had been ingested at once, scored 96% recall@5 and 0.86 MRR; the context
+line for each passage is written afresh on every ingest, so a point or two
+moves between runs.
 
 The pipeline was chosen by running the same questions against three ways of
 cutting the documents (fixed windows, layout-aware cuts, layout-aware cuts
