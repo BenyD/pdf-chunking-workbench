@@ -1,21 +1,22 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PromptInput, type PromptValue } from "@/components/quartz/ai/prompt-input";
 import { Response, type InlineTag } from "@/components/quartz/ai/response";
-import { Icon, Search as SearchIcon } from "@/components/quartz/icon";
+import { Icon, Launch, Search as SearchIcon } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/quartz/ui/card";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { ChipButton, ChipGroup } from "@/components/quartz/ui/chip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/quartz/ui/collapsible";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
+import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
 import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
 import { SAMPLES } from "@/lib/samples";
 import type { Chunk, Document, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
@@ -26,11 +27,11 @@ type Suggestion = { text: string; document_id: string; document_name: string };
 const ALL = "all";
 const docName = (h: Hit) => (h.document_name ?? "").replace(/\.pdf$/i, "");
 
-/** A [n] in the answer becomes a small link to source n below it. */
-const CITATIONS: InlineTag[] = [{
+/** A [n] in the answer becomes a small link to source n below it, which also brings its page up on the right. */
+const citations = (onPick: (n: number) => void): InlineTag[] => [{
   pattern: /\[(\d+)\]/,
   partial: /\[\d*$/,
-  render: (m, { key }) => <Badge key={key} render={<a href={`#source-${m[1]}`} aria-label={`Source ${m[1]}`} />}>{m[1]}</Badge>,
+  render: (m, { key }) => <Badge key={key} className="mx-0.5" render={<a href={`#source-${m[1]}`} aria-label={`Source ${m[1]}`} onClick={() => onPick(Number(m[1]))} />}>{m[1]}</Badge>,
 }];
 
 export function SearchView() {
@@ -42,6 +43,7 @@ export function SearchView() {
   const [asked, setAsked] = useState("");
   const [suggestions, setSuggestions] = useState<Suggestion[] | null>(null);
   const [hits, setHits] = useState<Hit[] | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);   // the source whose page shows on the right
   const [answer, setAnswer] = useState<string | null>(null);
   const [answerBusy, setAnswerBusy] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -65,7 +67,7 @@ export function SearchView() {
     let found: Hit[] = [];
     try {
       const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 8 }) });
-      found = r.results; setHits(found);
+      found = r.results; setHits(found); setSelected(found[0]?.id ?? null);
     } catch (e) { setErr(String(e)); setHits([]); } finally { setBusy(false); }
     if (!found.length) return;
     setAnswerBusy(true);
@@ -83,6 +85,15 @@ export function SearchView() {
     void run(s.text, scope);
   }
   const status = busy ? "submitted" : answerBusy ? "streaming" : "ready";
+  const tags = useMemo(() => citations((n) => setSelected(hits?.[n - 1]?.id ?? null)), [hits]);
+  // The page on the right: the selected source's page, with every source on that page drawn and the selected one filled.
+  const current = hits?.find((h) => h.id === selected) ?? hits?.[0] ?? null;
+  const pageOverlays = useMemo(() => {
+    if (!current || !hits) return [];
+    return hits.flatMap((h, i) => (h.document_id !== current.document_id ? [] : h.bboxes.filter((b) => b.page === current.page_start).map((b, j) => ({
+      id: `${h.id}:${j}`, type: h.chunk_type, box: b, selected: h.id === current.id, label: `Source ${i + 1}, ${typeLabel[h.chunk_type]} passage`,
+    }))));
+  }, [hits, current]);
   // Suggestions grouped by the document they were written for, in the order they arrive.
   const groups = (suggestions ?? []).reduce<{ id: string; name: string; items: Suggestion[] }[]>((acc, s) => {
     const g = acc.find((x) => x.id === s.document_id);
@@ -160,7 +171,8 @@ export function SearchView() {
           </Empty>
         )}
         {asked && (
-          <div className="flex w-full flex-col gap-4">
+          <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <div className="flex min-w-0 flex-col gap-4">
             <h2 className="type-heading">{asked}</h2>
             {err && <Alert status="fail"><AlertTitle>The search failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
             {(busy || answerBusy || answer !== null) && (
@@ -168,7 +180,7 @@ export function SearchView() {
                 <CardHeader><CardTitle>Answer</CardTitle></CardHeader>
                 <CardContent>
                   <SkeletonSwap loading={busy || answerBusy} label="Writing the answer" fallback={<SkeletonText type="body" lines={3} />}>
-                    {answer ? <Response inlineTags={CITATIONS}>{answer}</Response> : <p className="type-body text-text-2">No answer could be written from what was found.</p>}
+                    {answer ? <Response inlineTags={tags}>{answer}</Response> : <p className="type-body text-text-2">No answer could be written from what was found.</p>}
                   </SkeletonSwap>
                 </CardContent>
               </Card>
@@ -191,12 +203,32 @@ export function SearchView() {
                   <h3 id="sources-title" className="type-label text-text-2">Sources</h3>
                   <ItemGroup>
                     <ul>
-                      {hits.map((r, i) => <SourceRow key={r.id} r={r} n={i + 1} />)}
+                      {hits.map((r, i) => <SourceRow key={r.id} r={r} n={i + 1} selected={current?.id === r.id} onSelect={() => setSelected(r.id)} />)}
                     </ul>
                   </ItemGroup>
                 </section>
               )}
             </SkeletonSwap>
+          </div>
+          {current && (
+            <Card className="min-w-0 lg:sticky lg:top-(--topbar) lg:self-start">
+              <CardHeader>
+                <CardTitle>Page {current.page_start}</CardTitle>
+                <CardDescription>{docName(current)}</CardDescription>
+                <CardAction>
+                  <Tooltip>
+                    <TooltipTrigger render={<Button variant="ghost" size="icon-xs" aria-label="Open the document at this page" nativeButton={false} render={<Link href={`/documents/${current.document_id}?page=${current.page_start}`} />} />}>
+                      <Icon icon={Launch} />
+                    </TooltipTrigger>
+                    <TooltipContent>Open the document at this page</TooltipContent>
+                  </Tooltip>
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                <PageViewer imageUrl={current.page_image_url} alt={`Page ${current.page_start} of ${docName(current)}`} overlays={pageOverlays} onSelect={(oid) => setSelected(oid.split(":")[0])} />
+              </CardContent>
+            </Card>
+          )}
           </div>
         )}
       </div>
@@ -224,29 +256,29 @@ export function SearchView() {
 }
 
 /** One passage the answer rests on: where it is, what it says, and its surroundings on request. */
-function SourceRow({ r, n }: { r: Hit; n: number }) {
+function SourceRow({ r, n, selected, onSelect }: { r: Hit; n: number; selected: boolean; onSelect: () => void }) {
   type Ctx = { parent: Chunk | null; prev: Chunk | null; next: Chunk | null; children: Chunk[] };
   const [open, setOpen] = useState(false);
   const [ctx, setCtx] = useState<Ctx | null>(null);
   useEffect(() => { if (open && !ctx) api<Ctx>(`/api/chunks/${r.id}`).then(setCtx).catch(() => {}); }, [open, ctx, r.id]);
-  const box = r.bboxes.find((b) => b.page === r.page_start);
   const meta = r.metadata as { image_path?: string };
   return (
     <li id={`source-${n}`}>
       <Collapsible open={open} onOpenChange={setOpen}>
-        <Item kind={chunkKind[r.chunk_type]}>
+        <Item kind={chunkKind[r.chunk_type]} selected={selected}>
           <ItemContent>
             <ItemTitle>
               <Badge>{n}</Badge>
               <Badge kind={chunkKind[r.chunk_type]} label={typeLabel[r.chunk_type]} />
-              <ItemLink href={`/documents/${r.document_id}?page=${r.page_start}`}>{docName(r)}, page {r.page_start}</ItemLink>
+              <ItemLink href={`/documents/${r.document_id}?page=${r.page_start}`} aria-current={selected ? "true" : undefined} onClick={(e) => { e.preventDefault(); onSelect(); }}>{docName(r)}, page {r.page_start}</ItemLink>
             </ItemTitle>
             {r.context && <ItemDescription>{r.context}</ItemDescription>}
             <ItemDescription>{r.raw_text}</ItemDescription>
+            {/* Under the text rather than beside it; raised over the row's stretched link so it takes the click. */}
+            <div className="relative z-(--z-raised) w-fit">
+              <CollapsibleTrigger render={<Button variant="ghost" size="xs" />}>{open ? "Hide context" : "Show context"}</CollapsibleTrigger>
+            </div>
           </ItemContent>
-          <ItemActions>
-            <CollapsibleTrigger render={<Button variant="ghost" size="sm" />}>{open ? "Hide context" : "Show context"}</CollapsibleTrigger>
-          </ItemActions>
         </Item>
         <CollapsibleContent>
           <div className="flex flex-col gap-3 p-3">
@@ -256,7 +288,6 @@ function SourceRow({ r, n }: { r: Hit; n: number }) {
                 <img src={publicAsset(meta.image_path)} alt="Figure" className="block max-h-64 w-auto" />
               </div>
             )}
-            {box && <PageViewer imageUrl={r.page_image_url} alt={`Page ${r.page_start} of ${docName(r)}`} overlays={[{ id: r.id, type: r.chunk_type, box, label: `${typeLabel[r.chunk_type]} passage on page ${r.page_start}`, selected: true }]} />}
             <SkeletonSwap loading={!ctx} label="Loading surroundings" fallback={<SkeletonText type="body-sm" lines={3} />}>
               {ctx?.parent && (
                 <div className="flex flex-col gap-1">
@@ -266,8 +297,10 @@ function SourceRow({ r, n }: { r: Hit; n: number }) {
               )}
               {ctx && (ctx.prev || ctx.next) && (
                 <div className="grid gap-3 md:grid-cols-2">
-                  {ctx.prev && <div className="flex flex-col gap-1"><p className="type-label">Before</p><p className="well line-clamp-6 rounded-soft p-3 type-body-sm whitespace-pre-wrap">{ctx.prev.raw_text}</p></div>}
-                  {ctx.next && <div className="flex flex-col gap-1"><p className="type-label">After</p><p className="well line-clamp-6 rounded-soft p-3 type-body-sm whitespace-pre-wrap">{ctx.next.raw_text}</p></div>}
+                  {/* The neighbouring passages, so the reader sees what this one continues from and runs into.
+                      The clamp sits inside the padded well, or the clipped line would show through the padding. */}
+                  {ctx.prev && <div className="flex flex-col gap-1"><p className="type-label">Just before this passage</p><div className="well rounded-soft p-3"><p className="line-clamp-6 type-body-sm whitespace-pre-wrap">{ctx.prev.raw_text.trim()}</p></div></div>}
+                  {ctx.next && <div className="flex flex-col gap-1"><p className="type-label">Just after this passage</p><div className="well rounded-soft p-3"><p className="line-clamp-6 type-body-sm whitespace-pre-wrap">{ctx.next.raw_text.trim()}</p></div></div>}
                 </div>
               )}
             </SkeletonSwap>

@@ -1,7 +1,5 @@
 "use client";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Icon, Launch } from "@/components/quartz/icon";
-import { Button } from "@/components/quartz/ui/button";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
 import { Dialog, DialogAction, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemStatus, ItemTitle } from "@/components/quartz/ui/item";
@@ -34,7 +32,7 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad, initialPrevie
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="lg">
+      <DialogContent size="lg" className="[--overlay-lg:var(--container-5xl)]">
         <DialogHeader>
           <DialogTitle>Load sample documents</DialogTitle>
           <DialogDescription>Tick the ones to load. Click a name to look through it first.</DialogDescription>
@@ -71,10 +69,10 @@ export function SamplePicker({ open, onOpenChange, loaded, onLoad, initialPrevie
                   // eslint-disable-next-line @next/next/no-img-element
                   : <img key={current.key} src={`/samples/previews/${current.key}.png`} alt={`First page of ${name(current.name)}`} className="block h-72 w-full object-cover object-top" />}
               </div>
-              <figcaption className="flex flex-col gap-2">
+              <figcaption className="flex flex-col gap-0.5">
                 <span className="type-label text-text-1">{name(current.name)}</span>
-                <span className="type-body-sm text-text-2">{pages(current.pages)}. {current.blurb}</span>
-                <span><Button variant="secondary" size="sm" nativeButton={false} render={<a href={`/samples/${current.file}`} target="_blank" rel="noreferrer" />}><Icon icon={Launch} />Open the PDF</Button></span>
+                <span className="type-body-sm text-text-2">{current.blurb}</span>
+                {!pdfInline && <a href={`/samples/${current.file}`} target="_blank" rel="noreferrer" className="type-body-sm text-text-2 underline underline-offset-4">Open the PDF</a>}
               </figcaption>
             </figure>
           </div>
