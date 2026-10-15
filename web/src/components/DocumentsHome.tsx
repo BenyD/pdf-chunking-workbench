@@ -1,17 +1,18 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
-import { Checkmark, ErrorOutline, Icon, OverflowMenuHorizontal, Renew, Time, Upload } from "@/components/quartz/icon";
+import { Checkmark, DocumentPdf, ErrorOutline, Icon, OverflowMenuHorizontal, Renew, Time, Upload } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { AttachmentDrop, AttachmentDropTrigger, rejectionReason, type FileRejection } from "@/components/quartz/ui/attachment";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
 import { Dialog, DialogAction, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/quartz/ui/dropdown-menu";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemStatus, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderActions, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
+import { SAMPLES } from "@/lib/samples";
 import type { Document } from "@/lib/types";
 import { api, fmtNum, stageLabel } from "@/lib/ui";
 import { SamplePicker } from "./SamplePicker";
@@ -41,6 +42,8 @@ export function DocumentsHome() {
   const [busy, setBusy] = useState<"samples" | "upload" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [picker, setPicker] = useState(false);
+  const [previewKey, setPreviewKey] = useState<string | null>(null);
+  const openPicker = (key: string | null = null) => { setPreviewKey(key); setPicker(true); };
   const [toDelete, setToDelete] = useState<Document | null>(null);
   const [pending, setPending] = useState<Record<string, "ingest" | "embed" | "delete">>({});
 
@@ -102,7 +105,7 @@ export function DocumentsHome() {
           {hasDocs && (
             <PageHeaderActions>
               <AttachmentDropTrigger size="default" pending={busy === "upload"} pendingLabel="Uploading"><Icon icon={Upload} />Upload a PDF</AttachmentDropTrigger>
-              <Button onClick={() => setPicker(true)} pending={busy === "samples"} pendingLabel="Loading samples">Load samples</Button>
+              <Button onClick={() => openPicker()} pending={busy === "samples"} pendingLabel="Loading samples">Load samples</Button>
             </PageHeaderActions>
           )}
         </PageHeaderRow>
@@ -138,13 +141,33 @@ export function DocumentsHome() {
         {docs && docs.length === 0 && (
           <Empty>
             <EmptyHeader>
+              <EmptyMedia><Icon icon={DocumentPdf} /></EmptyMedia>
               <EmptyTitle>No documents yet</EmptyTitle>
-              <EmptyDescription>Load the samples to see it working, or upload your own PDF.</EmptyDescription>
+              <EmptyDescription>Load the samples, or drop a PDF anywhere on this page.</EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button size="sm" onClick={() => setPicker(true)} pending={busy === "samples"} pendingLabel="Loading samples">Load samples</Button>
+              <Button size="sm" onClick={() => openPicker()} pending={busy === "samples"} pendingLabel="Loading samples">Load samples</Button>
               <AttachmentDropTrigger pending={busy === "upload"} pendingLabel="Uploading">Upload a PDF</AttachmentDropTrigger>
             </EmptyContent>
+            {/* The first page of each sample, so what "Load samples" brings is in view before anything is loaded.
+                Clicking one opens the picker on that sample, where every page can be looked through. */}
+            <div className="flex w-full flex-col gap-2 pt-2">
+              <p className="type-label text-text-2">The samples. Click one to look through it.</p>
+              <ul className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+                {SAMPLES.map((s) => (
+                  <li key={s.key} className="min-w-0">
+                    <a href={`/samples/${s.file}`} onClick={(e) => { e.preventDefault(); openPicker(s.key); }} className="flex min-w-0 flex-col gap-1 rounded-soft">
+                      <span className="frame block overflow-hidden bg-paper">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={`/samples/previews/${s.key}.png`} alt="" className="block h-28 w-full object-cover object-top" loading="lazy" />
+                      </span>
+                      <span className="truncate type-label-sm text-text-1">{s.name.replace(/\.pdf$/i, "")}</span>
+                      <span className="type-body-sm text-text-3">{fmtNum(s.pages)} {s.pages === 1 ? "page" : "pages"}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Empty>
         )}
         {hasDocs && (
@@ -190,7 +213,7 @@ export function DocumentsHome() {
         )}
       </SkeletonSwap>
 
-      <SamplePicker open={picker} onOpenChange={setPicker} loaded={loaded} onLoad={seed} />
+      <SamplePicker open={picker} onOpenChange={setPicker} loaded={loaded} onLoad={seed} initialPreview={previewKey} />
 
       <Dialog role="alertdialog" open={toDelete !== null} onOpenChange={(open) => { if (!open) setToDelete(null); }}>
         <DialogContent size="sm">

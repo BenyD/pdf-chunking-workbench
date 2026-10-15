@@ -1,7 +1,8 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
-import { Close, Icon } from "@/components/quartz/icon";
+import { Close, Icon, ListChecked } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
@@ -9,7 +10,7 @@ import { ButtonGroup } from "@/components/quartz/ui/button-group";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { Checkbox } from "@/components/quartz/ui/checkbox";
 import { Dialog, DialogAction, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/quartz/ui/dialog";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Field, FieldContent, FieldDescription, FieldLabel, FieldTitle } from "@/components/quartz/ui/field";
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Input } from "@/components/quartz/ui/input";
@@ -18,6 +19,7 @@ import { Skeleton, SkeletonSwap } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/quartz/ui/table";
 import { cn } from "@/lib/quartz/utils";
+import { SAMPLES } from "@/lib/samples";
 import type { Document, OcrAnchor, OcrField, OcrTemplate, Page } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 
@@ -62,6 +64,8 @@ function describe(r: RunResult): string {
 }
 
 export function OcrView() {
+  const router = useRouter();
+  const [seeding, setSeeding] = useState(false);
   const [docs, setDocs] = useState<Document[] | null>(null);
   const [templates, setTemplates] = useState<OcrTemplate[]>([]);
   const [srcDoc, setSrcDoc] = useState<string | null>(null);
@@ -151,16 +155,28 @@ export function OcrView() {
       </PageHeaderRow>
     </PageHeader>
   );
+  /** Start every sample processing and go to Documents, where the progress shows. */
+  async function loadSamples() {
+    setSeeding(true); setErr(null);
+    try { await api("/api/samples", { method: "POST", body: JSON.stringify({ keys: SAMPLES.map((s) => s.key) }) }); router.push("/"); }
+    catch (e) { setErr(String(e)); setSeeding(false); }
+  }
+
   if (docs !== null && docs.length === 0) {
     return (
       <>
         {header}
+        {err && <Alert status="fail"><AlertTitle>Loading the samples failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
         <Empty>
           <EmptyHeader>
-            <EmptyTitle>No documents to work on</EmptyTitle>
-            <EmptyDescription>Load the samples to get the pharmacy bills, or upload a scanned form of your own.</EmptyDescription>
+            <EmptyMedia><Icon icon={ListChecked} /></EmptyMedia>
+            <EmptyTitle>No form to work on yet</EmptyTitle>
+            <EmptyDescription>Load the samples for the pharmacy bills, or upload a scanned form of your own.</EmptyDescription>
           </EmptyHeader>
-          <EmptyContent><Button size="sm" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button></EmptyContent>
+          <EmptyContent>
+            <Button size="sm" onClick={loadSamples} pending={seeding} pendingLabel="Loading samples">Load samples</Button>
+            <Button size="sm" variant="secondary" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+          </EmptyContent>
         </Empty>
       </>
     );

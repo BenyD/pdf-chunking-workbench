@@ -1,20 +1,22 @@
 "use client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PromptInput, type PromptValue } from "@/components/quartz/ai/prompt-input";
 import { Response, type InlineTag } from "@/components/quartz/ai/response";
+import { Icon, Search as SearchIcon } from "@/components/quartz/icon";
 import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/alert";
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/quartz/ui/card";
 import { ChipButton, ChipGroup } from "@/components/quartz/ui/chip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/quartz/ui/collapsible";
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/quartz/ui/empty-state";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
 import { PageHeader, PageHeaderContent, PageHeaderDescription, PageHeaderRow, PageHeaderTitle } from "@/components/quartz/ui/page-header";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/quartz/ui/select";
 import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
+import { SAMPLES } from "@/lib/samples";
 import type { Chunk, Document, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel } from "./PageViewer";
@@ -33,6 +35,8 @@ const CITATIONS: InlineTag[] = [{
 
 export function SearchView() {
   const sp = useSearchParams();
+  const router = useRouter();
+  const [seeding, setSeeding] = useState(false);
   const [docs, setDocs] = useState<Document[] | null>(null);
   const [docId, setDocId] = useState<string | null>(sp.get("document_id"));
   const [asked, setAsked] = useState("");
@@ -97,16 +101,28 @@ export function SearchView() {
     </PageHeader>
   );
 
+  /** Start every sample processing and go to Documents, where the progress shows. */
+  async function loadSamples() {
+    setSeeding(true); setErr(null);
+    try { await api("/api/samples", { method: "POST", body: JSON.stringify({ keys: SAMPLES.map((s) => s.key) }) }); router.push("/"); }
+    catch (e) { setErr(String(e)); setSeeding(false); }
+  }
+
   if (docs !== null && docs.length === 0) {
     return (
       <>
         {header}
+        {err && <Alert status="fail"><AlertTitle>Loading the samples failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
         <Empty>
           <EmptyHeader>
+            <EmptyMedia><Icon icon={SearchIcon} /></EmptyMedia>
             <EmptyTitle>Nothing to search yet</EmptyTitle>
-            <EmptyDescription>Add a document first. Once it finishes processing it shows up here.</EmptyDescription>
+            <EmptyDescription>Add a document first. Then ask questions here and get answers with their sources.</EmptyDescription>
           </EmptyHeader>
-          <EmptyContent><Button size="sm" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button></EmptyContent>
+          <EmptyContent>
+            <Button size="sm" onClick={loadSamples} pending={seeding} pendingLabel="Loading samples">Load samples</Button>
+            <Button size="sm" variant="secondary" nativeButton={false} render={<Link href="/" />}>Go to Documents</Button>
+          </EmptyContent>
         </Empty>
       </>
     );
