@@ -36,6 +36,7 @@ scripts/   eval.py: recall@k on the question sets, against a running deployment.
            compare_chunking.py: builds fixed-size, semantic, hierarchical and structure-only chunks beside the live ones and scores them all.
            gap_check.py: checks SOPs against 21 CFR Part 211, line by line (regulations/21cfr211.xml is the eCFR text): picks the sections
            that apply to each SOP, keeps every verdict by its evidence (benchmarks/gap-cache.sqlite), and with --batch uses the Batch API.
+           With --library it checks a company's SOPs as one set: a gap only when no SOP meets the requirement, named against its owner.
 ```
 
 ## Run locally

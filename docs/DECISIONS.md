@@ -884,7 +884,211 @@ about $0.0001 (voyage-4), again only for passages not seen before.
 The SOP check page still shows the snapshot of the hand-scoped run;
 `--publish` replaces it with the latest run of the sample.
 
-Not built yet: the library-level check above, and a run over real SOPs
-(these seven are synthetic and one page or two each). Prompt caching does
-not apply: the instructions are about 170 tokens, far below the smallest
-cacheable prefix.
+Not built yet: a run over real SOPs (these seven are synthetic and one
+page or two each). The library-level check is section 25. Prompt caching
+does not apply: the instructions are about 170 tokens, far below the
+smallest cacheable prefix.
+
+## 25. A company's SOPs checked as one library
+
+**Why.** Section 24 judges each SOP alone, so a requirement that another
+SOP covers comes back as a gap. That kept the scope line at 0.65, which
+misses 211.82 Receipt and storage on the incoming-materials SOP. At 0.62,
+on the five held-out SOPs, Haiku called 25 of the 39 lines from
+unexpected sections gaps, and 55 of the 78 from accepted neighbours.
+
+**Decision.** `gap_check.py --library`. The library is the `--sop` list,
+or every ready document whose name starts with `SOP-`, keeping the newest
+document of each SOP number (an old revision would meet what the current
+one dropped).
+- A section is the library's when any SOP scores it at 0.62. Its owner is
+  the SOP that scores it highest. (By score, not by place in each SOP's
+  ranking: the two differ on 1 of 24 sections here, 211.134, at 0.626
+  against 0.625.)
+- Each requirement is asked of its owner first. Only if the owner does not
+  meet it, it is asked of up to two more SOPs, and only of SOPs whose
+  closest passage scores at least the owner's, closest first. The asking
+  goes in rounds, one batch each, and stops at the first "met" or at the
+  owner's "not applicable".
+- The verdict: met if any SOP asked meets it; else not applicable if the
+  owner's scope rules it out; else partly met if any SOP goes part of the
+  way; else a gap, with the owner's reason. It is reported once, against
+  the owner.
+- A line asked of an SOP is the same line the per-SOP mode builds (same
+  passages, scope line and prompt), so it has the same cache key. A library
+  whose SOPs were already checked one by one costs only the extra SOPs
+  asked.
+- Gaps come in two lists. Line by line: gaps in sections some SOP is
+  clearly about (its owner scores 0.65, one SOP's own line, or more). By
+  section: the sections no SOP is clearly about (owner between 0.62 and
+  0.65), since a gap there more likely means the library has no SOP for
+  the section than that the owner falls short.
+
+**Measured** on seven synthetic SOPs: the sample, SOP-PR-021 and the five
+held-out ones. That gives 24 sections and 214 requirements. The verdicts
+are the cached ones the per-SOP runs used, so only the grouping differs.
+
+Where the per-SOP false gaps went (the five held-out SOPs, at 0.62):
+
+| Per-SOP gaps | met by the section's owner, another SOP | same requirement as a gap the owner already has | still in the line-by-line list | moved to the by-section list |
+|---|---|---|---|---|
+| 25 in unexpected sections | 7 | 6 | 0 | 12 |
+| 55 in accepted neighbours | 6 | 0 | 12 | 37 |
+
+- 13 of the 80 disappear outright, for example the label lines the batch
+  record review SOP picked up, which the label SOP meets.
+- 6 more were the label SOP's own gaps found a second time; they are now
+  reported once, against the label SOP.
+- The 12 that stay are 211.186 Master production and control records,
+  owned by the batch record review SOP (0.661). The per-SOP run at 0.65
+  showed them too.
+- The line-by-line list is exactly the per-SOP gap list at 0.65: the same
+  59 requirements with the same owners. The lower line adds nothing to it.
+  The other 60 gaps sit in the by-section list, 11 sections.
+
+Only 13 disappear because sections barely overlap in this set: 6 of the 24
+are in two SOPs' scope. Most neighbour gaps are things no SOP here does at
+all: laboratory records, testing and release, records retention,
+retesting. They are real gaps of a seven-SOP library. A company's full
+library would have SOPs that own those sections, and a section no SOP
+scores at 0.65 is the sign of that. No gap on a core line was hidden by
+another SOP. Four more SOPs test this claim below.
+
+**The sample's known gaps** still show: 8 of the 9 on the cached verdicts,
+7 on fresh ones. The ones missing are Haiku's own misses on the sample
+(211.170(a) sentence 2 "met" in both runs, 211.166(b) sentence 2 "met" in
+one), not a neighbour's doing. No other SOP's passages came closer than
+the sample's on any of its 41 lines, so the sample alone answered all of
+them.
+
+**211.82** is now checked. Its owner is the incoming-materials SOP (0.633,
+the only SOP near it), and it sits in the by-section list. 1 of its 3
+lines is met (quarantine until released). 2 are partly met: the receiving
+check never looks at "labeling as to contents" and is not said to come
+before acceptance, and storage is not said to conform to 211.80. Fresh
+verdicts said the same. No line on the score can lift it into the main
+list: 211.110 in-process sampling scores higher on the same SOP (0.643)
+and is not its topic (10 of its 13 lines are not applicable).
+
+**Who else is asked.** 177 of the 214 requirements were asked of their
+owner only, 37 of a second or third SOP, and 1 of those was met elsewhere.
+Asking the two next-closest SOPs whatever their score was tried: 450
+verdicts against 268 ($0.0379 against $0.0228 as bought), and 3 more
+"met". Two of those borrow a clause from another procedure: a complaint
+investigation is "met" by the batch review SOP's deviation records, and a
+returned-goods investigation by the complaints SOP. Each hides a core gap.
+So only SOPs with closer passages are asked.
+
+**The cache, by library.**
+
+| Library | model calls | paid |
+|---|---|---|
+| The sample and six others, after the per-SOP runs | 66 (the extra SOPs asked, and 19 lines of sections the sample and SOP-PR-021 had never been checked on) | $0.0054 |
+| The same, run again | 0 | $0 |
+| The Pune site copy in place of the sample | 0 | $0 |
+| Revision B in place of the sample | 15 | $0.0014 |
+
+Revision B changes what section 24 says it should: the yearly examination
+is met, its investigation and its record partly met. The by-section list
+moves a little between uploads of the same text. 211.194 scores 0.621 on
+the sample but under 0.62 on the Pune copy, because the stored vectors
+carry each upload's context lines, and revision B brings in 211.22
+instead. The line-by-line list stayed the same for the Pune copy, and for
+revision B it changed only on lines whose evidence the revision changed.
+
+**What it costs**, through the batch API, for the seven SOPs:
+
+| Mode | lines judged | cost |
+|---|---|---|
+| Per SOP at 0.65 | 128 | $0.0113 |
+| Library at 0.65 | 130 | $0.0115 |
+| Per SOP at 0.62 | 254 | $0.0218 |
+| Library at 0.62, empty cache | 266, in 3 rounds of 214, 37 and 15 | $0.0226 |
+| Library at 0.62, the two next-closest always asked | 450 | $0.0379 |
+
+The run on an empty cache waited 620 s over three batches, against about
+200 to 290 s for one. Sending every SOP that might be asked in one batch
+would be 282 lines here, 6% more, for one wait.
+
+Here the library costs what the per-SOP check costs, because each SOP has
+its own topic. Its cost grows with the number of requirements, not of
+SOPs: each requirement is asked of at most three SOPs. A whole library,
+however many SOPs it holds, is at most 394 × 3 = 1,182 lines, about $0.10
+through the batch API at $0.000085 a line, and near 394 lines when owners
+meet their requirements. The per-SOP check pays once for every SOP that
+touches a section. That bound is arithmetic. It was not measured on a real
+library.
+
+**Four more SOPs, to test the fuller library.** Four more synthetic SOPs,
+one page each, were written for topics none of the seven covers: laboratory
+records (211.194), finished product testing and release for distribution
+(211.165), records retention (211.180) and master production records
+(211.186). Before any was ingested, the section each should own and its
+lines were written down: 38 lines it should meet and 10 known gaps (no
+calibration records, no test for objectionable microorganisms, component
+records kept two years from receipt, no calculated excess in the master
+record, and others). The same person wrote the SOPs and the expected
+results, so this tests the grouping, not how real SOPs are worded.
+
+| Section | owner with seven SOPs | owner with eleven |
+|---|---|---|
+| 211.186 Master production and control records | batch record review, 0.661 | master records SOP, 0.745 |
+| 211.194 Laboratory records | stability (sample), 0.621, by section | laboratory records SOP, 0.740 |
+| 211.165 Testing and release for distribution | batch record review, 0.635, by section | finished product testing SOP, 0.731 |
+| 211.180 Records, general requirements | complaints, 0.635, by section | records retention SOP, 0.683 |
+| 211.110 In-process sampling and testing | incoming materials, 0.643, by section | finished product testing SOP, 0.652 |
+| 211.22 Quality control unit | not in the library | finished product testing SOP, 0.625, by section |
+
+The first four went as predicted. The last two were not predicted.
+
+- Of the 60 by-section gaps, 23 are now met and 11 moved to the
+  line-by-line list under a new owner. The other 26 did not change. They are
+  in the 7 sections no new SOP covers (211.122, 211.105, 211.208, 211.82,
+  211.184, 211.87, 211.134).
+- In the three sections the new SOPs were written for, 22 of the 31 gaps
+  are met. The 9 left are the 7 known gaps there, plus 2 lines Haiku calls
+  partly met (211.194(a)(2) sentence 2, 211.165(d) sentence 2).
+- Of the 12 gaps in 211.186, 8 are met. The 4 left are the 2 known gaps,
+  plus 211.186(b)(4) sentences 1 and 2, which Haiku calls partly met (it
+  reads "kilograms or grams" as allowing mixed weight systems).
+- All 10 known gaps of the new SOPs show. 6 of their 38 lines to meet came
+  back partly met: section 24's miss again, where Haiku wants the
+  requirement's own words. One of them, 211.194(e), was met before by the
+  stability SOP. It is now asked of its new owner first, and Haiku finds
+  that owner's "results are recorded in the stability database" too thin.
+  The stability SOP has no closer passage, so it is not asked.
+- No core gap of the original seven is hidden. The 47 line-by-line gaps
+  outside 211.186 keep their owner and verdict. A new SOP was asked as a
+  second SOP on one old line, 211.122(g)(3) sentence 2, and neither SOP
+  meets it. The records SOP's "one year after the expiry date" was never
+  asked about reserve samples. The sample still gets 35 of 41 right and
+  shows 8 of its 9 known gaps.
+- The by-section list went from 11 sections and 60 gaps to 8 and 30: the
+  26 unchanged, plus 4 in 211.22.
+- The line-by-line list went from 59 to 70: 47 unchanged, 16 against the
+  four new SOPs (10 known, 6 Haiku's), and 7 in 211.110.
+
+**211.110 shows a limit of the score.** The finished product testing SOP
+scores in-process sampling at 0.652, just over the line, so the section
+moved into the line-by-line list with 7 gaps against an SOP about finished
+product ("only of finished product at end of packing, with no written
+in-process controls"). With seven SOPs, the incoming-materials SOP called
+10 of its 13 lines not applicable. Neither result is right. The library has
+no SOP for in-process controls, which is a real gap of the library, and it
+is now reported against the wrong SOP. So a score of 0.65 means only that
+some SOP comes nearest to the section, not that the SOP is written about
+it.
+
+**What the four cost.** 78 new verdicts through the batch API, $0.0071,
+in 3 rounds of 71, 5 and 2 lines (517 s of waiting); 171 came from the
+cache. Ingesting the four pages cost about $0.003, for the context lines
+Haiku writes. The whole library now takes 249 verdicts as bought ($0.0222),
+against 268 ($0.0228) with seven SOPs: owners meet more lines themselves,
+so fewer requirements go on to a second or third SOP (196 of 219 asked of
+the owner only, against 177 of 214). Checking the eleven one by one at 0.62
+would be 340 lines. Adding SOPs did not add cost here, which fits the claim
+above that cost follows the requirements, not the number of SOPs.
+
+Not built: a library made from the document control system's current
+versions (the newest by SOP number in the name stands in for it), a run on
+a real company's SOPs, and the library on the SOP check page.

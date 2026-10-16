@@ -6,6 +6,7 @@
     .venv/bin/python ../scripts/gap_check.py --sop SOP-QC-014 SOP-PR-021 --batch   # many SOPs, at half price
     .venv/bin/python ../scripts/gap_check.py --sections 211.137 211.166 211.170    # sections given by hand
     .venv/bin/python ../scripts/gap_check.py --scope-only                     # which sections apply, then stop
+    .venv/bin/python ../scripts/gap_check.py --library --batch                # every "SOP-..." document as one library
 
 1. The regulation is read from the official eCFR XML (scripts/regulations/21cfr211.xml, fetched from
    https://www.ecfr.gov/api/versioner/v1/full/<date>/title-21.xml?part=211). Every paragraph carries its
@@ -32,6 +33,12 @@
    at half price; a run that dies while a batch is out picks the batch up again the next time.
 6. The sample SOP is scored against the gaps it was written with (EXPECTED below), and the model cost is
    measured per SOP, so the bill for thousands of SOPs is arithmetic, not a guess.
+7. --library checks a company's SOPs as one set. A section is the library's when any SOP scores it at the line
+   (0.62 here, against 0.65 for one SOP alone) and belongs to the SOP that scores it highest. Each requirement is
+   asked of that owner first and, only if the owner does not meet it, of up to two SOPs whose passages come
+   closer to it; it is a gap only when none of them meets it, and it is reported once, against the owner. The
+   lines asked are the same lines the per-SOP mode builds, so they share its cache. Gaps in sections no SOP scores
+   at one SOP's own line are listed apart, by section: the library only touches those, and may lack an SOP for them.
 """
 from __future__ import annotations
 
@@ -565,27 +572,37 @@ def judge_in_batches(cache: Cache, todo: list[Line], poll: float = 20.0) -> floa
 # run
 # ---------------------------------------------------------------------------
 
-def prepare(c: psycopg.Connection, cache: Cache, name_part: str, reqs: list[Requirement], vectors: list[list[float]],
-            sections: list[str] | None, strategy: str, model: str, threshold: float) -> dict:
-    """Scope one SOP and find the evidence for each of its lines. No model is called here."""
-    doc_id, doc_name = find_sop(c, name_part)
-    stem = doc_name.rsplit(".", 1)[0]
-    ranking = [] if sections else choose_sections(c, doc_id, strategy, reqs, vectors, threshold)
-    chosen = list(sections) if sections else [s["section"] for s in ranking if s["in_scope"]]
-    scope, exclusions = sop_scope(c, doc_id, strategy)
+def load_sop(c: psycopg.Connection, cache: Cache, doc_id: str, doc_name: str, reqs: list[Requirement], vectors: list[list[float]],
+             strategy: str, threshold: float, rank: bool) -> dict:
+    """One SOP's passages, their own-words vectors, its scope line and, if asked, its section ranking."""
     sop = passages(c, doc_id, strategy)
     P = np.array(cache.embed([p["text"] for p in sop], "document"), dtype=np.float32)   # by text: a revision re-embeds only what changed
     P /= np.linalg.norm(P, axis=1, keepdims=True)
+    scope, exclusions = sop_scope(c, doc_id, strategy)
+    return {"doc_id": doc_id, "name": doc_name, "stem": doc_name.rsplit(".", 1)[0], "passages": sop, "P": P,
+            "scope": scope, "exclusions": exclusions,
+            "ranking": choose_sections(c, doc_id, strategy, reqs, vectors, threshold) if rank else []}
+
+
+def make_line(s: dict, r: Requirement, v: list[float], kw: np.ndarray, model: str) -> Line:
+    """One requirement judged on one SOP: its three closest passages and the request that would judge them. The key
+    holds nothing about which SOP this is, so the same words anywhere get the same verdict."""
+    found = closest(s["passages"], s["P"], v, kw)
+    params = judge_params(r, found, s["scope"], model)
+    evidence = _hash(sorted(p["text"] for p in found), s["scope"])
+    judge = _hash({name: val for name, val in params.items() if name != "messages"}, JUDGE_PROMPT, r.cite, r.context, r.paragraph, r.text)
+    return Line(s["stem"], r, found, rules_judge(r, found, s["exclusions"]), params, evidence, judge, _hash(r.cite, evidence, judge))
+
+
+def prepare(c: psycopg.Connection, cache: Cache, name_part: str, reqs: list[Requirement], vectors: list[list[float]],
+            sections: list[str] | None, strategy: str, model: str, threshold: float) -> dict:
+    """Scope one SOP and find the evidence for each of its lines. No model is called here."""
+    s = load_sop(c, cache, *find_sop(c, name_part), reqs, vectors, strategy, threshold, rank=not sections)
+    chosen = list(sections) if sections else [x["section"] for x in s["ranking"] if x["in_scope"]]
     mine = [(r, v) for r, v in zip(reqs, vectors) if r.section in chosen]
-    K = keyword_scores(c, [f"{r.section_title}. {r.text}" for r, _ in mine], [p["text"] for p in sop])
-    lines: list[Line] = []
-    for (r, v), kw in zip(mine, K):
-        found = closest(sop, P, v, kw)
-        params = judge_params(r, found, scope, model)
-        evidence = _hash(sorted(p["text"] for p in found), scope)
-        judge = _hash({name: val for name, val in params.items() if name != "messages"}, JUDGE_PROMPT, r.cite, r.context, r.paragraph, r.text)
-        lines.append(Line(stem, r, found, rules_judge(r, found, exclusions), params, evidence, judge, _hash(r.cite, evidence, judge)))
-    return {"doc_id": doc_id, "name": doc_name, "stem": stem, "sections": chosen, "ranking": ranking, "lines": lines}
+    K = keyword_scores(c, [f"{r.section_title}. {r.text}" for r, _ in mine], [p["text"] for p in s["passages"]])
+    lines = [make_line(s, r, v, kw, model) for (r, v), kw in zip(mine, K)]
+    return {"doc_id": s["doc_id"], "name": s["name"], "stem": s["stem"], "sections": chosen, "ranking": s["ranking"], "lines": lines}
 
 
 def score(rows: list[dict], key: str) -> dict:
@@ -656,9 +673,262 @@ def print_ranking(stem: str, ranking: list[dict], top: int = 8) -> None:
         print(f"  {'*' if s['in_scope'] else ' '} {s['score']:.3f}  {s['title'][:70]}")
 
 
+# ---------------------------------------------------------------------------
+# 5. a company's library: a gap only when no SOP in it meets the requirement
+# ---------------------------------------------------------------------------
+
+LIBRARY_OUT = ROOT / "scripts" / "benchmarks" / "gap-library.json"
+LIBRARY_THRESHOLD = 0.62        # lower than one SOP's line: a section touched in passing no longer costs false gaps (DECISIONS section 25)
+LIBRARY_ALSO = 2                # other SOPs asked about a requirement, at most, after its owner
+LIBRARY_MARGIN = 0.0            # ... and only those whose closest passage scores at least the owner's, minus this
+SETTLED = ("met",)
+
+
+def sop_number(name: str) -> str:
+    """"SOP-QC-014 Stability and reserve samples, revision B" -> "SOP-QC-014": what versions and copies share."""
+    return re.split(r"[\s:,]", name, maxsplit=1)[0].upper()
+
+
+def library_members(c: psycopg.Connection, names: list[str] | None, prefix: str) -> tuple[list[tuple[str, str]], list[str]]:
+    """The SOPs named, or every ready document whose name starts with the prefix. A library holds one version of
+    each SOP: when several documents share a number (a revision, another site's copy), the newest is kept and the
+    others are listed as left out, since an old revision would meet what the current one dropped."""
+    if names:
+        found = list(dict.fromkeys(find_sop(c, n) for n in names))
+        numbers = [sop_number(n) for _, n in found]
+        for num in sorted({x for x in numbers if numbers.count(x) > 1}):
+            print(f"note: {num} is in the library {numbers.count(num)} times; each copy counts as meeting what it meets")
+        return found, []
+    rows = c.execute("select id::text, name from documents where name ilike %s and status = 'ready' order by created_at desc",
+                     (prefix.replace("%", r"\%").replace("_", r"\_") + "%",)).fetchall()
+    keep: dict[str, tuple[str, str]] = {}
+    left: list[str] = []
+    for doc_id, name in rows:
+        if sop_number(name) in keep:
+            left.append(name.rsplit(".", 1)[0])
+        else:
+            keep[sop_number(name)] = (doc_id, name)
+    if not keep:
+        raise SystemExit(f"no ready document starts with {prefix!r}")
+    return sorted(keep.values(), key=lambda x: x[1]), left
+
+
+def library_status(asked: list[Line], owner: Line) -> tuple[str, Line]:
+    """Met if any SOP asked meets it. Otherwise not applicable if the owner's scope rules it out (another SOP's
+    scope says nothing about the company's other products), then partly met if any SOP goes part of the way, and
+    a gap with the owner's reason if none does."""
+    by = {st: [x for x in asked if x.verdict and x.verdict["status"] == st] for st in ("met", "partly_met", "unsure")}
+    if by["met"]:
+        return "met", by["met"][0]
+    if owner.verdict and owner.verdict["status"] == "not_applicable":
+        return "not_applicable", owner
+    if by["partly_met"]:
+        return "partly_met", by["partly_met"][0]
+    if by["unsure"]:
+        return "unsure", by["unsure"][0]
+    return "not_met", owner
+
+
+def prepare_library(c: psycopg.Connection, cache: Cache, members: list[tuple[str, str]], reqs: list[Requirement],
+                    vectors: list[list[float]], sections: list[str] | None, strategy: str, model: str, threshold: float) -> dict:
+    """Every member's section ranking, the library's sections and their owners, and for each requirement the SOPs
+    to ask, owner first. No model is called here.
+
+    A section is the library's when some SOP scores it at the line; its owner is the SOP that scores it highest.
+    A requirement is asked of its owner, then of at most LIBRARY_ALSO other SOPs whose closest passage to it scores
+    at least the owner's (minus LIBRARY_MARGIN), closest first: the judge only ever sees an SOP's three closest
+    passages, so an SOP with nothing nearer than the owner's evidence would not be found to meet it either."""
+    sops = [load_sop(c, cache, doc_id, name, reqs, vectors, strategy, threshold, rank=True) for doc_id, name in members]
+    owners: dict[str, dict] = {}
+    for i, s in enumerate(sops):
+        for pos, x in enumerate(s["ranking"], 1):
+            if (sections and x["section"] not in sections) or (not sections and not x["in_scope"]):
+                continue
+            o = owners.get(x["section"])
+            if o is None or (x["score"], -pos) > (o["score"], -o["position"]):
+                owners[x["section"]] = {"section": x["section"], "title": x["title"], "owner": i, "score": x["score"], "position": pos}
+    for sec, o in owners.items():
+        o["in_scope_of"] = [(s["stem"], x["score"]) for s in sops for x in s["ranking"] if x["section"] == sec and x["score"] >= threshold]
+    mine = [(r, v) for r, v in zip(reqs, vectors) if r.section in owners]
+    if not mine:
+        return {"members": sops, "owners": owners, "groups": []}
+    queries = [f"{r.section_title}. {r.text}" for r, _ in mine]
+    Q = np.array([v for _, v in mine], dtype=np.float32)
+    Q /= np.linalg.norm(Q, axis=1, keepdims=True)
+    K = [keyword_scores(c, queries, [p["text"] for p in s["passages"]]) for s in sops]
+    near = np.stack([(Q @ s["P"].T + KEYWORD_WEIGHT * k).max(axis=1) for s, k in zip(sops, K)], axis=1)  # requirement x SOP
+    groups = []
+    for j, (r, v) in enumerate(mine):
+        o = owners[r.section]["owner"]
+        others = sorted((i for i in range(len(sops)) if i != o and near[j, i] >= near[j, o] - LIBRARY_MARGIN), key=lambda i: -near[j, i])
+        order = [o] + others[:LIBRARY_ALSO]
+        groups.append({"req": r, "owner": sops[o]["stem"], "near": {sops[i]["stem"]: round(float(near[j, i]), 3) for i in order},
+                       "candidates": [make_line(sops[i], r, v, K[i][j], model) for i in order]})
+    return {"members": sops, "owners": owners, "groups": groups}
+
+
+def judge_library(cache: Cache, groups: list[dict], batch: bool, no_cache: bool) -> int:
+    """Ask in rounds: every requirement's owner first, then, for those not met, the next SOP, until each is met,
+    ruled out by its owner's scope, or out of SOPs to ask. A verdict already in the cache costs nothing and counts
+    in any round, so a library whose SOPs were checked one by one is checked as a library for free. Returns the
+    number of rounds that called the model."""
+    every = {x.key: x for g in groups for x in g["candidates"]}
+    known = {} if no_cache else cache.verdicts(sorted(every))
+    done: dict[str, Line] = {}                          # key -> the line whose verdict this run holds
+
+    def take(x: Line) -> bool:
+        if x.key in done:
+            y = done[x.key]
+            x.verdict, x.tokens, x.dollars, x.mode, x.source = y.verdict, y.tokens, y.dollars, y.mode, y.source if y is x else "shared"
+            return True
+        if x.key in known:
+            k = known[x.key]
+            x.verdict, x.source, x.tokens, x.dollars, x.mode = k["verdict"], "cache", (k["in"], k["out"]), k["dollars"], k["mode"]
+            done[x.key] = x
+            return True
+        return False
+
+    rounds = 0
+    while True:
+        todo: dict[str, Line] = {}
+        for g in groups:
+            owner, asked = g["candidates"][0], []
+            for x in g["candidates"]:
+                if not take(x):
+                    if x.key not in todo:
+                        todo[x.key] = x
+                    break
+                asked.append(x)
+                if x.verdict["status"] in SETTLED or (x is owner and x.verdict["status"] == "not_applicable"):
+                    break
+        if not todo:
+            break
+        rounds += 1
+        print(f"round {rounds}: {len(todo)} lines to judge" + (" in a batch" if batch else ""))
+        if batch:
+            judge_in_batches(cache, list(todo.values()))
+        else:
+            asyncio.run(judge_live(cache, list(todo.values())))
+        for x in todo.values():
+            done[x.key] = x
+    for g in groups:
+        g["asked"] = [x for x in g["candidates"] if x.verdict]
+        g["status"], g["by"] = library_status(g["asked"], g["candidates"][0])
+    return rounds
+
+
+def library_report(lib: dict, model: str, threshold: float, left_out: list[str], rounds: int, given: bool) -> dict:
+    members, groups, owners = lib["members"], lib["groups"], lib["owners"]
+    sample_in = any(s["stem"] == SAMPLE for s in members)
+    rows = []
+    for g in groups:
+        r, by = g["req"], g["by"]
+        # owned: some SOP is clearly about the section (scores it at one SOP's own line); touched: the library only
+        # comes near it, so a gap there may mean the library lacks an SOP for it rather than that the owner is short.
+        tier = "owned" if owners[r.section]["score"] >= SCOPE_THRESHOLD else "touched"
+        rows.append({"cite": r.cite, "section": r.section, "section_title": r.section_title, "text": r.text,
+                     "owner": g["owner"], "owner_score": owners[r.section]["score"], "tier": tier, "status": g["status"], "by": by.sop,
+                     "reason": by.verdict["reason"] if by.verdict else "", "quote": by.verdict["quote"] if by.verdict else "",
+                     "asked": [{"sop": x.sop, "near": g["near"][x.sop], "status": x.verdict["status"], "reason": x.verdict["reason"],
+                                "verdict_from": x.source} for x in g["asked"]],
+                     "expected": EXPECTED.get(r.cite) if sample_in else None})
+    seen: dict[str, Line] = {}
+    for g in groups:
+        for x in g["asked"]:
+            seen.setdefault(x.key, x)
+    bought = [x for x in seen.values() if x.mode]
+    new = [x for x in seen.values() if x.source in ("model", "failed")]
+    # What checking each member on its own at the same line would ask: every requirement of every section in its scope.
+    size = defaultdict(int)
+    for g in groups:
+        size[g["req"].section] += 1
+    one_by_one = sum(size[x["section"]] for s in members for x in s["ranking"]
+                     if (x["section"] in owners if given else x["in_scope"]))
+    gaps = [x for x in rows if x["status"] in ("not_met", "partly_met")]
+    by_owner = {s["stem"]: {"sections": sorted(sec for sec, o in owners.items() if members[o["owner"]]["stem"] == s["stem"]),
+                            "gaps": [x["cite"] for x in gaps if x["owner"] == s["stem"] and x["tier"] == "owned"],
+                            "gaps_touched": [x["cite"] for x in gaps if x["owner"] == s["stem"] and x["tier"] == "touched"]}
+                for s in members}
+    touched = []
+    for o in sorted(owners.values(), key=lambda o: -o["score"]):
+        if o["score"] < SCOPE_THRESHOLD:
+            mine = [x for x in rows if x["section"] == o["section"]]
+            touched.append({"section": o["section"], "title": o["title"], "closest": members[o["owner"]]["stem"], "score": o["score"],
+                            "requirements": len(mine), **{st: sum(1 for x in mine if x["status"] == st)
+                                                          for st in ("met", "partly_met", "not_met", "not_applicable", "unsure")}})
+    graded = [x for x in rows if x["expected"]]
+    return {
+        "library": [s["stem"] for s in members], "left_out": left_out, "regulation": "21 CFR Part 211", "regulation_as_of": "2026-10-13",
+        "scope": {"how": "given" if given else "measured", "threshold": threshold, "owned_from": SCOPE_THRESHOLD,
+                  "also": LIBRARY_ALSO, "margin": LIBRARY_MARGIN},
+        "sections": [{"section": o["section"], "title": o["title"], "owner": members[o["owner"]]["stem"], "score": o["score"],
+                      "in_scope_of": o["in_scope_of"]} for o in sorted(owners.values(), key=lambda o: -o["score"])],
+        "requirements": len(rows), "gaps": sum(1 for x in gaps if x["tier"] == "owned"),
+        "gaps_touched": sum(1 for x in gaps if x["tier"] == "touched"), "touched_sections": touched,
+        "status": {st: sum(1 for x in rows if x["status"] == st) for st in ("met", "partly_met", "not_met", "not_applicable", "unsure")},
+        "by_owner": by_owner,
+        "sample_score": {"graded": len(graded), "right": sum(1 for x in graded if x["status"] == x["expected"]),
+                         "gaps_expected": sum(1 for x in graded if x["expected"] in ("not_met", "partly_met")),
+                         "gaps_shown": sum(1 for x in graded if x["expected"] in ("not_met", "partly_met") and x["status"] in ("not_met", "partly_met"))},
+        "model_usage": {"model": model, "calls": len(bought), "in": sum(x.tokens[0] for x in bought), "out": sum(x.tokens[1] for x in bought),
+                        "dollars": round(sum(x.dollars for x in bought), 5), "batch_calls": sum(1 for x in bought if x.mode == "batch"),
+                        "rounds": rounds, "lines_one_by_one": one_by_one},
+        "this_run": {"calls": len(new), "from_cache": sum(1 for x in seen.values() if x.source == "cache"),
+                     "in": sum(x.tokens[0] for x in new), "out": sum(x.tokens[1] for x in new), "dollars": round(sum(x.dollars for x in new), 5)},
+        "rows": rows,
+    }
+
+
+def run_library(names: list[str] | None, prefix: str, sections: list[str] | None, strategy: str, model: str, threshold: float,
+                batch: bool, no_cache: bool, scope_only: bool, cache_path: Path, out: Path) -> None:
+    cache = Cache(cache_path)
+    reqs = units(read_part())
+    vectors = cache.embed([f"{r.section_title}. {r.text}" for r in reqs], "query")
+    with _conn() as c:
+        members, left_out = library_members(c, names, prefix)
+        lib = prepare_library(c, cache, members, reqs, vectors, sections, strategy, model, threshold)
+    stems = [s["stem"] for s in lib["members"]]
+    print(f"library of {len(stems)} SOPs" + (f" ({len(left_out)} older or duplicate copies left out: {'; '.join(left_out)})" if left_out else ""))
+    print(f"{len(lib['owners'])} sections at {threshold}, {len(lib['groups'])} requirements, "
+          f"{sum(len(g['candidates']) for g in lib['groups'])} SOP lines that could be asked")
+    for o in sorted(lib["owners"].values(), key=lambda o: -o["score"]):
+        also = [f"{n[:10]} {v:.3f}" for n, v in o["in_scope_of"] if n != stems[o["owner"]]]
+        print(f"  {o['section']:8} {o['score']:.3f}  owner {stems[o['owner']][:40]:40}" + (f"  also in scope of {', '.join(also)}" if also else ""))
+    if scope_only:
+        return
+    rounds = judge_library(cache, lib["groups"], batch, no_cache)
+    rep = library_report(lib, model, threshold, left_out, rounds, given=bool(sections))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rep, indent=2, ensure_ascii=False) + "\n")
+
+    print(f"\n{'citation':24} {'owner':11} {'library':15} {'by':11} {'expected':15} asked")
+    for x in rep["rows"]:
+        asked = ", ".join(f"{a['sop'][:10]} {a['status']}" for a in x["asked"])
+        print(f"{x['cite']:24} {x['owner'][:11]:11} {x['status']:15} {x['by'][:11]:11} {str(x['expected']):15} {asked}"
+              + ("  (touched)" if x["tier"] == "touched" else ""))
+    print(f"\n{rep['requirements']} requirements: " + ", ".join(f"{k} {v}" for k, v in rep["status"].items() if v))
+    print(f"{rep['gaps']} gaps in sections an SOP is about, by owner:")
+    for stem, o in rep["by_owner"].items():
+        print(f"  {stem[:56]:56} owns {len(o['sections'])} sections, {len(o['gaps'])} gaps")
+    if rep["touched_sections"]:
+        print(f"{rep['gaps_touched']} more in {len(rep['touched_sections'])} sections no SOP is clearly about "
+              f"(closest SOP under {SCOPE_THRESHOLD}): the library may have no SOP for them")
+        for t in rep["touched_sections"]:
+            print(f"  {t['title'][:52]:52} closest {t['closest'][:10]} {t['score']:.3f}: "
+                  f"{t['not_met']} not met, {t['partly_met']} partly, {t['met']} met, {t['not_applicable']} n/a of {t['requirements']}")
+    if rep["sample_score"]["graded"]:
+        s = rep["sample_score"]
+        print(f"sample: {s['right']} of {s['graded']} as expected; {s['gaps_shown']} of its {s['gaps_expected']} known gaps still shown")
+    u, t = rep["model_usage"], rep["this_run"]
+    print(f"library: {u['calls']} verdicts in {u['rounds']} rounds, {u['in']:,} in / {u['out']:,} out tokens, ${u['dollars']:.4f} as bought"
+          f" ({u['batch_calls']} through the batch API); checked one by one at the same line: {u['lines_one_by_one']} lines")
+    print(f"this run: {t['calls']} model calls, {t['from_cache']} from the cache, ${t['dollars']:.4f}")
+    print(f"wrote {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}")
+
+
 async def run(names: list[str], sections: list[str] | None, strategy: str, model: str, threshold: float,
-              batch: bool, no_cache: bool, publish: bool, scope_only: bool) -> None:
-    cache = Cache()
+              batch: bool, no_cache: bool, publish: bool, scope_only: bool, cache_path: Path = CACHE) -> None:
+    cache = Cache(cache_path)
     reqs = units(read_part())
     queries = [f"{r.section_title}. {r.text}" for r in reqs]
     vectors = cache.embed(queries, "query")             # every sentence of the Part, embedded once for all SOPs
@@ -726,9 +996,16 @@ async def run(names: list[str], sections: list[str] | None, strategy: str, model
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sop", nargs="+", default=[SAMPLE], help="name fragments; each picks the newest ready document it matches")
+    ap.add_argument("--sop", nargs="+", help=f"name fragments; each picks the newest ready document it matches (default: {SAMPLE})")
+    ap.add_argument("--library", nargs="?", const="SOP-", metavar="PREFIX",
+                    help="judge the SOPs as one company's library: a requirement is a gap only when none of them meets it, "
+                         "and each gap is named against the SOP that should own it. The library is the --sop list, or else "
+                         "every ready document whose name starts with PREFIX (default SOP-), newest version of each")
     ap.add_argument("--sections", nargs="+", help="check these sections instead of choosing them for each SOP")
-    ap.add_argument("--threshold", type=float, default=SCOPE_THRESHOLD, help="how close a section must come to be in scope")
+    ap.add_argument("--threshold", type=float, help=f"how close a section must come to be in scope "
+                                                    f"(default {SCOPE_THRESHOLD}, or {LIBRARY_THRESHOLD} with --library)")
+    ap.add_argument("--cache", type=Path, default=CACHE, help="the verdict cache to read and fill")
+    ap.add_argument("--out", type=Path, default=LIBRARY_OUT, help="where --library writes its report")
     ap.add_argument("--scope-only", action="store_true", help="print which sections apply to each SOP and stop")
     ap.add_argument("--batch", action="store_true", help="send the model calls through the Message Batches API: half price, minutes to hours")
     ap.add_argument("--no-cache", action="store_true", help="judge every line again (the new verdicts replace the cached ones)")
@@ -742,4 +1019,9 @@ if __name__ == "__main__":
             if not a.sections or r.section in a.sections:
                 print(f"{r.cite:26} {r.text[:110]}")
         raise SystemExit(0)
-    asyncio.run(run(a.sop, a.sections, a.strategy, a.model, a.threshold, a.batch, a.no_cache, a.publish, a.scope_only))
+    if a.library is not None:
+        run_library(a.sop, a.library, a.sections, a.strategy, a.model, a.threshold or LIBRARY_THRESHOLD, a.batch, a.no_cache,
+                    a.scope_only, a.cache, a.out)
+    else:
+        asyncio.run(run(a.sop or [SAMPLE], a.sections, a.strategy, a.model, a.threshold or SCOPE_THRESHOLD, a.batch, a.no_cache,
+                        a.publish, a.scope_only, a.cache))
