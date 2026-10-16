@@ -4,8 +4,9 @@ download -> render pages -> parse layout -> cut passages at headings, tables
 and figures -> model-written context per passage -> store -> embed. Progress
 is written to the documents row after every stage so the UI can show it.
 
-One index is kept per document. The chunks table still carries a `strategy`
-column from the comparison that chose this pipeline; every row is "contextual".
+One index is kept per document: "contextual" rows (model-written context, API
+embeddings), or with PURE=true "structural" rows, exactly as the rules cut them,
+with vectors from a local open-source model and no API call at any step.
 """
 from __future__ import annotations
 
@@ -22,12 +23,14 @@ from .chunk.contextual import chunk_contextual
 from .chunk.model import ChunkDraft
 from .chunk.structural import chunk_structural
 from .config import settings
-from .llm import voyage
+from .llm import local, voyage
 from .parse.layout import parse_document
 
 log = logging.getLogger(__name__)
 
-STRATEGY = "contextual"
+STRATEGY = "structural" if settings.pure else "contextual"
+# Pure mode keeps its vectors from the local model in their own column, so both kinds can sit side by side.
+VECTOR_COLUMN = "embedding_local" if settings.pure else "embedding"
 
 
 def ingest(document_id: str) -> None:
@@ -57,10 +60,14 @@ def ingest(document_id: str) -> None:
         drafts = chunk_structural(layouts, title)          # cuts at headings, tables (and their rows) and figures
         _upload_figures(drafts, document_id)
 
-        db.set_progress(document_id, "context", 0, len(drafts))
-        chunks, llm_usage = asyncio.run(
-            chunk_contextual(drafts, title, on_progress=lambda d, t: db.set_progress(document_id, "context", d, t))
-        )
+        if settings.pure:
+            # No model writes anything: the passages are exactly what the rules cut.
+            chunks, llm_usage = drafts, {"pure": True, "context_calls": 0, "vision_calls": 0}
+        else:
+            db.set_progress(document_id, "context", 0, len(drafts))
+            chunks, llm_usage = asyncio.run(
+                chunk_contextual(drafts, title, on_progress=lambda d, t: db.set_progress(document_id, "context", d, t))
+            )
 
         # Store chunks first (embedding null), then embed in a separate, resumable
         # stage. If the embedding provider throttles or fails, the chunks and the
@@ -79,7 +86,8 @@ def ingest(document_id: str) -> None:
         db.insert_chunks([c.to_row(document_id, STRATEGY) for c in chunks])
         stats["llm"] = llm_usage
         stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)])
-        stats["embedding_model"] = settings.embedding_model if not settings.fake_embeddings else "fake (dev)"
+        stats["embedding_model"] = (settings.local_embedding_model + " (local)" if settings.pure
+                                    else settings.embedding_model if not settings.fake_embeddings else "fake (dev)")
         stats["parse_seconds"] = round(time.time() - t0, 1)
         db.update_document(document_id, stats=stats)
 
@@ -102,7 +110,7 @@ def _spread(chunks: list[ChunkDraft], n: int = 12) -> list[ChunkDraft]:
 
 def suggest_for(document_id: str, title: str, excerpts: list[str]) -> list[str]:
     """Question suggestions for the search page. Never fails the ingest."""
-    if settings.skip_llm or not excerpts:
+    if settings.skip_llm or settings.pure or not excerpts:
         return []
     try:
         from .llm import claude
@@ -132,15 +140,16 @@ def embed_missing(document_id: str, t0: float | None = None) -> None:
     t0 = t0 or time.time()
     try:
         with _embed_lock:
-            total = db.count_missing_embedding(document_id)
+            total = db.count_missing_embedding(document_id, VECTOR_COLUMN, STRATEGY)
             done = 0
             db.set_progress(document_id, "embed", done, total)
             while True:
-                rows = db.chunks_missing_embedding(document_id, limit=128)
+                rows = db.chunks_missing_embedding(document_id, limit=128, column=VECTOR_COLUMN, strategy=STRATEGY)
                 if not rows:
                     break
-                vectors = voyage.embed([r["content"] for r in rows], input_type="document")
-                db.set_embeddings([(str(r["id"]), v) for r, v in zip(rows, vectors)])
+                texts = [r["content"] for r in rows]
+                vectors = local.embed_passages(texts) if settings.pure else voyage.embed(texts, input_type="document")
+                db.set_embeddings([(str(r["id"]), v) for r, v in zip(rows, vectors)], VECTOR_COLUMN)
                 done += len(rows)
                 db.set_progress(document_id, "embed", done, total)
         row = db.get_document(document_id) or {}

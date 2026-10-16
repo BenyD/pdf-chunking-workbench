@@ -14,6 +14,8 @@ type Env = {
   VOYAGE_MAX_TOKENS_PER_REQUEST?: string;
   /** Bump in wrangler.jsonc to start a fresh container, for example after changing a secret: a running container keeps the env it started with. */
   GENERATION?: string;
+  /** "true": no generative model at any step; passages as the rules cut them, vectors from the local model baked into the image. */
+  PURE?: string;
 };
 
 /** One container, kept warm for two hours after its last request, since an ingest runs on in the background. */
@@ -32,6 +34,7 @@ export class ChunklabWorker extends Container<Env> {
       VOYAGE_API_KEY: env.VOYAGE_API_KEY,
       VOYAGE_RPM: env.VOYAGE_RPM ?? "60",
       VOYAGE_MAX_TOKENS_PER_REQUEST: env.VOYAGE_MAX_TOKENS_PER_REQUEST ?? "120000",
+      PURE: env.PURE ?? "false",
     };
   }
 }

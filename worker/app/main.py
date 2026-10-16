@@ -33,6 +33,8 @@ def health() -> dict:
         "context_model": settings.context_model,
         "embedding_model": settings.embedding_model,
         "skip_llm": settings.skip_llm,
+        "pure": settings.pure,
+        "local_embedding_model": settings.local_embedding_model,
         "fake_embeddings": settings.fake_embeddings,
         "anthropic_key": bool(settings.anthropic_api_key),
         "voyage_key": bool(settings.voyage_api_key),
@@ -63,6 +65,17 @@ def embed(req: IngestRequest, bg: BackgroundTasks) -> dict:
     return {"queued": req.document_id, "missing": missing}
 
 
+class QueryRequest(BaseModel):
+    text: str
+
+
+@app.post("/embed-query", dependencies=[Depends(require_secret)])
+def embed_query(req: QueryRequest) -> dict:
+    """A question's vector from the local model, for meaning search with no API call."""
+    from .llm import local
+    return {"embedding": local.embed_query(req.text[:2000]), "model": settings.local_embedding_model}
+
+
 @app.post("/suggest", status_code=202, dependencies=[Depends(require_secret)])
 def suggest(req: IngestRequest, bg: BackgroundTasks) -> dict:
     """Write question suggestions for a document that is already ingested."""
@@ -89,7 +102,7 @@ async def ocr_run(req: OcrRunRequest) -> dict:
     pdf = await asyncio.to_thread(storage.download, doc["storage_path"])
     result = await asyncio.to_thread(zonal.run_template, pdf, req.page_number, req.template)
 
-    if req.fallback and result["needs_fallback"]:
+    if req.fallback and result["needs_fallback"] and not settings.pure:      # pure mode: OCR only, never a model
         needing = set(result["needs_fallback"])
         fields = [f for f in req.template.get("fields", []) if f["name"] in needing]
         try:
@@ -134,15 +147,17 @@ def _store_record(doc: dict, req: OcrRunRequest, result: dict) -> str | None:
         bboxes=[bbox] if bbox else [],
         metadata={"fields": result["fields"], "template_id": req.template_id, "template_name": tname},
     )
-    record.embedding = voyage.embed([record.content], input_type="document")[0]
-    rows = []
-    for strategy in ("contextual",):
-        r = record.to_row(doc["id"], strategy)
-        r["id"] = str(uuid.uuid4())
-        r["ordinal"] = db.next_ordinal(doc["id"], strategy)
-        rows.append(r)
-    db.insert_chunks(rows)
-    return rows[0]["id"]
+    strategy = pipeline.STRATEGY
+    if not settings.pure:
+        record.embedding = voyage.embed([record.content], input_type="document")[0]
+    r = record.to_row(doc["id"], strategy)
+    r["id"] = str(uuid.uuid4())
+    r["ordinal"] = db.next_ordinal(doc["id"], strategy)
+    db.insert_chunks([r])
+    if settings.pure:
+        from .llm import local
+        db.set_embeddings([(r["id"], local.embed_passages([record.content])[0])], "embedding_local")
+    return r["id"]
 
 
 class OcrWordsRequest(BaseModel):

@@ -107,25 +107,40 @@ def next_ordinal(document_id: str, strategy: str) -> int:
         return int(row["n"])
 
 
-def chunks_missing_embedding(document_id: str, limit: int = 128) -> list[dict]:
+_VECTOR_COLUMNS = {"embedding", "embedding_local"}   # the API model's vectors, and the local model's
+
+
+def _col(column: str) -> str:
+    if column not in _VECTOR_COLUMNS:
+        raise ValueError(f"unknown vector column {column}")
+    return column
+
+
+def chunks_missing_embedding(document_id: str, limit: int = 128, column: str = "embedding", strategy: str | None = None) -> list[dict]:
+    col = _col(column)
     with conn() as c:
         return c.execute(
-            "select id, content from chunks where document_id = %s and embedding is null order by strategy, ordinal limit %s",
-            (document_id, limit),
+            f"select id, content from chunks where document_id = %s and {col} is null"
+            " and strategy <> 'hier_parent' and (%s::text is null or strategy = %s) order by strategy, ordinal limit %s",
+            (document_id, strategy, strategy, limit),
         ).fetchall()
 
 
-def count_missing_embedding(document_id: str) -> int:
+def count_missing_embedding(document_id: str, column: str = "embedding", strategy: str | None = None) -> int:
+    col = _col(column)
     with conn() as c:
-        return int(c.execute("select count(*) as n from chunks where document_id = %s and embedding is null", (document_id,)).fetchone()["n"])
+        return int(c.execute(
+            f"select count(*) as n from chunks where document_id = %s and {col} is null and strategy <> 'hier_parent'"
+            " and (%s::text is null or strategy = %s)", (document_id, strategy, strategy)).fetchone()["n"])
 
 
-def set_embeddings(pairs: list[tuple[str, list[float]]]) -> None:
+def set_embeddings(pairs: list[tuple[str, list[float]]], column: str = "embedding") -> None:
     if not pairs:
         return
+    col = _col(column)
     with conn() as c:
         c.cursor().executemany(
-            "update chunks set embedding = %s::vector where id = %s",
+            f"update chunks set {col} = %s::vector where id = %s",
             [("[" + ",".join(f"{x:.6f}" for x in v) + "]", cid) for cid, v in pairs],
         )
 

@@ -50,6 +50,13 @@ class Settings(BaseSettings):
     skip_llm: bool = False              # contextual strategy copies structural chunks
     fake_embeddings: bool = False       # deterministic pseudo-vectors, search is FTS-only in practice
 
+    # Pure mode: no generative model at any step. Passages are cut by rules only, and meaning search uses a
+    # small open-source embedding model that runs here on the CPU (ONNX), so no text leaves this server.
+    pure: bool = False
+    local_embedding_model: str = "snowflake/snowflake-arctic-embed-s"   # best of six small models on our benchmark (scripts/compare_local_models.py)
+    local_embedding_dim: int = 384
+    local_model_cache: str | None = None    # the Docker image bakes the model into /app/models
+
     llm_concurrency: int = 6
     tesseract_cmd: str | None = None
     ocr_lang: str = "eng"               # scanned pages
