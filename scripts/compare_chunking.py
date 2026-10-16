@@ -251,9 +251,10 @@ SETUPS = [
     ("hier_vec", "Hierarchical 1,500 / 300, meaning search", "hierarchical", 0, 1, True),
     ("hier_hyb", "Hierarchical 1,500 / 300, hybrid search", "hierarchical", 1, 1, True),
     ("struct_kw", "Structure-aware, keywords only (no AI at all)", "structural", 1, 0, False),
-    ("struct_hyb", "Structure-aware + embeddings (no generative AI)", "structural", 1, 1, False),
+    ("struct_hyb", "Structure-aware + embeddings API (no generative AI)", "structural", 1, 1, False),
+    ("struct_local", "Structure-aware + local open-source model (the app: no API, nothing generated)", "structural", 1, 1, False),
     ("ctx_kw", "Structure-aware + AI context, keywords only", "contextual", 1, 0, False),
-    ("ctx_hyb", "Structure-aware + AI context + embeddings (the app)", "contextual", 1, 1, False),
+    ("ctx_hyb", "Structure-aware + AI context + embeddings API (optional generative AI)", "contextual", 1, 1, False),
 ]
 
 
@@ -261,10 +262,13 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", (s or "").lower()).strip()
 
 
-def _search(cur, q: str, emb, strategy: str, doc_id: str, kw: float, vec: float, k: int) -> list[dict]:
+LOCAL_SETUPS = {"struct_local"}       # meaning search from the local model's vectors (embedding_local)
+
+
+def _search(cur, q: str, emb, strategy: str, doc_id: str, kw: float, vec: float, k: int, fn: str = "hybrid_search") -> list[dict]:
     cur.execute(
-        """select h.id::text, h.raw_text, h.page_start, h.page_end, c.token_count, h.parent_id::text, h.fts_rank, h.vec_rank
-             from hybrid_search(%s, %s::vector, %s, %s::uuid, %s, 60, %s, %s) h join chunks c on c.id = h.id
+        f"""select h.id::text, h.raw_text, h.page_start, h.page_end, c.token_count, h.parent_id::text, h.fts_rank, h.vec_rank
+             from {fn}(%s, %s::vector, %s, %s::uuid, %s, 60, %s, %s) h join chunks c on c.id = h.id
             order by h.rrf_score desc""",
         (q, None if vec == 0 else "[" + ",".join(f"{x:.6f}" for x in emb) + "]", strategy, doc_id, k, float(kw), float(vec)),
     )
@@ -285,15 +289,22 @@ def evaluate(k: int = 5) -> None:
                         where d.status = 'ready' order by d.name, q.created_at""")
         questions = cur.fetchall()
         have = dict(cur.execute("select strategy, count(*) from chunks group by 1").fetchall())
-        setups = [s for s in SETUPS if have.get(s[2])]
+        has_local = cur.execute("select exists (select 1 from chunks where embedding_local is not null)").fetchone()[0]
+        setups = [s for s in SETUPS if have.get(s[2]) and (s[0] not in LOCAL_SETUPS or has_local)]
         print(f"{len(questions)} questions; setups with data: {', '.join(s[0] for s in setups)}")
         embs = voyage.embed([q[2] for q in questions], input_type="query")
+        if has_local:
+            from app.llm import local
+            local_embs = [local.embed_query(q[2]) for q in questions]
 
         results = {s[0]: [] for s in setups}
         parent_cache: dict[str, dict] = {}
-        for (doc_id, name, question, needle, page), emb in zip(questions, embs):
+        for qi, ((doc_id, name, question, needle, page), emb) in enumerate(zip(questions, embs)):
             for key, _label, strategy, kw, vec, parents in setups:
-                hits = _search(cur, question, emb, strategy, doc_id, kw, vec, k)
+                if key in LOCAL_SETUPS:
+                    hits = _search(cur, question, local_embs[qi], strategy, doc_id, kw, vec, k, "hybrid_search_local")
+                else:
+                    hits = _search(cur, question, emb, strategy, doc_id, kw, vec, k)
                 if parents:                                  # children replaced by their parents, duplicates dropped
                     ids = [h["parent_id"] for h in hits if h["parent_id"]]
                     missing = [i for i in ids if i not in parent_cache]

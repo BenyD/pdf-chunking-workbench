@@ -1,6 +1,8 @@
-/** The one index the product ships. The name is a leftover of the comparison that chose it. */
-export type Strategy = "contextual";
-export const STRATEGY: Strategy = "contextual";
+import { aiEnabled } from "./flags";
+
+/** The index the app reads: "structural" with generative AI off (the rules' cuts, verbatim), "contextual" with it on. */
+export type Strategy = "contextual" | "structural";
+export const STRATEGY: Strategy = aiEnabled ? "contextual" : "structural";
 export const STRATEGIES: Strategy[] = [STRATEGY];
 
 export type ChunkType = "text" | "table" | "table_row" | "figure" | "record";

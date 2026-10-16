@@ -21,6 +21,7 @@ import { SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
 import { cn } from "@/lib/quartz/utils";
 import type { Chunk, Document, Page } from "@/lib/types";
+import { aiEnabled } from "@/lib/flags";
 import { STRATEGY } from "@/lib/types";
 import { api, fmtNum, publicAsset, stageLabel } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel, type Overlay } from "./PageViewer";
@@ -34,7 +35,9 @@ const ZOOMS = [0.5, 0.75, 1, 1.5, 2, 3];
 const STEPS = [
   { title: "Read the pages", detail: "Fetch the file and render every page" },
   { title: "Find the layout", detail: "Tables, figures, headings and scans" },
-  { title: "Describe the passages", detail: "A line of context for each one" },
+  aiEnabled
+    ? { title: "Describe the passages", detail: "A line of context for each one" }
+    : { title: "Cut the passages", detail: "At headings, tables, rows and figures" },
   { title: "Index", detail: "Make it searchable" },
 ];
 function stepOf(stage?: string | null): number {

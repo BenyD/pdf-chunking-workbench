@@ -18,6 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
+import { aiEnabled } from "@/lib/flags";
 import { SAMPLES } from "@/lib/samples";
 import type { Chunk, Document, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
@@ -65,7 +66,7 @@ export function SearchView() {
       try {
         const r = await api<{ suggestions: Suggestion[] }>(`/api/suggestions${docId ? `?document_id=${docId}` : ""}`);
         if (gone) return;
-        if (r.suggestions.length === 0 && docId && tries < 12) {
+        if (aiEnabled && r.suggestions.length === 0 && docId && tries < 12) {
           if (!kicked.current.has(docId)) { kicked.current.add(docId); api(`/api/documents/${docId}/suggest`, { method: "POST" }).catch(() => {}); }
           setWriting(true); setSuggestions([]);
           tries += 1;
@@ -90,7 +91,7 @@ export function SearchView() {
       const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 8 }) });
       found = r.results; setHits(found); setSelected(found[0]?.id ?? null);
     } catch (e) { setErr(String(e)); setHits([]); } finally { setBusy(false); }
-    if (!found.length) return;
+    if (!found.length || !aiEnabled) return;
     setAnswerBusy(true);
     try {
       const passages = found.slice(0, 6).map((h, i) => ({ n: i + 1, text: h.raw_text, document_name: docName(h), page: h.page_start }));
@@ -127,7 +128,9 @@ export function SearchView() {
       <PageHeaderRow>
         <PageHeaderContent>
           <PageHeaderTitle>Search</PageHeaderTitle>
-          <PageHeaderDescription>Ask a question and get an answer with its sources. Pick a question below or type your own.</PageHeaderDescription>
+          <PageHeaderDescription>{aiEnabled
+            ? "Ask a question and get an answer with its sources. Pick a question below or type your own."
+            : "Ask a question and see the passages that answer it, each on its page. Pick a question below or type your own."}</PageHeaderDescription>
         </PageHeaderContent>
       </PageHeaderRow>
     </PageHeader>
@@ -187,7 +190,7 @@ export function SearchView() {
                   </div>
                 ))}
                 {writing && <Status status="running" live>Writing a few questions this document can answer</Status>}
-                {!writing && suggestions?.length === 0 && <p className="type-body text-text-2">No questions could be written for this document yet. Type your own below.</p>}
+                {!writing && suggestions?.length === 0 && <p className="type-body text-text-2">{aiEnabled ? "No questions could be written for this document yet. Type your own below." : "Type a question below."}</p>}
               </SkeletonSwap>
             </EmptyContent>
           </Empty>
@@ -197,7 +200,7 @@ export function SearchView() {
           <div className="flex min-w-0 flex-col gap-4">
             <h2 className="type-heading">{asked}</h2>
             {err && <Alert status="fail"><AlertTitle>The search failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
-            {(busy || answerBusy || answer !== null) && (
+            {aiEnabled && (busy || answerBusy || answer !== null) && (
               <Card>
                 <CardHeader><CardTitle>Answer</CardTitle></CardHeader>
                 <CardContent>
@@ -222,7 +225,7 @@ export function SearchView() {
               )}
               {hits && hits.length > 0 && (
                 <section aria-labelledby="sources-title" className="flex flex-col gap-2">
-                  <h3 id="sources-title" className="type-label text-text-2">Sources</h3>
+                  <h3 id="sources-title" className="type-label text-text-2">{aiEnabled ? "Sources" : "Passages"}</h3>
                   <ItemGroup>
                     <ul>
                       {hits.map((r, i) => <SourceRow key={r.id} r={r} n={i + 1} selected={current?.id === r.id} onSelect={() => setSelected(r.id)} />)}

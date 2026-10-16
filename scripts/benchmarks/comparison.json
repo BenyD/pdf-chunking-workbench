@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-15",
+  "date": "2026-10-17",
   "k": 5,
   "questions": 129,
   "setups": [
@@ -104,13 +104,13 @@
       "strategy": "fixed",
       "questions": 129,
       "recall": 0.829,
-      "mrr": 0.732,
+      "mrr": 0.731,
       "tokens_read": 1331,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
           "recall": 0.889,
-          "mrr": 0.743,
+          "mrr": 0.738,
           "tokens_read": 1500
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
@@ -484,7 +484,7 @@
       "strategy": "structural",
       "questions": 129,
       "recall": 0.853,
-      "mrr": 0.695,
+      "mrr": 0.698,
       "tokens_read": 1596,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
@@ -502,8 +502,8 @@
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
           "recall": 1.0,
-          "mrr": 0.911,
-          "tokens_read": 2954
+          "mrr": 0.944,
+          "tokens_read": 2953
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
@@ -575,29 +575,29 @@
     },
     {
       "key": "struct_hyb",
-      "label": "Structure-aware + embeddings (no generative AI)",
+      "label": "Structure-aware + embeddings API (no generative AI)",
       "strategy": "structural",
       "questions": 129,
       "recall": 0.946,
-      "mrr": 0.845,
-      "tokens_read": 1355,
+      "mrr": 0.838,
+      "tokens_read": 1328,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
           "recall": 0.889,
-          "mrr": 0.782,
-          "tokens_read": 1848
+          "mrr": 0.727,
+          "tokens_read": 1654
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 1.0,
-          "mrr": 0.928,
-          "tokens_read": 1538
+          "mrr": 0.949,
+          "tokens_read": 1541
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
           "recall": 1.0,
-          "mrr": 0.856,
+          "mrr": 0.744,
           "tokens_read": 1473
         },
         "Pharmacy bill 1 (synthetic).pdf": {
@@ -651,7 +651,7 @@
         "nppa-ceiling-2024.pdf": {
           "questions": 8,
           "recall": 1.0,
-          "mrr": 0.875,
+          "mrr": 0.938,
           "tokens_read": 1016
         },
         "rifaximin-tablets.pdf": {
@@ -665,6 +665,101 @@
           "recall": 1.0,
           "mrr": 0.696,
           "tokens_read": 1729
+        }
+      }
+    },
+    {
+      "key": "struct_local",
+      "label": "Structure-aware + local open-source model (no API, nothing generated)",
+      "strategy": "structural",
+      "questions": 129,
+      "recall": 0.922,
+      "mrr": 0.776,
+      "tokens_read": 1371,
+      "by_document": {
+        "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
+          "questions": 18,
+          "recall": 0.778,
+          "mrr": 0.699,
+          "tokens_read": 2141
+        },
+        "Bharatiya Nyaya Sanhita 2023.pdf": {
+          "questions": 23,
+          "recall": 1.0,
+          "mrr": 0.92,
+          "tokens_read": 1552
+        },
+        "Pharma Price Schedule (synthetic).pdf": {
+          "questions": 9,
+          "recall": 1.0,
+          "mrr": 0.726,
+          "tokens_read": 2298
+        },
+        "Pharmacy bill 1 (synthetic).pdf": {
+          "questions": 3,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "tokens_read": 558
+        },
+        "Pharmacy bill 2 (synthetic).pdf": {
+          "questions": 3,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "tokens_read": 627
+        },
+        "Pharmacy bill 3 scanned (synthetic).pdf": {
+          "questions": 1,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "tokens_read": 246
+        },
+        "QC Inspection Report (synthetic).pdf": {
+          "questions": 16,
+          "recall": 1.0,
+          "mrr": 0.865,
+          "tokens_read": 603
+        },
+        "Tablet press maintenance manual (synthetic).pdf": {
+          "questions": 3,
+          "recall": 0.667,
+          "mrr": 0.667,
+          "tokens_read": 407
+        },
+        "cdsco-new-drugs-2024.pdf": {
+          "questions": 4,
+          "recall": 1.0,
+          "mrr": 1.0,
+          "tokens_read": 1284
+        },
+        "humira-label-2017.pdf": {
+          "questions": 11,
+          "recall": 0.727,
+          "mrr": 0.621,
+          "tokens_read": 1270
+        },
+        "nppa-apollo.pdf": {
+          "questions": 12,
+          "recall": 1.0,
+          "mrr": 0.743,
+          "tokens_read": 1562
+        },
+        "nppa-ceiling-2024.pdf": {
+          "questions": 8,
+          "recall": 1.0,
+          "mrr": 0.938,
+          "tokens_read": 912
+        },
+        "rifaximin-tablets.pdf": {
+          "questions": 6,
+          "recall": 1.0,
+          "mrr": 0.783,
+          "tokens_read": 1460
+        },
+        "who-trs986-annex2.pdf": {
+          "questions": 12,
+          "recall": 0.833,
+          "mrr": 0.415,
+          "tokens_read": 1110
         }
       }
     },
@@ -864,14 +959,14 @@
       "embedding_tokens": 663482,
       "dollars": 0.0398
     },
-    "fixed": {
-      "embedding_tokens": 663482,
-      "dollars": 0.0398
-    },
     "contextual": {
       "embedding_tokens": 1961353,
       "dollars": 1.0546,
       "model_dollars": 0.9369
+    },
+    "fixed": {
+      "embedding_tokens": 663482,
+      "dollars": 0.0398
     },
     "structural": {
       "embedding_tokens": 965128,
@@ -893,7 +988,8 @@
         "hier_vec": 1,
         "hier_hyb": 4,
         "struct_kw": null,
-        "struct_hyb": 3,
+        "struct_hyb": 2,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": 1
       }
@@ -909,6 +1005,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -923,7 +1020,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 1,
-        "struct_hyb": 1,
+        "struct_hyb": 2,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -939,6 +1037,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -954,6 +1053,7 @@
         "hier_hyb": 1,
         "struct_kw": 4,
         "struct_hyb": 4,
+        "struct_local": 3,
         "ctx_kw": 4,
         "ctx_hyb": 4
       }
@@ -969,6 +1069,7 @@
         "hier_hyb": 2,
         "struct_kw": null,
         "struct_hyb": 2,
+        "struct_local": 4,
         "ctx_kw": null,
         "ctx_hyb": 1
       }
@@ -984,6 +1085,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -999,6 +1101,7 @@
         "hier_hyb": 3,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
@@ -1014,6 +1117,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1029,6 +1133,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1044,6 +1149,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1059,6 +1165,7 @@
         "hier_hyb": 1,
         "struct_kw": 5,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1074,6 +1181,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": 3,
         "ctx_hyb": 1
       }
@@ -1083,12 +1191,13 @@
       "question": "In the First Schedule classification table of the BNSS 2023, what is the punishment for abetment where the abettor or the person abetted is a public servant whose duty is to prevent the offence?",
       "ranks": {
         "fixed_vec": 2,
-        "fixed_hyb": 3,
+        "fixed_hyb": 4,
         "semantic_vec": 1,
         "hier_vec": 2,
         "hier_hyb": 4,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1104,6 +1213,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1119,6 +1229,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1133,7 +1244,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 1,
+        "struct_hyb": 3,
+        "struct_local": null,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1149,6 +1261,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1164,6 +1277,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1179,6 +1293,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1194,6 +1309,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 5,
         "ctx_hyb": 2
       }
@@ -1209,6 +1325,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1224,6 +1341,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1239,6 +1357,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1254,6 +1373,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1269,6 +1389,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": null,
         "ctx_hyb": null
       }
@@ -1283,7 +1404,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
+        "struct_local": 3,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -1299,6 +1421,7 @@
         "hier_hyb": 2,
         "struct_kw": null,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": null,
         "ctx_hyb": 1
       }
@@ -1314,6 +1437,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1329,6 +1453,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1344,6 +1469,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 2,
+        "struct_local": 2,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -1359,6 +1485,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1374,6 +1501,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1389,6 +1517,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 3,
+        "struct_local": 3,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -1404,6 +1533,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1419,6 +1549,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1434,6 +1565,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1449,6 +1581,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1464,6 +1597,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1479,6 +1613,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1494,6 +1629,7 @@
         "hier_hyb": 2,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1509,6 +1645,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -1524,6 +1661,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1539,6 +1677,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1554,6 +1693,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1569,6 +1709,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1584,6 +1725,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 4,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1599,6 +1741,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1614,6 +1757,7 @@
         "hier_hyb": 2,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -1629,6 +1773,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1644,6 +1789,7 @@
         "hier_hyb": 1,
         "struct_kw": 5,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1659,6 +1805,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": 3,
         "ctx_kw": null,
         "ctx_hyb": 4
       }
@@ -1674,6 +1821,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1689,6 +1837,7 @@
         "hier_hyb": 1,
         "struct_kw": 4,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1704,6 +1853,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1719,6 +1869,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": null
       }
@@ -1734,6 +1885,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1749,6 +1901,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 3,
+        "struct_local": 4,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1764,6 +1917,7 @@
         "hier_hyb": null,
         "struct_kw": 3,
         "struct_hyb": 2,
+        "struct_local": 3,
         "ctx_kw": 4,
         "ctx_hyb": 2
       }
@@ -1779,6 +1933,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -1794,6 +1949,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1809,6 +1965,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 3,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1824,6 +1981,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 3,
         "ctx_hyb": 1
       }
@@ -1839,6 +1997,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1854,6 +2013,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1869,6 +2029,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1884,6 +2045,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1899,6 +2061,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1914,6 +2077,7 @@
         "hier_hyb": 1,
         "struct_kw": 4,
         "struct_hyb": 2,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1929,6 +2093,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
@@ -1944,6 +2109,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1958,7 +2124,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -1974,6 +2141,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1989,6 +2157,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2004,6 +2173,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2019,6 +2189,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2034,6 +2205,7 @@
         "hier_hyb": 4,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 2
       }
@@ -2049,6 +2221,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 2,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 2
       }
@@ -2063,7 +2236,8 @@
         "hier_vec": null,
         "hier_hyb": 4,
         "struct_kw": 1,
-        "struct_hyb": 1,
+        "struct_hyb": 2,
+        "struct_local": 3,
         "ctx_kw": 1,
         "ctx_hyb": 2
       }
@@ -2078,7 +2252,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 1,
-        "struct_hyb": 1,
+        "struct_hyb": 2,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 5
       }
@@ -2094,6 +2269,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2109,6 +2285,7 @@
         "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2124,6 +2301,7 @@
         "hier_hyb": 4,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2139,6 +2317,7 @@
         "hier_hyb": 4,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2152,8 +2331,9 @@
         "semantic_vec": null,
         "hier_vec": null,
         "hier_hyb": null,
-        "struct_kw": 5,
+        "struct_kw": 2,
         "struct_hyb": 5,
+        "struct_local": 5,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -2169,6 +2349,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2184,6 +2365,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2199,6 +2381,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2214,6 +2397,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2229,6 +2413,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2244,6 +2429,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2259,6 +2445,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2274,6 +2461,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2289,6 +2477,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 2
       }
@@ -2304,6 +2493,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2319,6 +2509,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2334,6 +2525,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2349,6 +2541,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2364,6 +2557,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 2,
+        "struct_local": 3,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2379,6 +2573,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -2394,6 +2589,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2409,6 +2605,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2424,6 +2621,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2439,6 +2637,7 @@
         "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2454,6 +2653,7 @@
         "hier_hyb": null,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2469,6 +2669,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2484,6 +2685,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -2499,6 +2701,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 2
       }
@@ -2514,6 +2717,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2529,6 +2733,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 2,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2544,6 +2749,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2559,6 +2765,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2574,6 +2781,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2589,6 +2797,7 @@
         "hier_hyb": null,
         "struct_kw": 3,
         "struct_hyb": 2,
+        "struct_local": 5,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2604,6 +2813,7 @@
         "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 3
       }
@@ -2619,6 +2829,7 @@
         "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -2634,6 +2845,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
@@ -2649,6 +2861,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 5,
+        "struct_local": 3,
         "ctx_kw": 4,
         "ctx_hyb": 3
       }
@@ -2664,6 +2877,7 @@
         "hier_hyb": 4,
         "struct_kw": null,
         "struct_hyb": 5,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": 5
       }
@@ -2679,6 +2893,7 @@
         "hier_hyb": 1,
         "struct_kw": 1,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -2694,6 +2909,7 @@
         "hier_hyb": 2,
         "struct_kw": null,
         "struct_hyb": 5,
+        "struct_local": 5,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
@@ -2709,6 +2925,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2724,6 +2941,7 @@
         "hier_hyb": 2,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2739,6 +2957,7 @@
         "hier_hyb": 3,
         "struct_kw": null,
         "struct_hyb": 4,
+        "struct_local": 2,
         "ctx_kw": 4,
         "ctx_hyb": 2
       }
@@ -2754,6 +2973,7 @@
         "hier_hyb": 3,
         "struct_kw": 5,
         "struct_hyb": 1,
+        "struct_local": null,
         "ctx_kw": 2,
         "ctx_hyb": 1
       }
@@ -2769,6 +2989,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 5,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2784,6 +3005,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 1,
+        "struct_local": 2,
         "ctx_kw": null,
         "ctx_hyb": 1
       }
@@ -2799,6 +3021,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 2,
+        "struct_local": 2,
         "ctx_kw": null,
         "ctx_hyb": 2
       }
@@ -2814,6 +3037,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
+        "struct_local": 4,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }

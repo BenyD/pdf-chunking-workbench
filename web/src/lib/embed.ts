@@ -1,3 +1,5 @@
+import { worker } from "./worker";
+
 /**
  * Query-side embedding. Documents are embedded by the worker with
  * input_type "document"; queries must use input_type "query" so the model
@@ -47,4 +49,19 @@ export async function embedQuery(text: string): Promise<number[] | null> {
   }
   console.warn("voyage: unavailable after retries, falling back to keyword search");
   return null;
+}
+
+/**
+ * A question's vector from the small open-source model that runs inside our worker: no API call, nothing leaves
+ * our servers. A worker that has gone to sleep wakes in a few seconds, so this waits up to 20; if it still cannot
+ * answer, search runs on keywords alone rather than failing.
+ */
+export async function embedQueryLocal(text: string): Promise<number[] | null> {
+  try {
+    const r = await worker<{ embedding: number[] }>("/embed-query", { text: text.slice(0, 2000) }, 20000);
+    return r.embedding;
+  } catch (e) {
+    console.warn(`local embedding: ${String(e)}; keywords only`);
+    return null;
+  }
 }

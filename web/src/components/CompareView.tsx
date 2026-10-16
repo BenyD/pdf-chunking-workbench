@@ -18,27 +18,27 @@ import { api } from "@/lib/ui";
 import { chunkKind, typeLabel } from "./PageViewer";
 
 type Hit = SearchResult & { document_name?: string };
-type Mode = "keywords" | "embeddings" | "full";
+type Mode = "keywords" | "pure" | "full";
 type Setup = { key: string; label: string; strategy: string; recall: number; mrr: number; tokens_read: number; questions: number; by_document: Record<string, { recall: number | null }> };
 type Question = { doc: string; question: string; ranks: Record<string, number | null> };
 const data = report as unknown as { date: string; k: number; questions: number; setups: Setup[]; per_question: Question[] };
 
-/** The three ways a question is asked, from no AI at all to the app as it ships. */
+/** The three ways a question is asked: keywords alone, the app as it ships, and the app with generative AI added. */
 const MODES: { mode: Mode; title: string; detail: string }[] = [
-  { mode: "keywords", title: "No AI", detail: "Chunks cut by rules, found by keyword search. No model runs at any step." },
-  { mode: "embeddings", title: "Meaning search, nothing generated", detail: "The same chunks, plus an embedding model, so a question in other words still matches. No text is generated." },
-  { mode: "full", title: "The app", detail: "Each chunk carries a context line written by a model and figures are described by a vision model. The answer is written from the sources." },
+  { mode: "keywords", title: "Keywords only", detail: "Passages cut by rules, found by keyword search. No model of any kind." },
+  { mode: "pure", title: "The app", detail: "The same passages, plus meaning search from a small open-source model on our own server. No API call, nothing generated." },
+  { mode: "full", title: "With generative AI", detail: "An option, off by default: a model writes a context line per passage, describes figures and writes the answer." },
 ];
 
 /** Which benchmark setup each live mode corresponds to. */
-const SETUP_OF: Record<Mode, string> = { keywords: "struct_kw", embeddings: "struct_hyb", full: "ctx_hyb" };
+const SETUP_OF: Record<Mode, string> = { keywords: "struct_kw", pure: "struct_local", full: "ctx_hyb" };
 
 /** What each method costs in model calls when a document is indexed. */
 const CALLS: Record<string, string> = {
   fixed: "Embeddings",
   semantic: "Embeddings, plus one per sentence to find the cuts",
   hierarchical: "Embeddings",
-  structural: "None, or embeddings",
+  structural: "None, or embeddings (a local model, or an API)",
   contextual: "A small model per chunk, a vision model per figure, embeddings",
 };
 
@@ -59,14 +59,16 @@ export function CompareView() {
 
   useEffect(() => { api<{ documents: Document[] }>("/api/documents").then((r) => setDocs(r.documents.filter((d) => d.status === "ready"))).catch(() => setDocs([])); }, []);
 
-  // Benchmark questions that tell the story, one per document: found only with the AI, and found either way.
+  // Benchmark questions that tell the story, one per document: what meaning search adds over keywords, and what
+  // only generative AI finds. Falls back to the old split when the report has no local-model setup.
   const presets = useMemo(() => {
     const order = ["Tablet press", "humira", "who-trs", "Bharatiya Nagarik", "nppa", "Pharma Price", "QC Inspection", "Bharatiya Nyaya"];
     const rank = (q: Question) => { const i = order.findIndex((o) => q.doc.startsWith(o)); return i < 0 ? order.length : i; };
     const onePerDoc = (qs: Question[], n: number) => [...qs].sort((a, b) => rank(a) - rank(b))
       .filter((q, i, all) => all.findIndex((x) => x.doc === q.doc) === i).slice(0, n);
-    const only = onePerDoc(data.per_question.filter((q) => q.ranks.struct_kw == null && q.ranks.ctx_hyb != null), 4);
-    const both = onePerDoc(data.per_question.filter((q) => q.ranks.struct_kw === 1 && q.ranks.ctx_hyb === 1).reverse(), 3);
+    const app = "struct_local" in (data.per_question[0]?.ranks ?? {}) ? "struct_local" : "ctx_hyb";
+    const only = onePerDoc(data.per_question.filter((q) => q.ranks.struct_kw == null && q.ranks[app] != null), 4);
+    const both = onePerDoc(data.per_question.filter((q) => q.ranks[app] == null && q.ranks.ctx_hyb != null), 3);
     return { only, both };
   }, []);
 
@@ -75,7 +77,7 @@ export function CompareView() {
     if (!q) return;
     setGeneration((g) => g + 1);
     setAsked(q); setErr(null); setAnswer(null);
-    setHits({ keywords: null, embeddings: null, full: null });
+    setHits({ keywords: null, pure: null, full: null });
     const results = await Promise.all(MODES.map(async ({ mode }) => {
       try {
         const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 5, mode }) });
@@ -108,7 +110,7 @@ export function CompareView() {
   const status = busy ? "submitted" : answerBusy ? "streaming" : "ready";
   const byKey = Object.fromEntries(data.setups.map((s) => [s.key, s]));
   const docsInReport = Object.keys(data.setups[0]?.by_document ?? {});
-  const shown = ["fixed_hyb", "hier_hyb", "struct_kw", "struct_hyb", "ctx_hyb"].filter((k) => byKey[k]);
+  const shown = ["fixed_hyb", "hier_hyb", "struct_kw", "struct_local", "ctx_hyb"].filter((k) => byKey[k]);
 
   return (
     <div className="flex flex-col gap-8">
@@ -116,7 +118,7 @@ export function CompareView() {
         <PageHeaderRow>
           <PageHeaderContent>
             <PageHeaderTitle>Compare</PageHeaderTitle>
-            <PageHeaderDescription>What the AI adds, measured. Ask one question three ways, then see how every chunking method scored on the same {data.questions} questions.</PageHeaderDescription>
+            <PageHeaderDescription>What AI would add, measured. Ask one question three ways, then see how every chunking method scored on the same {data.questions} questions.</PageHeaderDescription>
           </PageHeaderContent>
         </PageHeaderRow>
       </PageHeader>
@@ -142,14 +144,14 @@ export function CompareView() {
           <div className="flex flex-col gap-3">
             {presets.only.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="type-label text-text-2">Found only with the AI</p>
-                <ChipGroup aria-label="Questions found only with the AI">{presets.only.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
+                <p className="type-label text-text-2">Keywords miss, the app finds</p>
+                <ChipGroup aria-label="Questions keywords miss and the app finds">{presets.only.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
               </div>
             )}
             {presets.both.length > 0 && (
               <div className="flex flex-col gap-2">
-                <p className="type-label text-text-2">Found either way</p>
-                <ChipGroup aria-label="Questions found either way">{presets.both.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
+                <p className="type-label text-text-2">Only generative AI finds</p>
+                <ChipGroup aria-label="Questions only generative AI finds">{presets.both.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
               </div>
             )}
           </div>
@@ -215,7 +217,7 @@ export function CompareView() {
       <section className="flex flex-col gap-4" aria-labelledby="bench-heading">
         <div className="flex flex-col gap-1">
           <h2 id="bench-heading" className="type-heading-sm">Every method on the same questions</h2>
-          <p className="type-body-sm text-text-2">{data.questions} questions with a known answer across {docsInReport.length} documents, measured on {data.date}. A question counts when one of the top {data.k} passages holds the expected words, in the document&apos;s own text, on the right page. The first five rows are the chunking choices Amazon Bedrock offers, all searched with the same engine and embedding model as the app.</p>
+          <p className="type-body-sm text-text-2">{data.questions} questions with a known answer across {docsInReport.length} documents, measured on {data.date}. A question counts when one of the top {data.k} passages holds the expected words, in the document&apos;s own text, on the right page. The first five rows are the chunking choices Amazon Bedrock offers, rebuilt from its documented settings and searched with the same engine. The app is the row with the local open-source model: no API call and no generated text.</p>
         </div>
         <Table aria-label="Recall by method">
           <TableHeader>

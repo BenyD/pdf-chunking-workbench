@@ -1,0 +1,42 @@
+{
+  "questions": 129,
+  "chunks": 6979,
+  "models": [
+    {
+      "model": "BAAI/bge-small-en-v1.5",
+      "variant": "hybrid",
+      "recall": 0.9,
+      "mrr": 0.77,
+      "dims": 384,
+      "embed_seconds": 422,
+      "ms_per_query": 742
+    },
+    {
+      "model": "BAAI/bge-small-en-v1.5",
+      "variant": "hybrid+rerank",
+      "recall": 0.91,
+      "mrr": 0.79,
+      "dims": 384,
+      "embed_seconds": 422,
+      "ms_per_query": 742
+    },
+    {
+      "model": "snowflake/snowflake-arctic-embed-s",
+      "variant": "hybrid",
+      "recall": 0.93,
+      "mrr": 0.78,
+      "dims": 384,
+      "embed_seconds": 531,
+      "ms_per_query": 481
+    },
+    {
+      "model": "snowflake/snowflake-arctic-embed-s",
+      "variant": "hybrid+rerank",
+      "recall": 0.9,
+      "mrr": 0.79,
+      "dims": 384,
+      "embed_seconds": 531,
+      "ms_per_query": 481
+    }
+  ]
+}
