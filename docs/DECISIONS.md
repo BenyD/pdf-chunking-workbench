@@ -1188,3 +1188,81 @@ manual is chunked in 0.4 seconds.
 nothing without a model looking at the picture. No real manual with drawn
 callouts has been tested yet; the interviewers' own files are the next
 test.
+
+## 28. When the answer is somewhere else: the document's own links
+
+**Why.** A question matches the passage that names the thing, but the
+answer is often in the one it points at. Figure 1 shows the dented bowl;
+what was done about it is in a table row two pages on. A section says
+"see Table 2". An FDA label says "[see Warnings and Precautions (5.1)]".
+A unit number appears in the findings and again in the defect register.
+Search finds the first passage and stops.
+
+**What others do.** RegulaRAG (2026) resolves a regulation's
+cross-references by rules and follows them at query time. GraphRAG-style
+knowledge graphs, built by an LLM, cost far more to build and are not
+reliably better than plain RAG for lookups like these (Han et al., 2025).
+The document already says where its answers are, so its own references
+are the graph.
+
+**Decision.** `worker/app/chunk/references.py`, rules only, at ingest:
+- `ref`: a passage's own reference to a figure, table, section, step,
+  note, annex or schedule (including the FDA's bracketed form), resolved to
+  the first passage carrying that anchor in the same document.
+- `key`: a figure's labels and the key rows that explain them (section 23
+  and 27), now stored both ways.
+- `shared`: a rare identifier (a code such as B-220 or CAPA-0091, or a unit,
+  batch, lot, sample or invoice number) found in two to four passages.
+  A code on every page links nothing.
+- Contents pages are neither source nor target: they name sections without
+  being them.
+- Links sit in each passage's metadata on both ends, at most eight per
+  passage. `scripts/relink.py` rebuilds them for stored documents without
+  reading them again.
+
+At search time, the linked passages of the top five results are ranked
+against the question (`rank_linked`: local vector, else API vector, else
+keyword rank), and up to five are shown under the result that points to
+them: "Points to Table 1", "Refers to Figure 1", "Also about Unit 117".
+Taking the first two links per result instead missed answers; ranking them
+against the question is what makes the links pay.
+
+**Measured.** `scripts/make_crossref_questions.py` drafts questions from
+the links: a reader at passage R asks something answered only in the
+passage T that R points to. A draft is kept only if its answer phrase is in
+T, not in R and not in the question. The first set (29 questions) leaked T's
+words into the questions, so search found T directly and links showed
+nothing; the hard set also rejects any question with more than one content
+word that only T has. 36 hard questions over six documents
+(`scripts/eval_links.py`, right passage among those shown):
+
+| Setup | top 5 | top 10 | top 5 + links (passages read) |
+|---|---|---|---|
+| Keywords only | 69% | 78% | 78% (8.1) |
+| The app: local model, no API | 75% | 81% | 86% (7.6) |
+| With generative AI context lines | 78% | 83% | 100% (7.6) |
+
+- Links beat showing more results: 86% from 7.6 passages against 81% from
+  10.
+- On the 129-question set links change nothing (93% for the app, 98% with
+  AI): they are only added under results, never in place of one.
+- The app's 5 misses with links are all the same kind: the passage that
+  points to the answer is not in the top five, so there is nothing to
+  follow. With the AI context line on each passage, the referring passage
+  is found every time and the link does the rest.
+
+**Is the AI justified here?** Only as an option. Links alone take the app
+from 75% to 86% at no cost. The context line adds the last 14 points on
+these questions, for about 10 cents per 300 pages, written once at ingest;
+nothing is generated per search. If the documents are full of "see Table
+7" answers and a missed answer costs more than that, it is worth turning
+on. Otherwise links with no AI are the default.
+
+**Not covered.**
+- References to another document ("per SOP-QC-021") are not followed:
+  links stay inside one document.
+- Vague references ("the table above", "the previous step") are not
+  resolved.
+- A table with no caption and no number cannot be a target.
+- The questions were drawn from links the rules found, so a reference
+  the rules miss is not counted as a miss here.

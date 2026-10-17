@@ -237,6 +237,14 @@ five, 129 questions:
 The full table, per document, is on the Compare page and in
 docs/DECISIONS.md section 22.
 
+**When the answer is somewhere else.** A passage often points at the one
+that answers: "see Table 2", a figure whose decision is in a table row,
+a unit number recorded twice. These links are built by rules at ingest and
+shown under each result. On 36 questions whose answer sits only in the
+passage pointed at, the app finds 75% in the top five, 86% with links
+(81% if it simply showed ten), and 100% with generative AI switched on.
+Details in docs/DECISIONS.md section 28.
+
 `scripts/make_questions.py` writes a labelled question set for every document
 with Claude: passages are sampled across each document's pages and kinds (text,
 table rows, whole tables, figures, forms), and for each one the model writes a
