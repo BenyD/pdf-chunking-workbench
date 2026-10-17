@@ -1,0 +1,268 @@
+{
+  "generated": "2026-10-17",
+  "model": "claude-sonnet-5-5",
+  "questions": [
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Which classes of Magistrates are normally empowered to take cognizance of an offence upon a complaint or police report, and who can authorise a second class Magistrate to do so?",
+      "must_contain": "The Chief Judicial Magistrate may empower any Magistrate of the second class",
+      "expected_page": 84,
+      "link": "Section 210",
+      "link_kind": "ref",
+      "from_page": 168
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "When the Magistrate does not pass sentence himself but thinks the accused deserves a harsher punishment than he can inflict, to whom does he forward the accused and the proceedings?",
+      "must_contain": "forward the accused, to the Chief Judicial Magistrate to whom he is subordinate",
+      "expected_page": 130,
+      "link": "Section 364",
+      "link_kind": "ref",
+      "from_page": 105
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Who must countersign an order to produce a prisoner in Court if it was made by a Magistrate of the second class?",
+      "must_contain": "countersigned by the Chief Judicial Magistrate, to whom such Magistrate is subordinate",
+      "expected_page": 110,
+      "link": "Section 302",
+      "link_kind": "ref",
+      "from_page": 111
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Before a Magistrate can issue process against the accused under section 227, what must have been filed first?",
+      "must_contain": "a list of the prosecution witnesses has been filed",
+      "expected_page": 91,
+      "link": "Section 227",
+      "link_kind": "ref",
+      "from_page": 107
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What matters must the Government consider before directing that a person or class of persons shall not be removed from the prison in which they are confined?",
+      "must_contain": "likelihood of the disturbance of public order if the person",
+      "expected_page": 110,
+      "link": "Section 303",
+      "link_kind": "ref",
+      "from_page": 106
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "When money payable under an order is recovered as if it were a fine, is the offender ever liable to be arrested or detained in prison to execute the warrant sent to the Collector?",
+      "must_contain": "no such warrant shall be executed by the arrest or detention in prison of the offender",
+      "expected_page": 156,
+      "link": "Section 462",
+      "link_kind": "ref",
+      "from_page": 158
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "In what language must a charge be written?",
+      "must_contain": "The charge shall be written in the language of the Court.",
+      "expected_page": 93,
+      "link": "Section 234",
+      "link_kind": "ref",
+      "from_page": 94
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "How long does a warrant of arrest issued by a Court stay in force?",
+      "must_contain": "until it is cancelled by the Court which issued it, or until it is executed",
+      "expected_page": 38,
+      "link": "Section 72",
+      "link_kind": "ref",
+      "from_page": 206
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "For the harbouring offence's extended meaning of 'offence' covering acts committed outside India, what conditions make an act of theft count as robbery under section 309?",
+      "must_contain": "voluntarily causes or attempts to cause to any person death or hurt or wrongful restraint",
+      "expected_page": 81,
+      "link": "Section 309",
+      "link_kind": "ref",
+      "from_page": 68
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "Which offences, when alleged or found to have been committed against a person, make it punishable to print or publish information that reveals that person's identity?",
+      "must_contain": "section 64 or section 65 or section 66 or section 67 or section 68 or section 69 or section 70 or section 71",
+      "expected_page": 26,
+      "link": "Section 72",
+      "link_kind": "ref",
+      "from_page": 27
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "Which mischief offences in section 326 are punishable with imprisonment up to seven years and also carry a fine, as clauses (f) and (g) are cited in the explanation about acts committed outside India?",
+      "must_contain": "fire or any explosive substance intending to cause, or knowing it to be likely that he will thereby cause, damage to any property including agricultural produce, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine;",
+      "expected_page": 89,
+      "link": "Section 326",
+      "link_kind": "ref",
+      "from_page": 68
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What is the minimum term of rigorous imprisonment for the offence of rape under section 64 in cases not covered by the aggravated circumstances?",
+      "must_contain": "shall not be less than ten years, but which may extend to imprisonment for life",
+      "expected_page": 23,
+      "link": "Section 64",
+      "link_kind": "ref",
+      "from_page": 58
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What kind of statement in a declaration is punished like giving false evidence under the section that the explanation refers to?",
+      "must_contain": "touching any point material to the object for which the declaration is made or used",
+      "expected_page": 66,
+      "link": "Section 236",
+      "link_kind": "ref",
+      "from_page": 66
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What punishment does Section 178 prescribe for someone who counterfeits a Government revenue stamp, coin, currency-note or bank-note?",
+      "must_contain": "imprisonment for life, or with imprisonment of either description for a term which may extend to ten years",
+      "expected_page": 52,
+      "link": "Section 178",
+      "link_kind": "ref",
+      "from_page": 54
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the induction studies, how is clinical response defined in terms of CDAI change?",
+      "must_contain": "decrease in CDAI of at least 70 points",
+      "expected_page": 39,
+      "link": "Table 11",
+      "link_kind": "ref",
+      "from_page": 39
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the polyarticular JIA trials, what was the most common adverse reaction seen with HUMIRA, and how often did it occur compared to placebo?",
+      "must_contain": "20% of patients treated with HUMIRA developed injection site reactions",
+      "expected_page": 14,
+      "link": "Section 6.1",
+      "link_kind": "ref",
+      "from_page": 24
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the rheumatoid arthritis studies, how long was the improvement in SF-36 maintained for HUMIRA patients?",
+      "must_contain": "maintained through the end of measurement at week 156 (3 years)",
+      "expected_page": 33,
+      "link": "SF-36",
+      "link_kind": "shared",
+      "from_page": 36
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "Besides abatacept, which other biologic is also not recommended for use together with HUMIRA in RA patients because of increased infection risk?",
+      "must_contain": "use of HUMIRA with abatacept or anakinra is not recommended",
+      "expected_page": 22,
+      "link": "Section 7.2",
+      "link_kind": "ref",
+      "from_page": 13
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "What percentage of patients in the high maintenance dose group were in clinical remission at Week 26?",
+      "must_contain": "Clinical Remission‡ | 28% | 39%",
+      "expected_page": 41,
+      "link": "Table 13",
+      "link_kind": "ref",
+      "from_page": 40
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In Studies RA-II and RA-III, what was the median number of tender joints at week 24 for patients receiving HUMIRA plus MTX?",
+      "must_contain": "Number of tender joints (0-68) | 35 | 26 | 31 | 16* | 26 | 15 | 24 | 8*",
+      "expected_page": 30,
+      "link": "Table 3",
+      "link_kind": "ref",
+      "from_page": 30
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "What percentage of patients in the HUMIRA ulcerative colitis trial that allowed prior TNF-blocker users had actually used another TNF-blocker before enrollment?",
+      "must_contain": "Forty percent (40%) of patients enrolled in Study UC-II had previously used another TNF-blocker.\n\nConcomitant stable doses of aminosalicylates",
+      "expected_page": 41,
+      "link": "Section 14.7",
+      "link_kind": "ref",
+      "from_page": 4
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "What response measure does the figure showing improvement in disease activity through 24 weeks in the ankylosing spondylitis study plot by visit?",
+      "must_contain": "ASAS 20 Response By Visit, Study AS-I",
+      "expected_page": 37,
+      "link": "Figure 2",
+      "link_kind": "ref",
+      "from_page": 36
+    },
+    {
+      "doc": "who-trs986-annex2.pdf",
+      "question": "What must a contract for contract production or analysis allow the contract giver to do with respect to the contract acceptor?",
+      "must_contain": "audit the facilities and activities of the contract acceptor",
+      "expected_page": 18,
+      "link": "Section 7",
+      "link_kind": "ref",
+      "from_page": 3
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "How far from the seam weld is the dent on unit 117 of the mixing bowl?",
+      "must_contain": "sits 35 mm from the seam weld",
+      "expected_page": 2,
+      "link": "Unit 117",
+      "link_kind": "shared",
+      "from_page": 4
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "What defect was found on B-220 unit 203 that led to it being scrapped?",
+      "must_contain": "Rim deformation",
+      "expected_page": 4,
+      "link": "Unit 203",
+      "link_kind": "shared",
+      "from_page": 4
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "What action was assigned to unit 117 because of the inner wall scratch that exceeds the 15 mm limit?",
+      "must_contain": "Action: Rework.",
+      "expected_page": 4,
+      "link": "Unit 117",
+      "link_kind": "shared",
+      "from_page": 2
+    },
+    {
+      "doc": "Tablet press maintenance manual (synthetic).pdf",
+      "question": "On the TP-36 turret in Figure 4, what should I check on the die table, and how often?",
+      "must_contain": "Cracks around the die bores",
+      "expected_page": 3,
+      "link": "Table 6",
+      "link_kind": "ref",
+      "from_page": 1
+    },
+    {
+      "doc": "Tablet press maintenance manual (synthetic).pdf",
+      "question": "What should I check on the die table of the TP-36 turret before each batch?",
+      "must_contain": "Cracks around the die bores",
+      "expected_page": 1,
+      "link": "Figure 4",
+      "link_kind": "ref",
+      "from_page": 1
+    },
+    {
+      "doc": "Tablet press maintenance manual (synthetic).pdf",
+      "question": "What should the paddle wheel be cleaned with after the feed frame is taken apart?",
+      "must_contain": "Isopropyl alcohol 70%",
+      "expected_page": 2,
+      "link": "Figure 5",
+      "link_kind": "ref",
+      "from_page": 2
+    }
+  ],
+  "note": "Questions asking which page something is on were dropped: they test the contents page, not the content."
+}

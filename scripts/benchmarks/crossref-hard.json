@@ -1,0 +1,331 @@
+{
+  "generated": "2026-10-17",
+  "model": "claude-sonnet-5-5",
+  "hard": true,
+  "questions": [
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What is the maximum time the Magistrate has to supply the accused with copies of the police report and other documents, as required under the section R cites in sub-section (8)?",
+      "must_contain": "in no case beyond fourteen days from the date of production or appearance of the accused",
+      "expected_page": 92,
+      "link": "Section 230",
+      "link_kind": "ref",
+      "from_page": 80
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "When the Judges composing the Court of Revision are equally divided in opinion, what happens to the case, as the section R cites for such a split provides?",
+      "must_contain": "laid before another Judge of that Court",
+      "expected_page": 150,
+      "link": "Section 433",
+      "link_kind": "ref",
+      "from_page": 152
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Who is permitted to compound the offences that sub-section (3) of this section says a specially empowered Magistrate may deal with as compoundable offences?",
+      "must_contain": "compounded by the persons mentioned in the third column of that Table",
+      "expected_page": 125,
+      "link": "Section 359",
+      "link_kind": "ref",
+      "from_page": 91
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Who carries out the inquiry, investigation or survey under section 116 that precedes the notice, and what is the minimum rank required?",
+      "must_contain": "police officer not below the rank of Sub-Inspector of Police",
+      "expected_page": 51,
+      "link": "Section 116",
+      "link_kind": "ref",
+      "from_page": 52
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Who is empowered to command an unlawful assembly to disperse, before the armed forces may be used under this section?",
+      "must_contain": "officer in charge of a police station or, in the absence of such officer in charge, any police officer, not below the rank of a sub-inspector",
+      "expected_page": 62,
+      "link": "Section 148",
+      "link_kind": "ref",
+      "from_page": 62
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "For harbouring an offender, which acts committed abroad count as an offence under the cited clauses (f) and (g) of section 326, and what is the maximum imprisonment for the clause (f) act?",
+      "must_contain": "fire or any explosive substance intending to cause, or knowing it to be likely that he will thereby cause, damage to any property including agricultural produce, shall be punished with imprisonment of either description for a term which may extend to seven years, and shall also be liable to fine;",
+      "expected_page": 89,
+      "link": "Section 326",
+      "link_kind": "ref",
+      "from_page": 68
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What is the minimum term of rigorous imprisonment for the basic offence under the first of the sections whose non-registration is penalised here, in the ordinary case without aggravating circumstances?",
+      "must_contain": "shall not be less than ten years",
+      "expected_page": 23,
+      "link": "Section 64",
+      "link_kind": "ref",
+      "from_page": 58
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What kind of false statement in a declaration is punishable in the same manner as giving false evidence under the section that the explanation refers to?",
+      "must_contain": "touching any point material to the object for which the declaration is made or used",
+      "expected_page": 66,
+      "link": "Section 236",
+      "link_kind": "ref",
+      "from_page": 66
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What punishment applies to someone who counterfeits a stamp issued by Government, as covered by the section this passage cites?",
+      "must_contain": "punished with imprisonment for life, or with imprisonment of either description for a term which may extend to ten years",
+      "expected_page": 52,
+      "link": "Section 178",
+      "link_kind": "ref",
+      "from_page": 54
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "Under the Explanation this section shares with the earlier assault section, when does grave and sudden provocation not reduce the punishment?",
+      "must_contain": "if the provocation is sought or voluntarily provoked by the offender as an excuse for the offence",
+      "expected_page": 44,
+      "link": "Section 131",
+      "link_kind": "ref",
+      "from_page": 45
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "Under the provision that this section carves itself out from, what is the maximum imprisonment for a person who resists his own lawful apprehension or escapes from lawful custody?",
+      "must_contain": "term which may extend to two years",
+      "expected_page": 72,
+      "link": "Section 262",
+      "link_kind": "ref",
+      "from_page": 73
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "Which kinds of documents fall under the description in section 337 that makes possessing a known forgery punishable by up to seven years?",
+      "must_contain": "identity document issued by Government including voter identity card or Aadhaar Card",
+      "expected_page": 95,
+      "link": "Section 337",
+      "link_kind": "ref",
+      "from_page": 95
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "For the purposes of the harbouring section, an act committed outside India counts as an offence if it would be punishable under sub-sections (2), (3), (4) and (5) of section 310. What is the maximum punishment under sub-section (4) of that section?",
+      "must_contain": "Whoever makes any preparation for committing dacoity, shall be punished with rigorous imprisonment for a term which may extend to ten years",
+      "expected_page": 82,
+      "link": "Section 310",
+      "link_kind": "ref",
+      "from_page": 68
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What is the maximum term of imprisonment for forging the documents described in the section that subsection (1) refers to, as opposed to the seven-year maximum for counterfeiting an authenticating mark?",
+      "must_contain": "a term which may extend to ten years",
+      "expected_page": 95,
+      "link": "Section 338",
+      "link_kind": "ref",
+      "from_page": 96
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "In the provision defining dowry death, what is the general meaning of the word \"death\" used in the phrase \"the death of a woman\"?",
+      "must_contain": "the death of a human being unless the contrary appears",
+      "expected_page": 2,
+      "link": "Section 2",
+      "link_kind": "ref",
+      "from_page": 28
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "What does the other section that the Exception mentions cover, as opposed to the giver's side described here — namely, what conduct by the person who is being paid to conceal an offence is punished?",
+      "must_contain": "accepts or attempts to obtain, or agrees to accept, any gratification",
+      "expected_page": 69,
+      "link": "Section 250",
+      "link_kind": "ref",
+      "from_page": 69
+    },
+    {
+      "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "question": "For the acts abroad treated as offences under clauses (a) and (b) of section 332, what is the maximum prison term when the house-trespass is committed to commit an offence punishable with imprisonment for life?",
+      "must_contain": "imprisonment of either description for a term not exceeding ten years",
+      "expected_page": 92,
+      "link": "Section 332",
+      "link_kind": "ref",
+      "from_page": 68
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the table this passage cites, what percentage of TNF blocker naive patients given the 160/80 mg dose were in clinical remission at Week 4?",
+      "must_contain": "36%*",
+      "expected_page": 39,
+      "link": "Table 11",
+      "link_kind": "ref",
+      "from_page": 39
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the rheumatoid arthritis studies, how long was the mean improvement in the SF-36 health survey maintained?",
+      "must_contain": "maintained through the end of measurement at week 156 (3 years)",
+      "expected_page": 33,
+      "link": "SF-36",
+      "link_kind": "shared",
+      "from_page": 36
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "According to the table cited for the Week 26 and Week 52 assessments, what proportion of patients in the low dose group was in clinical remission at Week 52?",
+      "must_contain": "23%",
+      "expected_page": 41,
+      "link": "Table 13",
+      "link_kind": "ref",
+      "from_page": 40
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "What proportion of patients in the ulcerative colitis trials were taking an aminosalicylate at baseline?",
+      "must_contain": "patients were receiving aminosalicylates (69%)",
+      "expected_page": 41,
+      "link": "Section 14.7",
+      "link_kind": "ref",
+      "from_page": 4
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "Why might azathioprine or 6-mercaptopurine be a concern when continued alongside HUMIRA in Crohn's disease, as the cited warning section explains?",
+      "must_contain": "more cases of malignancies have been observed among TNF-blocker-treated adult patients",
+      "expected_page": 10,
+      "link": "Section 5.2",
+      "link_kind": "ref",
+      "from_page": 6
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the radiographic results the passage points to, what was the mean change in Total Sharp Score at month 12 for patients on placebo plus MTX?",
+      "must_contain": "Total Sharp score | 2.7",
+      "expected_page": 32,
+      "link": "Table 5",
+      "link_kind": "ref",
+      "from_page": 32
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the table this section cites, how long did patients in the first study with active uveitis take, at the median, to reach treatment failure when receiving placebo?",
+      "must_contain": "3.0 [2.7, 3.7]",
+      "expected_page": 46,
+      "link": "Table 19",
+      "link_kind": "ref",
+      "from_page": 46
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the HUMIRA-treated patients on the SF-36 Physical Component Summary, what happened to the Mental Component Summary score in the psoriatic arthritis study, as opposed to the rheumatoid arthritis studies?",
+      "must_contain": "no worsening in the SF-36 Mental Component Summary score",
+      "expected_page": 36,
+      "link": "SF-36",
+      "link_kind": "shared",
+      "from_page": 33
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "What percentage of subjects in the HUMIRA group achieved mNAPSI 75 at Week 26 in Study Ps-III?",
+      "must_contain": "47%",
+      "expected_page": 45,
+      "link": "Table 17",
+      "link_kind": "ref",
+      "from_page": 44
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "How many polyarticular JIA patients aged 4 to 17 years were enrolled in the study that showed HUMIRA reduced signs and symptoms?",
+      "must_contain": "in 171 patients who were 4 to 17 years of age",
+      "expected_page": 33,
+      "link": "Section 14.2",
+      "link_kind": "ref",
+      "from_page": 24
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the hidradenitis suppurativa studies, what percentage of HUMIRA-treated subjects in Study HS-II achieved HiSCR at Week 12?",
+      "must_contain": "N=163 96 (59%)",
+      "expected_page": 45,
+      "link": "Table 18",
+      "link_kind": "ref",
+      "from_page": 45
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the table this section cites, what proportion of patients in the placebo maintenance group were in clinical remission at Week 56?",
+      "must_contain": "12%",
+      "expected_page": 39,
+      "link": "Table 12",
+      "link_kind": "ref",
+      "from_page": 39
+    },
+    {
+      "doc": "humira-label-2017.pdf",
+      "question": "In the rheumatoid arthritis studies, what percentage of patients on HUMIRA 40 mg every other week had adverse reactions of rash, as summarized in the table R cites?",
+      "must_contain": "Rash | 12% | 6%",
+      "expected_page": 17,
+      "link": "Table 1",
+      "link_kind": "ref",
+      "from_page": 17
+    },
+    {
+      "doc": "who-trs986-annex2.pdf",
+      "question": "What is the full title of the section on good manufacturing practices for pharmaceutical products that the revision list refers to as Section 2?",
+      "must_contain": "Good manufacturing practices for pharmaceutical products 90",
+      "expected_page": 1,
+      "link": "Section 2",
+      "link_kind": "ref",
+      "from_page": 3
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "What defect was recorded for the B-220 unit 203 that was rejected and scrapped?",
+      "must_contain": "Rim deformation",
+      "expected_page": 4,
+      "link": "Unit 203",
+      "link_kind": "shared",
+      "from_page": 4
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "What action was decided for the bowl in Figure 1 with the scratch that exceeds the 15 mm limit?",
+      "must_contain": "Action: Rework",
+      "expected_page": 4,
+      "link": "Unit 117",
+      "link_kind": "shared",
+      "from_page": 2
+    },
+    {
+      "doc": "QC Inspection Report (synthetic).pdf",
+      "question": "What action was decided for the bowl in Figure 1 given its rim dent?",
+      "must_contain": "Action: Rework.",
+      "expected_page": 4,
+      "link": "Unit 117",
+      "link_kind": "shared",
+      "from_page": 2
+    },
+    {
+      "doc": "Tablet press maintenance manual (synthetic).pdf",
+      "question": "For the part marked with the letter B on the turret in Figure 4, what should be checked on it?",
+      "must_contain": "Cracks around the die bores",
+      "expected_page": 3,
+      "link": "Table 6",
+      "link_kind": "ref",
+      "from_page": 1
+    },
+    {
+      "doc": "Tablet press maintenance manual (synthetic).pdf",
+      "question": "What does the table on page 3 say to check on the part marked D in Figure 4, and how often?",
+      "must_contain": "Powder build-up under the frame",
+      "expected_page": 1,
+      "link": "Figure 4",
+      "link_kind": "ref",
+      "from_page": 1
+    }
+  ]
+}

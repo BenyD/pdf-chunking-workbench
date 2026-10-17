@@ -1,0 +1,245 @@
+[
+  {
+    "set": "crossref",
+    "setup": "Keywords only",
+    "way": "top 5",
+    "recall": 0.828,
+    "questions": 29,
+    "passages": 5.0,
+    "tokens": 1626
+  },
+  {
+    "set": "crossref",
+    "setup": "Keywords only",
+    "way": "top 10",
+    "recall": 0.966,
+    "questions": 29,
+    "passages": 10.0,
+    "tokens": 3210
+  },
+  {
+    "set": "crossref",
+    "setup": "Keywords only",
+    "way": "top 5 + links",
+    "recall": 0.862,
+    "questions": 29,
+    "passages": 8.1,
+    "tokens": 2466
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Keywords only",
+    "way": "top 5",
+    "recall": 0.694,
+    "questions": 36,
+    "passages": 5.0,
+    "tokens": 1594
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Keywords only",
+    "way": "top 10",
+    "recall": 0.778,
+    "questions": 36,
+    "passages": 10.0,
+    "tokens": 3163
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Keywords only",
+    "way": "top 5 + links",
+    "recall": 0.778,
+    "questions": 36,
+    "passages": 8.1,
+    "tokens": 2442
+  },
+  {
+    "set": "main",
+    "setup": "Keywords only",
+    "way": "top 5",
+    "recall": 0.86,
+    "questions": 129,
+    "passages": 5.0,
+    "tokens": 1597
+  },
+  {
+    "set": "main",
+    "setup": "Keywords only",
+    "way": "top 10",
+    "recall": 0.907,
+    "questions": 129,
+    "passages": 9.6,
+    "tokens": 2961
+  },
+  {
+    "set": "main",
+    "setup": "Keywords only",
+    "way": "top 5 + links",
+    "recall": 0.86,
+    "questions": 129,
+    "passages": 6.6,
+    "tokens": 1984
+  },
+  {
+    "set": "crossref",
+    "setup": "The app (local model)",
+    "way": "top 5",
+    "recall": 0.966,
+    "questions": 29,
+    "passages": 5.0,
+    "tokens": 1361
+  },
+  {
+    "set": "crossref",
+    "setup": "The app (local model)",
+    "way": "top 10",
+    "recall": 1.0,
+    "questions": 29,
+    "passages": 10.0,
+    "tokens": 2676
+  },
+  {
+    "set": "crossref",
+    "setup": "The app (local model)",
+    "way": "top 5 + links",
+    "recall": 0.966,
+    "questions": 29,
+    "passages": 8.3,
+    "tokens": 2260
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "The app (local model)",
+    "way": "top 5",
+    "recall": 0.75,
+    "questions": 36,
+    "passages": 5.0,
+    "tokens": 1307
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "The app (local model)",
+    "way": "top 10",
+    "recall": 0.806,
+    "questions": 36,
+    "passages": 10.0,
+    "tokens": 2550
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "The app (local model)",
+    "way": "top 5 + links",
+    "recall": 0.861,
+    "questions": 36,
+    "passages": 7.6,
+    "tokens": 2110
+  },
+  {
+    "set": "main",
+    "setup": "The app (local model)",
+    "way": "top 5",
+    "recall": 0.93,
+    "questions": 129,
+    "passages": 5.0,
+    "tokens": 1393
+  },
+  {
+    "set": "main",
+    "setup": "The app (local model)",
+    "way": "top 10",
+    "recall": 0.946,
+    "questions": 129,
+    "passages": 9.6,
+    "tokens": 2610
+  },
+  {
+    "set": "main",
+    "setup": "The app (local model)",
+    "way": "top 5 + links",
+    "recall": 0.93,
+    "questions": 129,
+    "passages": 6.4,
+    "tokens": 1777
+  },
+  {
+    "set": "crossref",
+    "setup": "Generative AI",
+    "way": "top 5",
+    "recall": 0.966,
+    "questions": 29,
+    "passages": 5.0,
+    "tokens": 1844
+  },
+  {
+    "set": "crossref",
+    "setup": "Generative AI",
+    "way": "top 10",
+    "recall": 1.0,
+    "questions": 29,
+    "passages": 10.0,
+    "tokens": 3392
+  },
+  {
+    "set": "crossref",
+    "setup": "Generative AI",
+    "way": "top 5 + links",
+    "recall": 0.966,
+    "questions": 29,
+    "passages": 8.3,
+    "tokens": 3163
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Generative AI",
+    "way": "top 5",
+    "recall": 0.778,
+    "questions": 36,
+    "passages": 5.0,
+    "tokens": 1758
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Generative AI",
+    "way": "top 10",
+    "recall": 0.833,
+    "questions": 36,
+    "passages": 10.0,
+    "tokens": 3454
+  },
+  {
+    "set": "crossref-hard",
+    "setup": "Generative AI",
+    "way": "top 5 + links",
+    "recall": 1.0,
+    "questions": 36,
+    "passages": 7.6,
+    "tokens": 2865
+  },
+  {
+    "set": "main",
+    "setup": "Generative AI",
+    "way": "top 5",
+    "recall": 0.977,
+    "questions": 129,
+    "passages": 5.0,
+    "tokens": 1799
+  },
+  {
+    "set": "main",
+    "setup": "Generative AI",
+    "way": "top 10",
+    "recall": 0.992,
+    "questions": 129,
+    "passages": 9.7,
+    "tokens": 3456
+  },
+  {
+    "set": "main",
+    "setup": "Generative AI",
+    "way": "top 5 + links",
+    "recall": 0.977,
+    "questions": 129,
+    "passages": 6.3,
+    "tokens": 2294
+  }
+]
