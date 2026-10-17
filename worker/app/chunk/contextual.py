@@ -31,6 +31,8 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
         id_map[old.id] = new.id
     for c in clones:
         c.parent_id = id_map.get(c.parent_id) if c.parent_id else None
+        if c.metadata.get("links"):
+            c.metadata["links"] = [{**l, "id": id_map[l["id"]]} for l in c.metadata["links"] if l["id"] in id_map]
     link_sequence(clones)
 
     usage = {"context_calls": 0, "triage_calls": 0, "vision_calls": 0, "figures_dropped": 0, "skipped": 0, "errors": 0}
@@ -104,6 +106,10 @@ async def chunk_contextual(structural: list[ChunkDraft], doc_title: str, on_prog
     if any(c.metadata.get("vision_skipped") for c in clones):
         clones = [c for c in clones if not c.metadata.get("vision_skipped")]
         link_sequence(clones)
+        kept = {c.id for c in clones}
+        for c in clones:
+            if c.metadata.get("links"):
+                c.metadata["links"] = [l for l in c.metadata["links"] if l["id"] in kept]
 
     # rows inherit their table's model context
     for c in clones:

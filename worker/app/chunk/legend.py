@@ -145,11 +145,19 @@ def bind(figure: ChunkDraft, labels: list[str], chunks: list[ChunkDraft]) -> Key
     figure.raw_text = figure.raw_text.rstrip() + "\n" + key.text()
     figure.metadata["key"] = {"source": key.source, "page": key.page, "title": key.title, "entries": key.entries,
                               "names_figure": key.names_figure, "chunk_ids": key.chunk_ids}
-    # and the other way: each row of the key says which figure it labels
+    # and the other way: each row of the key says which figure it labels; both ends get a "key" link
+    by_id = {c.id: c for c in chunks}
     for cid in key.chunk_ids:
-        for c in chunks:
-            if c.id == cid:
-                c.metadata["labels_figure"] = {"page": figure.page_start, "caption": figure.metadata.get("caption")}
+        row = by_id.get(cid)
+        if not row:
+            continue
+        row.metadata["labels_figure"] = {"page": figure.page_start, "caption": figure.metadata.get("caption")}
+        target = by_id.get(row.parent_id) if row.parent_id else row      # link the figure to the key's table, once
+        for a, b, d in ((figure, target, "out"), (target, figure, "in")):
+            links = a.metadata.setdefault("links", [])
+            if b and not any(l["id"] == b.id for l in links):
+                links.append({"id": b.id, "kind": "key", "label": f"Key: {key.title}" if d == "out" else "Figure it labels",
+                              "dir": d, "page": b.page_start, "type": b.chunk_type})
     return key
 
 
@@ -175,3 +183,22 @@ def bind_all(chunks: list[ChunkDraft]) -> int:
             c.metadata["key"]["labels_from"] = "image"
             n += 1
     return n
+
+
+def key_links_from_metadata(chunks: list[ChunkDraft]) -> None:
+    """Rebuild the figure-to-key links for passages stored before those links existed, from metadata["key"]."""
+    by_id = {c.id: c for c in chunks}
+    for fig in chunks:
+        key = fig.metadata.get("key") if fig.chunk_type == "figure" else None
+        if not key:
+            continue
+        for cid in key.get("chunk_ids", []):
+            row = by_id.get(cid)
+            target = (by_id.get(row.parent_id) if row and row.parent_id else row)
+            if not target:
+                continue
+            for a, b, d in ((fig, target, "out"), (target, fig, "in")):
+                links = a.metadata.setdefault("links", [])
+                if not any(l["id"] == b.id for l in links):
+                    links.append({"id": b.id, "kind": "key", "label": f"Key: {key.get('title', 'a table')}" if d == "out" else "Figure it labels",
+                                  "dir": d, "page": b.page_start, "type": b.chunk_type})

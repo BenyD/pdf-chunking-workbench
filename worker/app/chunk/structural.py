@@ -21,6 +21,7 @@ from ..config import settings
 from ..parse.model import FigureBlock, PageLayout, TableBlock, TextBlock, frac, union
 from ..parse.tables import resolve_ditto, row_to_text, to_markdown
 from .legend import bind_all
+from .references import link_all
 from .model import ChunkDraft, link_sequence
 from .tokens import count
 
@@ -91,6 +92,7 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
     flush()
     bind_all(chunks)          # a figure's bare labels (A, B, 1, 2) tied to the key that explains them, wherever it is
     link_sequence(chunks)
+    link_all(chunks)          # "see Table 2", "(5.1)", "unit 117": links to where the rest of the answer is
     return chunks
 
 
