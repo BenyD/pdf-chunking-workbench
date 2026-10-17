@@ -1092,3 +1092,51 @@ above that cost follows the requirements, not the number of SOPs.
 Not built: a library made from the document control system's current
 versions (the newest by SOP number in the name stands in for it), a run on
 a real company's SOPs, and the library on the SOP check page.
+
+## 26. No generative AI by default, and meaning search on our own server
+
+**Why.** Quescenta's people do not want AI in the pipeline and want to pay
+as little as possible: chunking that is only rules, and no calls to an
+outside model. The chunking always was rules (sections 2 to 5); the AI sat
+on top of it. The question was what meaning search costs without an API.
+
+**Decision.** Two switches, both defaulting to "no AI":
+- Worker `PURE=true`: passages are stored exactly as the rules cut them
+  (strategy "structural"); no context line, no figure description, no
+  suggested questions, no OCR fallback. Every passage is embedded by
+  snowflake-arctic-embed-s, a small open-source model run on the CPU through
+  ONNX (fastembed) and baked into the Docker image. Its vectors (384 numbers)
+  live in their own column with their own search function, beside the API
+  model's.
+- Web `NEXT_PUBLIC_AI` unset: search reads those passages, the question is
+  embedded by the same local model through the worker's /embed-query, and
+  no answer is written: the matching passages, highlighted on their pages,
+  are the result. The built-in samples carry a few fixed questions instead
+  of model-written ones. If the worker cannot answer in 20 seconds, search
+  runs on keywords alone.
+
+**Which model.** `scripts/compare_local_models.py` scores candidates on the
+same 129 questions, fused with the app's own keyword ranking:
+
+| Local model | recall@5 | MRR |
+|---|---|---|
+| snowflake-arctic-embed-s (384) | 93% | 0.78 |
+| bge-small-en-v1.5 (384) | 90% | 0.77 |
+| either, plus a local cross-encoder re-ranker | 90 to 91% | 0.79 |
+
+Four more candidates (granite-embedding-small, all-MiniLM-L6, bge-base,
+nomic-embed) were not finished: their downloads from HuggingFace kept
+failing. The re-ranker helped bge-small by a point and cost arctic three,
+so it is left out.
+
+**Measured in the app's own search** (`compare_chunking.py`, HNSW index):
+92% recall@5, MRR 0.78, 1,371 tokens in the top five. That is above every
+Bedrock-style method (fixed-size 84%, semantic 82%, hierarchical 88 to
+90%) and between keywords alone (85%) and the full generative setup (98%).
+The gap to 98% is figures and lone table rows, sections 22 and 23.
+
+**Cost.** No per-use bill. Indexing the 7,000 benchmark passages took 4.5
+minutes on a laptop CPU; on the half-CPU container a 100-page document takes
+a few minutes. A question's vector takes a few milliseconds once the model
+is loaded; the first question after the container wakes waits a few
+seconds.

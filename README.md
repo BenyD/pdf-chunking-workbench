@@ -8,18 +8,26 @@ scanned bills.
 Pages:
 
 - **Documents**: upload a PDF or load the samples; each one is read, split into passages and indexed within minutes.
-- **Search**: a question across all documents or one of them; a short answer with numbered sources, each opening the page it came from.
-- **Compare**: one question asked three ways (no AI, embeddings only, the app) side by side, and every chunking method Amazon Bedrock offers scored on the same 129 questions.
+- **Search**: a question across all documents or one of them; the passages that answer it, each highlighted on its page. With generative AI switched on, also a short written answer with citations.
+- **Compare**: one question asked three ways (keywords only, the app, the app with generative AI) side by side, and every chunking method Amazon Bedrock offers scored on the same 129 questions.
 - **SOP check**: a company SOP checked sentence by sentence against 21 CFR Part 211, each gap with the SOP's words and the reason.
 - **Forms** (hidden unless `NEXT_PUBLIC_FORMS=1` in `web/.env.local`): teach it a form once, then read every scan of that form into a table.
 
-How a document is processed (one pipeline, chosen after measuring three):
-pages are rendered; the layout is parsed so headings, tables (whole and row by
-row) and figures are known; passages are cut along those boundaries with their
-breadcrumb (chapter, section) in front; a small model writes one situating
-sentence per passage and describes every figure, arrows included; everything
-is embedded and stored. Search is hybrid (keyword and meaning, fused) and the
-answer is written from the passages found, with citations.
+How a document is processed: pages are rendered; the layout is parsed so
+headings, tables (whole and row by row) and figures are known; passages are cut
+along those boundaries with their breadcrumb (chapter, section) in front, and a
+figure's bare labels (A, B, 1, 2) are tied to the key that explains them;
+every passage is embedded by a small open-source model running in our own
+worker and stored. Search is hybrid (keyword and meaning, fused) and returns
+the passages, each on its page.
+
+**No generative AI by default, and no outside API.** Nothing in the pipeline
+writes text: the passages are exactly what the rules cut, and the embedding
+model (snowflake-arctic-embed-s, run on the CPU through ONNX) only turns text
+into numbers. It scores 92% on the benchmark below, above every Bedrock-style
+method. Setting `NEXT_PUBLIC_AI=1` on the web app and `PURE=false` on the
+worker turns on the optional extras: a model-written context line per
+passage, figure descriptions, and a written answer (98%).
 
 Read [docs/DECISIONS.md](docs/DECISIONS.md) for why each choice was made
 (internal notes, not served by the app).
@@ -153,6 +161,12 @@ given to the container. Samples load from the deployment itself, so nothing
 else needs uploading.
 
 ## Models and cost
+
+**By default nothing here is called.** Passages are cut by rules, and meaning
+search uses snowflake-arctic-embed-s inside the worker: no API, no per-use
+bill, nothing leaves the servers. Indexing costs only the worker's CPU time.
+The table below applies when generative AI is switched on.
+
 
 | Step | Model | Notes |
 |---|---|---|
