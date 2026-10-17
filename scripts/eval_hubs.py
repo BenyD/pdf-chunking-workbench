@@ -13,6 +13,8 @@ and across all documents, and counts in the top five:
   contents      a text passage at least half made of contents entries ("Title ... page number")
   _is_toc       what references.py's _is_toc flags (the rule the reference links use)
   under 40      a text or figure passage under 40 characters
+  Hindi         for a question asked in English, a passage written mostly in an Indian script, which the
+                English-only model cannot read (a Hindi question finding Hindi passages is not counted)
   hit           the expected phrase in the document's own words on the expected page, in the right document
 
 Each run is saved under its label in scripts/benchmarks/hubs-eval.json; with both a "before" and an "after" run
@@ -52,6 +54,13 @@ ENTRY = re.compile(r"[A-Z][^\n.0-9]{1,120}?\s[0-9]{1,3}(?=\s+[A-Z0-9]|\s*$)")
 
 def norm(s: str) -> str:
     return re.sub(r"\s+", " ", (s or "").lower()).strip()
+
+
+INDIC = re.compile(r"[\u0900-\u0D7F]")
+
+
+def is_indic(text: str) -> bool:
+    return len(INDIC.findall(text)) > len(re.findall(r"[A-Za-z]", text))
 
 
 def is_contents(chunk_type: str, text: str) -> bool:
@@ -102,14 +111,16 @@ def run(base: str | None) -> dict:
         for scope, doc in (("document", q["doc_id"]), ("all", None)):
             rows = search(q["question"], doc)
             t = totals.setdefault(scope, {"questions": 0, "hits": 0, "rr": 0.0, "contents": 0, "is_toc": 0, "short": 0,
-                                          "q_contents": 0, "q_short": 0, "first_contents": 0, "first_short": 0})
+                                          "q_contents": 0, "q_short": 0, "first_contents": 0, "first_short": 0,
+                                          "indic": 0, "q_indic": 0, "first_indic": 0})
             rank = None
             for i, r in enumerate(rows):
                 if rank is None and r["doc_id"] == q["doc_id"] and norm(q["must_contain"]) in norm(r["raw_text"]) \
                         and (q["expected_page"] is None or r["page_start"] <= q["expected_page"] <= r["page_end"]):
                     rank = i + 1
             flags = [(is_contents(r["chunk_type"], r["raw_text"]), _is_toc(SimpleNamespace(raw_text=r["raw_text"])),
-                      r["chunk_type"] in ("text", "figure") and len(r["raw_text"].strip()) < SHORT) for r in rows]
+                      r["chunk_type"] in ("text", "figure") and len(r["raw_text"].strip()) < SHORT,
+                      is_indic(r["raw_text"]) and not INDIC.search(q["question"])) for r in rows]
             t["questions"] += 1
             t["hits"] += rank is not None
             t["rr"] += 1 / rank if rank else 0
@@ -120,6 +131,9 @@ def run(base: str | None) -> dict:
             t["q_short"] += any(f[2] for f in flags)
             t["first_contents"] += bool(flags) and flags[0][0] and rank != 1
             t["first_short"] += bool(flags) and flags[0][2] and rank != 1
+            t["indic"] += sum(f[3] for f in flags)
+            t["q_indic"] += any(f[3] for f in flags)
+            t["first_indic"] += bool(flags) and flags[0][3] and rank != 1
             entry["ranks"][scope] = rank
         per_q.append(entry)
     for t in totals.values():
@@ -138,7 +152,9 @@ def show(saved: dict, pair: tuple[str, str]) -> None:
                 ("contents passages in top 5", lambda t: t["contents"]), ("  questions with one", lambda t: t["q_contents"]),
                 ("  ranked first, not the answer", lambda t: t["first_contents"]), ("_is_toc passages in top 5", lambda t: t["is_toc"]),
                 (f"under {SHORT} characters in top 5", lambda t: t["short"]), ("  questions with one", lambda t: t["q_short"]),
-                ("  ranked first, not the answer", lambda t: t["first_short"])]
+                ("  ranked first, not the answer", lambda t: t["first_short"]),
+                ("Hindi passages, English questions", lambda t: t.get("indic", "")), ("  questions with one", lambda t: t.get("q_indic", "")),
+                ("  ranked first, not the answer", lambda t: t.get("first_indic", ""))]
         for name, f in rows:
             print(f"  {name:34}" + "".join(f"{f(saved[l]['totals'][scope])!s:>{w}}" for l in labels))
     if all(l in saved for l in pair):
@@ -158,10 +174,11 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--label", help="save this run under the label (before / after); without it, print what is saved")
     ap.add_argument("--base", help="measure a running app through its API instead of the local database")
+    ap.add_argument("--compare", nargs=2, metavar=("BEFORE", "AFTER"), help="the two saved runs to compare")
     args = ap.parse_args()
     saved = json.loads(OUT.read_text()) if OUT.exists() else {}
     if args.label:
         saved[args.label] = run(args.base)
         OUT.write_text(json.dumps(saved, indent=2, ensure_ascii=False) + "\n")
     prod = (args.label or "").startswith("prod") or (not args.label and args.base)
-    show(saved, ("prod-before", "prod-after") if prod else ("before", "after"))
+    show(saved, tuple(args.compare) if args.compare else ("prod-before", "prod-after") if prod else ("before", "after"))

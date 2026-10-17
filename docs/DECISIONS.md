@@ -1752,3 +1752,44 @@ more verdicts after the fix for unmarked opening paragraphs.
 - All 14 SOPs are synthetic, one page each, and one person wrote the SOPs,
   the rules and the expected verdicts.
 - The library mode runs with `--local`, but was not measured again.
+
+## 31. Hindi passages left out of meaning search for English questions
+
+**Why.** The local model reads English only, so a passage in Hindi (the
+Hindi half of an NPPA price notice) comes out as a vector near every
+question. On the live site, "What action was decided for the bowl in
+Figure 1" across all documents showed a Hindi passage third. Section 29
+counted 19 such slots in 8 questions, but that count included the NPPA
+notices' own Hindi questions, where Hindi passages are the right answer.
+Counting English questions only (`scripts/eval_hubs.py`, the Hindi rows):
+6 top-five slots in 3 questions within a document, 5 in 4 across all
+documents, none ranked first.
+
+**Decision.** Migration 20261020000000. In `hybrid_search_local`, for a
+question with no Indian-script letters, a passage written mostly in an
+Indian script (more Devanagari to Malayalam letters than Latin ones,
+`mostly_indic`) is left out of the meaning ranks. The nearest 8 × the
+results asked for are drawn so that leaving some out still leaves 4 ×. Keyword
+search still finds such passages, and a question typed in Hindi is
+unchanged.
+
+**Measured** (129 questions, top five, pure mode, local):
+
+| | before | after |
+|---|---|---|
+| Hindi passages for English questions, in-document | 6 (3 questions) | 0 |
+| ... across all documents | 5 (4 questions) | 0 |
+| Recall@5 in-document / across all | 94.6% / 92.2% | 93.8% / 92.2% |
+| MRR in-document / across all | 0.800 / 0.755 | 0.793 / 0.754 |
+
+The one question lost is labelled oddly: "which column of the price table
+gives the maximum price ..." is asked in English but its expected phrase
+is the Hindi "स्तंभ (5)" on page 3; the English notice on page 1, which
+says the same, is now first. The label is left as written. One date
+question moved from first to second; four questions across all documents
+moved a place either way as the meaning ranks closed up.
+
+**Not covered.** A question in Hindi still gets the English-only model's
+vectors, so its meaning search is no better than chance; keyword search
+carries it. A multilingual model would fix that, at about three times the
+size of the current one.
