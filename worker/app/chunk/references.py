@@ -106,6 +106,17 @@ def link_all(chunks: list[ChunkDraft]) -> int:
             continue
         for a in _anchors(c):
             targets.setdefault(a, c)
+    # "Section 5" starts where its first part does: the earliest passage of 5 or 5.x. Without this, a label whose
+    # section 5 has no heading of its own (only 5.1, 5.2 ...) sent "Section 5" to step 5 of its instructions for use.
+    order = {c.id: i for i, c in enumerate(chunks)}
+    for (kind, val), t in list(targets.items()):
+        if kind != "section":
+            continue
+        parts = val.split(".")
+        for n in range(1, len(parts) + 1):
+            key = ("section", ".".join(parts[:n]))
+            if key not in targets or order[t.id] < order[targets[key].id]:
+                targets[key] = t
     made = 0
     for c in chunks:
         if c.chunk_type == "table_row" or _is_toc(c):
