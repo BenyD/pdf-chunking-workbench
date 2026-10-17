@@ -155,6 +155,7 @@ def read_part(xml_path: Path = XML) -> list[Requirement]:
         num = sec.get("N")
         title = html.unescape("".join(sec.find("HEAD").itertext())).replace("§", "").strip()
         stack: list[tuple[int, str, str]] = []          # (level, marker, lead-in text)
+        intro: Requirement | None = None                 # an unmarked opening paragraph ("... They shall include:")
         for p in sec.findall("P"):
             raw = html.unescape("".join(p.itertext())).strip()
             markers, rest = [], raw
@@ -165,7 +166,8 @@ def read_part(xml_path: Path = XML) -> list[Requirement]:
                 if out and out[-1].section == num:
                     out[-1].text += " " + raw
                 else:                                    # or is the whole section (211.192 has no (a) at all)
-                    out.append(Requirement(num, num, title, raw, title))
+                    intro = Requirement(num, num, title, raw, title)
+                    out.append(intro)
                 continue
             for mk in markers:
                 lvl = _level(mk, len(stack) and stack[-1][0] or 0)
@@ -173,7 +175,8 @@ def read_part(xml_path: Path = XML) -> list[Requirement]:
                     stack.pop()
                 stack.append((lvl, mk, ""))
             cite = num + "".join(f"({mk})" for _, mk, _ in stack)
-            lead = " > ".join(t for _, _, t in stack[:-1] if t)
+            leads = ([intro.text if len(intro.text) < 400 else intro.text[:400] + "..."] if intro else []) + [t for _, _, t in stack[:-1]]
+            lead = " > ".join(t for t in leads if t)    # the opening paragraph is the lead-in of (a), (b)... after it
             stack[-1] = (stack[-1][0], stack[-1][1], rest if len(rest) < 400 else rest[:400] + "...")
             out.append(Requirement(cite, num, title, rest, f"{title}" + (f" > {lead}" if lead else "")))
     for r in out:

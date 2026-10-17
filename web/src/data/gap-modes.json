@@ -19,9 +19,9 @@
         "right": 2,
         "gaps": 10,
         "gaps_shown": 1,
-        "unsure": 31,
+        "unsure": 44,
         "sops": 3,
-        "lines": 33
+        "lines": 50
       },
       "all": {
         "graded": 74,
@@ -29,9 +29,9 @@
         "right": 36,
         "gaps": 19,
         "gaps_shown": 8,
-        "unsure": 145,
+        "unsure": 189,
         "sops": 14,
-        "lines": 220
+        "lines": 278
       },
       "dollars_per_sop": 0.0
     },
@@ -54,7 +54,7 @@
         "gaps_shown": 8,
         "unsure": 0,
         "sops": 3,
-        "lines": 33
+        "lines": 50
       },
       "all": {
         "graded": 74,
@@ -64,9 +64,9 @@
         "gaps_shown": 17,
         "unsure": 0,
         "sops": 14,
-        "lines": 220
+        "lines": 278
       },
-      "dollars_per_sop": 0.0009
+      "dollars_per_sop": 0.001169
     },
     "local+model": {
       "sample": {
@@ -87,7 +87,7 @@
         "gaps_shown": 8,
         "unsure": 0,
         "sops": 3,
-        "lines": 33
+        "lines": 50
       },
       "all": {
         "graded": 74,
@@ -97,9 +97,9 @@
         "gaps_shown": 16,
         "unsure": 0,
         "sops": 14,
-        "lines": 220
+        "lines": 278
       },
-      "dollars_per_sop": 0.001369
+      "dollars_per_sop": 0.001731
     },
     "current": {
       "sample": {
@@ -120,7 +120,7 @@
         "gaps_shown": 8,
         "unsure": 0,
         "sops": 3,
-        "lines": 52
+        "lines": 84
       },
       "all": {
         "graded": 74,
@@ -130,9 +130,9 @@
         "gaps_shown": 16,
         "unsure": 0,
         "sops": 14,
-        "lines": 251
+        "lines": 316
       },
-      "dollars_per_sop": 0.001646
+      "dollars_per_sop": 0.002035
     }
   }
 }

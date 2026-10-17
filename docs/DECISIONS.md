@@ -732,7 +732,9 @@ missing and why, as cheaply as possible.
   reserve sample consists of at least twice the quantity..."); lead-ins
   that only introduce a list do not. A section with no paragraph markers at
   all (211.192, 211.182, 211.204 and 17 others) used to be dropped; it is
-  now one requirement. Part 211 is 394 sentences in 59 sections.
+  now one requirement. A section that opens with an unmarked paragraph
+  ("Written procedures ... They shall include:") passes it to (a), (b)...
+  as their lead-in (section 30). Part 211 is 420 sentences in 59 sections.
 - Which sections apply to an SOP is measured, not given (below).
 - Each requirement's three closest SOP passages are its evidence (below for
   how they are picked).
@@ -872,7 +874,7 @@ same command run again sent nothing.
 **What it costs.** A new SOP like the sample costs $0.0038 through the batch
 API, about $0.00009 a line, and its scope sets the bill: 6 to 21 lines for
 the six held-out SOPs ($0.0006 to $0.0018 each, measured), 41 for the
-sample, 394 if an SOP touched every section of the Part. 5,000 SOPs like
+sample, 420 if an SOP touched every section of the Part. 5,000 SOPs like
 the sample come to about $19 through the batch API ($38 one by one); 5,000
 like the held-out ones (15 lines on average), about $6. After that a
 revision pays only for the lines whose passages it touched (24 of 41 here,
@@ -1013,8 +1015,8 @@ would be 282 lines here, 6% more, for one wait.
 Here the library costs what the per-SOP check costs, because each SOP has
 its own topic. Its cost grows with the number of requirements, not of
 SOPs: each requirement is asked of at most three SOPs. A whole library,
-however many SOPs it holds, is at most 394 × 3 = 1,182 lines, about $0.10
-through the batch API at $0.000085 a line, and near 394 lines when owners
+however many SOPs it holds, is at most 420 × 3 = 1,260 lines, about $0.11
+through the batch API at $0.000085 a line, and near 420 lines when owners
 meet their requirements. The per-SOP check pays once for every SOP that
 touches a section. That bound is arithmetic. It was not measured on a real
 library.
@@ -1442,15 +1444,24 @@ section's rules (below), and on nine documents that are not SOPs:
 
 | Scope rule | 7 SOPs: 13 core sections | extras | 4 later SOPs | 3 held out | not SOPs | WHO GMP guide |
 |---|---|---|---|---|---|---|
-| voyage-4, cosine 0.65 (before) | 12 | 1 neighbour | 4 of 4, 3 extras | 6 of 6, 3 extras | 0 | 33 |
+| voyage-4, cosine 0.65 (before) | 12 | 1 neighbour | 4 of 4, 3 extras | 6 of 6, 4 extras | 0 | 34 |
 | Local cosine alone, at its best line (0.80) | 13 | 26 | 4 of 4, 23 extras | not run | 24 | 51 |
 | Words alone, minus usual | 12 | 5 | 4 of 4, 3 extras | not run | 5 | 8 |
-| Words + 2 × local cosine, minus usual (now) | 12 | 2 neighbours | 4 of 4, none | 6 of 6, none | 0 | 28 |
+| Words + 2 × local cosine, minus usual (now) | 13 | 2 neighbours, 211.142 | 4 of 4, 1 extra | 6 of 6, 1 extra | 0 | 29 |
 
-- The local miss is 211.188 Batch production and control records on the
-  batch record review SOP (0.19; it takes 211.192). voyage-4's miss was
-  211.82. The two extras are 211.122 on the label SOP and 211.208 on the
-  returned goods and salvage SOP, both neighbours a reviewer accepts.
+The first and last rows are measured with the Part read in full (below,
+"Items under an unmarked opening paragraph"); the two in between were
+measured before that fix and not run again.
+
+- The local scope finds all 13 core sections. Its one miss before the fix
+  was 211.188 Batch production and control records on the batch record
+  review SOP (0.19, when the section had 2 sentences; 0.42 with its 17).
+  voyage-4's miss is 211.82. The two neighbours are 211.122 on the label
+  SOP and 211.208 on the returned goods and salvage SOP, both accepted by a
+  reviewer. The extras the fix brought: 211.142 Warehousing procedures on
+  the incoming-materials SOP (0.305; it is about finished products, not
+  components), and 211.188 on the master record SOP (0.305) and the
+  in-process controls and yield SOP (0.31), which a reviewer may accept.
 - Revision B and the Pune copy get the sample's three sections.
 - Scoring every stored document for the background takes about a second
   per run.
@@ -1526,21 +1537,21 @@ Graded on the sample and the three held-out SOPs: 74 lines, 19 known gaps.
 
 | Mode | right | known gaps shown | missed | false gaps | left for a person | per SOP | 5,000 SOPs |
 |---|---|---|---|---|---|---|---|
-| Rules only, local: no AI, no API | 36 of 74 | 8 of 19 | 0 | 0 | 145 of 220 lines | $0 | $0 |
-| Rules first, Haiku on the rest, local | 60 | 17 | 2 | 9 | 0 | $0.0009 | $4.50 |
-| Haiku on every line, local evidence | 55 | 16 | 3 | 9 | 0 | $0.0014 | $6.84 |
-| Haiku on every line, voyage-4 (current) | 56 | 16 | 3 | 8 | 0 | $0.0017 | $8.23 |
+| Rules only, local: no AI, no API | 36 of 74 | 8 of 19 | 0 | 0 | 189 of 278 lines | $0 | $0 |
+| Rules first, Haiku on the rest, local | 60 | 17 | 2 | 9 | 0 | $0.0012 | $5.84 |
+| Haiku on every line, local evidence | 55 | 16 | 3 | 9 | 0 | $0.0017 | $8.65 |
+| Haiku on every line, voyage-4 (current) | 56 | 16 | 3 | 8 | 0 | $0.0020 | $10.17 |
 
 Missed is a known gap shown as met or not applicable; a false gap is a met
 or not applicable line shown as a gap. The current mode's cost includes
 voyage-4 for the SOP's passages, $0.00006 per SOP.
 
-| Mode | sample, 41 lines | 3 held out, 33 lines | 10 other SOPs, 146 lines |
+| Mode | sample, 41 lines | 3 held out, 50 lines, 33 graded | 10 other SOPs, 187 lines |
 |---|---|---|---|
-| Rules only | 34 decided, all right, 7 left | 2 decided, both right, 31 left | 39 decided, 107 left |
-| Rules first, then Haiku | 40 right | 20 right | 107 sent to Haiku |
+| Rules only | 34 decided, all right, 7 left | 6 decided (2 graded, both right), 44 left | 49 decided, 138 left |
+| Rules first, then Haiku | 40 right | 20 right | 138 sent to Haiku |
 | Haiku, local evidence | 36 right | 19 right | |
-| Haiku, voyage-4 | 35 right | 21 right (52 lines asked: 3 extra sections) | |
+| Haiku, voyage-4 | 35 right | 21 right (84 lines asked: 4 extra sections) | |
 
 - On the sample the cascade is right on 40 of 41. The rules take the lines
   Haiku gets wrong (three active-ingredient lines it calls met or partly
@@ -1552,17 +1563,57 @@ voyage-4 for the SOP's passages, $0.00006 per SOP.
   record completed at the end of the shift, not as each step is done.
 - Local evidence costs Haiku nothing measurable: 55 against 56 of 74.
 
-**At 5,000 SOPs**, for SOPs like these (15.7 lines each on average):
+**At 5,000 SOPs**, for SOPs like these (19.9 lines each on average):
 - Rules only: no bill. The local model needs 0.07 s of CPU per SOP to embed
   its passages (about 6 minutes for 5,000 on this laptop), and the scoring
-  and the rules take milliseconds. But a person reads about 10 lines per
-  SOP, some 52,000 lines in all, each shown with its three passages and the
+  and the rules take milliseconds. But a person reads about 13.5 lines per
+  SOP, some 67,500 lines in all, each shown with its three passages and the
   words the rules could not find.
-- Rules first, then Haiku: about $4.50, half the current $8.23, and the
+- Rules first, then Haiku: about $5.84, 57% of the current $10.17, and the
   best of the four on these SOPs. It still sends 2 of every 3 lines to a
   generative model.
-- The sample, the longest SOP here (41 lines): $3.35 for 5,000 through the
-  cascade, $19.36 with Haiku on every line.
+- The sample, the longest SOP here with the local scope (41 lines): $3.35
+  for 5,000 through the cascade, $19.36 with Haiku on every line.
+
+**Items under an unmarked opening paragraph.** `read_part` used to drop the
+items of a section whose opening paragraph has no marker. 211.142 opens
+"Written procedures describing the warehousing of drug products shall be
+established and followed. They shall include:", then (a) "Quarantine of
+drug products before release by the quality control unit." The opening
+paragraph became a requirement of its own but was not passed down, so (a)
+had only the section title as context, no "shall" anywhere, and was left
+out. It was found while the held-out SOPs were written, and fixed after the
+measurements above were first taken so that one change would not move
+both. The opening paragraph is now the lead-in of every item after it. The
+scope table's first and last rows and the two tables under "Four ways" are
+measured with the fix; the rules judge's table is from before it.
+- 26 sentences in 25 paragraphs of 211.130, 211.142, 211.150, 211.184 and
+  211.188 are now checked (Part 211: 394 to 420), 15 of them the items of
+  211.188, the batch record. 23 lines of 211.101, 211.130 and 211.184 that
+  were checked already gain the lead-in, so a cached verdict for them no
+  longer matches.
+- No graded line moved: the sample's and the held-out SOPs' graded sections
+  have no such opening, so right, gaps shown, missed and false gaps are as
+  before.
+- Scope moved: 211.188 has 17 sentences instead of 2, so its two best come
+  closer to more SOPs (the scope table above). The local modes check 278
+  lines instead of 220, voyage-4 316 instead of 251. Before the fix the
+  rules left 145 of 220 lines for a person, and 5,000 SOPs cost $4.50
+  through the cascade, $6.84 with Haiku on local evidence and $8.23 with
+  voyage-4. The new lines are mostly 211.188's short items ("Dates;", "Any
+  sampling performed;"), which the rules decide less often (14 of 58), so
+  the cascade costs 30% more.
+- voyage-4 at 0.62 also takes 211.188 on the label and cleaning SOPs: 2 more
+  extras in section 24's 0.62 row (its 0.68 and 0.65 rows are unchanged).
+  Section 25's library figures were measured before the fix and not run
+  again.
+- On the 58 new local lines the rules decide 14 and agree with Haiku on 7.
+  Five of the seven others are 211.188 lines on the master record SOP that
+  the rules call met, because the master record names the same things
+  ("Dates;" is all of 211.188(b)(1)); Haiku calls them partly or not met,
+  as the SOP covers the master record and never each batch's record. The
+  other two are not met where Haiku says not applicable, on a section
+  outside the SOP's scope.
 
 **The SOP check page.** Its scores card showed the old rules (sure about 15
 of 41) and its cost card assumed the model on every line. Both now read
@@ -1571,15 +1622,18 @@ only, the cascade and Haiku on the sample and the three held-out SOPs, and
 the three costs at 5,000 SOPs. The rows are still the sample's Haiku
 verdicts.
 
-**Spent:** $0.014 on 163 Haiku verdicts through the Batch API, and about
-$0.002 on the held-out SOPs' context lines at ingest.
+**Spent:** $0.014 on 163 Haiku verdicts through the Batch API, about
+$0.002 on the held-out SOPs' context lines at ingest, and $0.0086 on 103
+more verdicts after the fix for unmarked opening paragraphs.
 
 **Not covered.**
-- `read_part` drops the items under a section whose opening paragraph has
-  no marker ("Written procedures ... They shall include:", then (a) and
-  (b)). 26 sentences in 25 paragraphs of 211.130, 211.142, 211.150, 211.184
-  and 211.188 are never checked, in any mode. Found here and not fixed, because fixing it changes
-  every mode's line count.
+- The words rule calls a one-word list item met wherever the word appears
+  (211.188(b)(1) "Dates;" above). A short item needs its lead-in's terms
+  too, or should be left unsure.
+- 211.132 puts its (1) on the same line as the paragraph's heading
+  ("Labeling. (1) In order to alert consumers..."), so (b)(1) and (c)(1)
+  are cited as (b) and (c), and (c)(1)(i) to (iii) are read as letters and
+  dropped: 3 sentences of the OTC tamper-evident packaging section.
 - The background for the local scope is whatever else is stored. A
   database of nothing but stability SOPs would raise 211.166's usual score
   and push stability SOPs out of scope; a fixed reference set would make
