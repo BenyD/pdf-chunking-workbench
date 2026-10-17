@@ -1695,6 +1695,34 @@ joined by commas, "and" or "or", and "of this chapter" or the like.
   None of the 14 SOPs keeps anything for a time after distribution, so the
   numbers step has nothing to compare the OTC periods with.
 
+Three kinds of words were still left in, and asked nothing of an SOP. The
+pattern did not know the lead phrases "as specified in", "according to" and
+"in accord with", so their citations stayed and "211.192" was a term of
+211.188(b)(12) (also 211.67(c), 211.184(a) and (d), 211.186(b)(7)). The
+pattern for "paragraphs (c)(1), (c)(2), and (c)(3) of this section" never
+matched, because the parentheses were stripped before it ran, so
+"paragraphs" was a term of 211.101(c)(3), 211.170(a)(1) and 211.170(b)(1).
+And 211.180(a) and (b) kept the OTC condition before their 3-year period,
+"in the case of certain OTC drug products lacking expiration dating because
+they meet the criteria for exemption", as nine terms. All three now go: 10
+lines lose terms. The period itself stays, for the numbers step.
+- Without the OTC words, 211.180(b) holds 82% of its terms in the records
+  retention SOP's "3.2 Records of raw materials, containers, closures and
+  labels ... are kept for two years after the material is received", and
+  the rules called it met. Haiku says partly met. The numbers step had
+  skipped that sentence, because it counts from receipt and the rule from
+  expiry or distribution. A period for the same records counted from an
+  event the rule does not count from is now unsure: the rules cannot say
+  which is longer.
+- No line changes in any mode, and nothing was spent: rules 36 of 74, the
+  cascade 60, 194 of 278 lines left for a person, $6.00 for 5,000 SOPs.
+  Seven unsure lines get a new reason. 211.67(c) on the equipment cleaning
+  SOP now holds 67% of its terms (was 44%), so it is closer to met.
+- "they" is still a term. As a stop word it would make the incoming
+  materials SOP's 211.84(d)(1) "Specific identity tests, if they exist,
+  shall be used" met at 75% on "5.1 Every lot is tested for identity",
+  because "specific" matches "specification". Haiku says not met.
+
 **The SOP check page.** Its scores card showed the old rules (sure about 15
 of 41) and its cost card assumed the model on every line. Both now read
 `web/src/data/gap-modes.json`, written by `gap_modes.py --publish`: rules

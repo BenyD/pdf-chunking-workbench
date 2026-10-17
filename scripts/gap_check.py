@@ -596,6 +596,9 @@ def _has(term: str, text: str) -> bool:
 _CITE = r"\d+\.\d+(?:\([a-z0-9]+\))*"
 _CITES = (rf"§§?\s*{_CITE}(?:(?:,|,? and|,? or)\s+(?:§\s*)?{_CITE})*"
           r"(?:\s+of (?:this (?:chapter|part|section)|these regulations))?")
+# The section's own paragraphs: "paragraph (d)", "paragraphs (c)(1), (c)(2), and (c)(3)", "paragraphs (a) (2) and (3)".
+_PARA = r"\([a-z0-9]+\)(?:\s?\([a-z0-9]+\))*"
+_PARAS = rf"{_PARA}(?:(?:,|,? and|,? or)\s+{_PARA})*"
 
 
 def obligation(text: str) -> str:
@@ -605,9 +608,11 @@ def obligation(text: str) -> str:
     t = re.sub(r"^To (?:assure|ensure) [^,]+, ", "", text)
     t = re.sub(r"^Except for [^,]+, ", "", t)
     t = re.sub(r",?\s*\b(?:except|unless)\b[^,;.]*", "", t)
+    t = re.sub(r"\s*\b(?:described in )?paragraphs? " + _PARAS + r" of this section", "", t)   # before its markers go
     t = re.sub(r"\s*\([^()]*\)", "", t)                    # "(either by medical examination or ...)", "(except routine ...)"
-    t = re.sub(r"\s*\(?\b(?:as )?(?:described in|in accordance with|under|required by|of) " + _CITES + r"\)?", "", t)
-    t = re.sub(r"\b(?:described in )?paragraphs? \([a-z0-9]+\)(?:\s*\(\w+\))*(?: and \(\w+\))? of this section", "", t)
+    t = re.sub(r"\s*\(?\b(?:as )?(?:described in|specified in|in accordance with|in accord with|according to|under|required by|of) "
+               + _CITES + r"\)?", "", t)
+    t = re.sub(r"\bor, in the case of [^,]+,", "or", t)    # "or, in the case of certain OTC drug products lacking ...,"
     return re.sub(r"\s+", " ", t).strip()
 
 
@@ -742,6 +747,12 @@ def rules_judge(req: Requirement, passages: list[dict], sop: dict) -> dict:
             if sd < days:
                 return _v("partly_met", f"The SOP keeps them {ssaid} after {ANCHORS[anchor]}; the rule asks for {said}.", sent.strip())
             longer, matched = (ssaid, sent.strip()), matched | {anchor}
+    # The same records kept for a period from another event ("two years after the material is received" against "1 year
+    # after the expiration date"): the rules cannot say which is longer, and the words alone would call it met.
+    for sd, ssaid, sanchor, sent in periods(whole) if asked and not longer else []:
+        if sanchor not in asked and len([w for w in subject if _found(w, sent.lower())]) >= 2:
+            return _v("unsure", f"The SOP counts {ssaid} from {ANCHORS[sanchor]}; the rule counts from "
+                      + " or ".join(ANCHORS[a] for a in sorted(asked)) + ".", sent.strip())
     if longer and "whichever is longer" in body and asked - matched:
         missing = ", ".join(ANCHORS[a] for a in sorted(asked - matched))
         return _v("partly_met", f"The SOP counts only from one event; the rule also counts from {missing}, whichever is longer.", longer[1])
