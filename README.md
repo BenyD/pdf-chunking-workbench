@@ -230,14 +230,15 @@ five, 129 questions:
 |---|---|
 | Fixed-size 300 tokens (Bedrock default) | 84% |
 | Semantic chunking | 82% |
-| Hierarchical 1,500 / 300 | 88 to 90%, reading twice the tokens |
+| Hierarchical 1,500 / 300 | 87 to 89%, reading about three times the tokens |
 | Our structure, keywords only | 86% |
 | Our structure + local open-source model (the app, no API) | 93% |
 | Our structure + embeddings API, nothing generated | 95% |
 | With generative AI switched on | 98% |
 
-The full table, per document, is on the Compare page and in
-docs/DECISIONS.md section 22.
+Every setup is searched the way the search page searches: 8 results asked
+for, the top five scored (re-run 2026-10-18). The full table, per document,
+is on the Compare page and in docs/DECISIONS.md section 22.
 
 **When the answer is somewhere else.** A passage often points at the one
 that answers: "see Table 2", a figure whose decision is in a table row,

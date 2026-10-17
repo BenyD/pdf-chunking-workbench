@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-17",
+  "date": "2026-10-18",
   "k": 5,
   "questions": 129,
   "setups": [
@@ -103,26 +103,26 @@
       "label": "Fixed-size 300 tokens, hybrid search",
       "strategy": "fixed",
       "questions": 129,
-      "recall": 0.829,
-      "mrr": 0.731,
+      "recall": 0.783,
+      "mrr": 0.717,
       "tokens_read": 1331,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
-          "recall": 0.889,
-          "mrr": 0.738,
+          "recall": 0.778,
+          "mrr": 0.699,
           "tokens_read": 1500
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 0.913,
-          "mrr": 0.848,
+          "mrr": 0.841,
           "tokens_read": 1500
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
-          "recall": 0.778,
-          "mrr": 0.444,
+          "recall": 0.333,
+          "mrr": 0.333,
           "tokens_read": 1500
         },
         "Pharmacy bill 1 (synthetic).pdf": {
@@ -293,27 +293,27 @@
       "label": "Hierarchical 1,500 / 300, meaning search",
       "strategy": "hierarchical",
       "questions": 129,
-      "recall": 0.884,
-      "mrr": 0.844,
-      "tokens_read": 3461,
+      "recall": 0.891,
+      "mrr": 0.845,
+      "tokens_read": 4372,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
-          "recall": 0.944,
-          "mrr": 0.861,
-          "tokens_read": 5333
+          "recall": 1.0,
+          "mrr": 0.872,
+          "tokens_read": 6917
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 1.0,
           "mrr": 0.978,
-          "tokens_read": 4182
+          "tokens_read": 6008
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
           "recall": 0.444,
           "mrr": 0.315,
-          "tokens_read": 7000
+          "tokens_read": 7500
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
@@ -355,13 +355,13 @@
           "questions": 11,
           "recall": 0.727,
           "mrr": 0.682,
-          "tokens_read": 4420
+          "tokens_read": 5783
         },
         "nppa-apollo.pdf": {
           "questions": 12,
           "recall": 1.0,
           "mrr": 0.958,
-          "tokens_read": 3500
+          "tokens_read": 4386
         },
         "nppa-ceiling-2024.pdf": {
           "questions": 8,
@@ -379,7 +379,7 @@
           "questions": 12,
           "recall": 1.0,
           "mrr": 0.917,
-          "tokens_read": 4782
+          "tokens_read": 6190
         }
       }
     },
@@ -388,27 +388,27 @@
       "label": "Hierarchical 1,500 / 300, hybrid search",
       "strategy": "hierarchical",
       "questions": 129,
-      "recall": 0.899,
-      "mrr": 0.82,
-      "tokens_read": 3545,
+      "recall": 0.868,
+      "mrr": 0.803,
+      "tokens_read": 4490,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
-          "recall": 0.944,
-          "mrr": 0.796,
-          "tokens_read": 5667
+          "recall": 0.833,
+          "mrr": 0.727,
+          "tokens_read": 6917
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 1.0,
-          "mrr": 0.957,
-          "tokens_read": 4435
+          "mrr": 0.946,
+          "tokens_read": 6326
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
-          "recall": 0.778,
-          "mrr": 0.444,
-          "tokens_read": 7333
+          "recall": 0.444,
+          "mrr": 0.37,
+          "tokens_read": 7500
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
@@ -450,13 +450,13 @@
           "questions": 11,
           "recall": 0.727,
           "mrr": 0.682,
-          "tokens_read": 5045
+          "tokens_read": 6409
         },
         "nppa-apollo.pdf": {
           "questions": 12,
-          "recall": 0.917,
-          "mrr": 0.917,
-          "tokens_read": 2250
+          "recall": 1.0,
+          "mrr": 0.958,
+          "tokens_read": 3750
         },
         "nppa-ceiling-2024.pdf": {
           "questions": 8,
@@ -473,8 +473,8 @@
         "who-trs986-annex2.pdf": {
           "questions": 12,
           "recall": 1.0,
-          "mrr": 0.743,
-          "tokens_read": 5125
+          "mrr": 0.701,
+          "tokens_read": 6907
         }
       }
     },
@@ -579,26 +579,26 @@
       "strategy": "structural",
       "questions": 129,
       "recall": 0.953,
-      "mrr": 0.841,
-      "tokens_read": 1329,
+      "mrr": 0.852,
+      "tokens_read": 1371,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
-          "recall": 0.889,
-          "mrr": 0.727,
-          "tokens_read": 1654
+          "recall": 0.833,
+          "mrr": 0.792,
+          "tokens_read": 1886
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 1.0,
           "mrr": 0.949,
-          "tokens_read": 1541
+          "tokens_read": 1547
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
           "recall": 1.0,
-          "mrr": 0.744,
-          "tokens_read": 1473
+          "mrr": 0.856,
+          "tokens_read": 1567
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
@@ -621,7 +621,7 @@
         "QC Inspection Report (synthetic).pdf": {
           "questions": 16,
           "recall": 1.0,
-          "mrr": 0.969,
+          "mrr": 0.938,
           "tokens_read": 658
         },
         "Tablet press maintenance manual (synthetic).pdf": {
@@ -638,20 +638,20 @@
         },
         "humira-label-2017.pdf": {
           "questions": 11,
-          "recall": 0.636,
-          "mrr": 0.568,
-          "tokens_read": 1362
+          "recall": 0.727,
+          "mrr": 0.598,
+          "tokens_read": 1341
         },
         "nppa-apollo.pdf": {
           "questions": 12,
           "recall": 1.0,
           "mrr": 0.903,
-          "tokens_read": 1622
+          "tokens_read": 1593
         },
         "nppa-ceiling-2024.pdf": {
           "questions": 8,
           "recall": 1.0,
-          "mrr": 0.938,
+          "mrr": 0.854,
           "tokens_read": 1016
         },
         "rifaximin-tablets.pdf": {
@@ -664,7 +664,7 @@
           "questions": 12,
           "recall": 1.0,
           "mrr": 0.696,
-          "tokens_read": 1729
+          "tokens_read": 1797
         }
       }
     },
@@ -674,32 +674,32 @@
       "strategy": "structural",
       "questions": 129,
       "recall": 0.93,
-      "mrr": 0.778,
-      "tokens_read": 1371,
+      "mrr": 0.807,
+      "tokens_read": 1511,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
           "recall": 0.778,
-          "mrr": 0.699,
-          "tokens_read": 2141
+          "mrr": 0.657,
+          "tokens_read": 2270
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 1.0,
-          "mrr": 0.92,
-          "tokens_read": 1552
+          "mrr": 0.899,
+          "tokens_read": 1636
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
           "recall": 1.0,
-          "mrr": 0.726,
-          "tokens_read": 2298
+          "mrr": 0.856,
+          "tokens_read": 2392
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
           "recall": 1.0,
           "mrr": 1.0,
-          "tokens_read": 558
+          "tokens_read": 625
         },
         "Pharmacy bill 2 (synthetic).pdf": {
           "questions": 3,
@@ -717,12 +717,12 @@
           "questions": 16,
           "recall": 1.0,
           "mrr": 0.865,
-          "tokens_read": 603
+          "tokens_read": 611
         },
         "Tablet press maintenance manual (synthetic).pdf": {
           "questions": 3,
           "recall": 1.0,
-          "mrr": 0.778,
+          "mrr": 0.833,
           "tokens_read": 435
         },
         "cdsco-new-drugs-2024.pdf": {
@@ -734,13 +734,13 @@
         "humira-label-2017.pdf": {
           "questions": 11,
           "recall": 0.727,
-          "mrr": 0.621,
-          "tokens_read": 1270
+          "mrr": 0.682,
+          "tokens_read": 1404
         },
         "nppa-apollo.pdf": {
           "questions": 12,
           "recall": 1.0,
-          "mrr": 0.743,
+          "mrr": 0.75,
           "tokens_read": 1562
         },
         "nppa-ceiling-2024.pdf": {
@@ -758,8 +758,8 @@
         "who-trs986-annex2.pdf": {
           "questions": 12,
           "recall": 0.833,
-          "mrr": 0.415,
-          "tokens_read": 1110
+          "mrr": 0.656,
+          "tokens_read": 2034
         }
       }
     },
@@ -830,7 +830,7 @@
           "questions": 11,
           "recall": 0.818,
           "mrr": 0.636,
-          "tokens_read": 1946
+          "tokens_read": 1945
         },
         "nppa-apollo.pdf": {
           "questions": 12,
@@ -863,27 +863,27 @@
       "label": "Structure-aware + AI context + embeddings API (optional generative AI)",
       "strategy": "contextual",
       "questions": 129,
-      "recall": 0.984,
-      "mrr": 0.875,
-      "tokens_read": 1790,
+      "recall": 0.977,
+      "mrr": 0.868,
+      "tokens_read": 1802,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
           "recall": 1.0,
-          "mrr": 0.921,
-          "tokens_read": 2036
+          "mrr": 0.856,
+          "tokens_read": 2027
         },
         "Bharatiya Nyaya Sanhita 2023.pdf": {
           "questions": 23,
           "recall": 0.957,
-          "mrr": 0.891,
-          "tokens_read": 1953
+          "mrr": 0.913,
+          "tokens_read": 1949
         },
         "Pharma Price Schedule (synthetic).pdf": {
           "questions": 9,
-          "recall": 1.0,
-          "mrr": 0.689,
-          "tokens_read": 2024
+          "recall": 0.889,
+          "mrr": 0.722,
+          "tokens_read": 2118
         },
         "Pharmacy bill 1 (synthetic).pdf": {
           "questions": 3,
@@ -912,8 +912,8 @@
         "Tablet press maintenance manual (synthetic).pdf": {
           "questions": 3,
           "recall": 1.0,
-          "mrr": 0.556,
-          "tokens_read": 974
+          "mrr": 0.389,
+          "tokens_read": 975
         },
         "cdsco-new-drugs-2024.pdf": {
           "questions": 4,
@@ -925,7 +925,7 @@
           "questions": 11,
           "recall": 0.909,
           "mrr": 0.795,
-          "tokens_read": 1789
+          "tokens_read": 1821
         },
         "nppa-apollo.pdf": {
           "questions": 12,
@@ -949,7 +949,7 @@
           "questions": 12,
           "recall": 1.0,
           "mrr": 0.739,
-          "tokens_read": 2066
+          "tokens_read": 2118
         }
       }
     }
@@ -983,15 +983,15 @@
       "question": "Which court tries dowry death?",
       "ranks": {
         "fixed_vec": 1,
-        "fixed_hyb": 5,
+        "fixed_hyb": null,
         "semantic_vec": 1,
         "hier_vec": 1,
-        "hier_hyb": 4,
+        "hier_hyb": null,
         "struct_kw": null,
-        "struct_hyb": 2,
+        "struct_hyb": null,
         "struct_local": null,
         "ctx_kw": null,
-        "ctx_hyb": 1
+        "ctx_hyb": 3
       }
     },
     {
@@ -1002,10 +1002,10 @@
         "fixed_hyb": 1,
         "semantic_vec": 1,
         "hier_vec": 1,
-        "hier_hyb": 1,
+        "hier_hyb": 2,
         "struct_kw": 1,
         "struct_hyb": 1,
-        "struct_local": 1,
+        "struct_local": null,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1020,7 +1020,7 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 1,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
         "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
@@ -1063,15 +1063,15 @@
       "question": "Is murder bailable and which court tries it?",
       "ranks": {
         "fixed_vec": 1,
-        "fixed_hyb": 2,
+        "fixed_hyb": 4,
         "semantic_vec": 1,
         "hier_vec": 1,
-        "hier_hyb": 2,
+        "hier_hyb": 4,
         "struct_kw": null,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
         "struct_local": 4,
         "ctx_kw": null,
-        "ctx_hyb": 1
+        "ctx_hyb": 2
       }
     },
     {
@@ -1177,11 +1177,11 @@
         "fixed_vec": null,
         "fixed_hyb": null,
         "semantic_vec": 3,
-        "hier_vec": null,
+        "hier_vec": 5,
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
-        "struct_local": null,
+        "struct_local": 4,
         "ctx_kw": 3,
         "ctx_hyb": 1
       }
@@ -1191,10 +1191,10 @@
       "question": "In the First Schedule classification table of the BNSS 2023, what is the punishment for abetment where the abettor or the person abetted is a public servant whose duty is to prevent the offence?",
       "ranks": {
         "fixed_vec": 2,
-        "fixed_hyb": 4,
+        "fixed_hyb": null,
         "semantic_vec": 1,
         "hier_vec": 2,
-        "hier_hyb": 4,
+        "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
         "struct_local": 1,
@@ -1244,7 +1244,7 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 3,
+        "struct_hyb": 1,
         "struct_local": null,
         "ctx_kw": 4,
         "ctx_hyb": 1
@@ -1309,7 +1309,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 1,
-        "struct_local": 1,
+        "struct_local": 2,
         "ctx_kw": 5,
         "ctx_hyb": 2
       }
@@ -1407,7 +1407,7 @@
         "struct_hyb": 1,
         "struct_local": 3,
         "ctx_kw": 2,
-        "ctx_hyb": 2
+        "ctx_hyb": 1
       }
     },
     {
@@ -1415,10 +1415,10 @@
       "question": "What does the law say about snatching?",
       "ranks": {
         "fixed_vec": 1,
-        "fixed_hyb": 2,
+        "fixed_hyb": 3,
         "semantic_vec": 1,
         "hier_vec": 1,
-        "hier_hyb": 2,
+        "hier_hyb": 4,
         "struct_kw": null,
         "struct_hyb": 1,
         "struct_local": 1,
@@ -1708,8 +1708,8 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": null,
-        "struct_hyb": null,
-        "struct_local": null,
+        "struct_hyb": 3,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 1
       }
@@ -1805,7 +1805,7 @@
         "hier_hyb": null,
         "struct_kw": null,
         "struct_hyb": null,
-        "struct_local": 3,
+        "struct_local": null,
         "ctx_kw": null,
         "ctx_hyb": 4
       }
@@ -1901,7 +1901,7 @@
         "hier_hyb": 1,
         "struct_kw": 3,
         "struct_hyb": 3,
-        "struct_local": 4,
+        "struct_local": 3,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -1914,7 +1914,7 @@
         "fixed_hyb": null,
         "semantic_vec": 2,
         "hier_vec": 2,
-        "hier_hyb": null,
+        "hier_hyb": 2,
         "struct_kw": 3,
         "struct_hyb": 2,
         "struct_local": 3,
@@ -2076,7 +2076,7 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 4,
-        "struct_hyb": 2,
+        "struct_hyb": 3,
         "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
@@ -2124,7 +2124,7 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 1,
+        "struct_hyb": 2,
         "struct_local": 1,
         "ctx_kw": 2,
         "ctx_hyb": 2
@@ -2199,15 +2199,15 @@
       "question": "What is the ceiling price of F-11000 and its schedule category?",
       "ranks": {
         "fixed_vec": null,
-        "fixed_hyb": 4,
+        "fixed_hyb": null,
         "semantic_vec": null,
         "hier_vec": null,
-        "hier_hyb": 4,
+        "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
         "struct_local": 1,
         "ctx_kw": 1,
-        "ctx_hyb": 2
+        "ctx_hyb": 1
       }
     },
     {
@@ -2220,7 +2220,7 @@
         "hier_vec": 2,
         "hier_hyb": 1,
         "struct_kw": 1,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
         "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 2
@@ -2231,13 +2231,13 @@
       "question": "Which manufacturer is listed for code F-12345?",
       "ranks": {
         "fixed_vec": null,
-        "fixed_hyb": 4,
+        "fixed_hyb": null,
         "semantic_vec": null,
         "hier_vec": null,
-        "hier_hyb": 4,
+        "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 2,
-        "struct_local": 3,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 2
       }
@@ -2252,10 +2252,10 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 1,
-        "struct_hyb": 2,
+        "struct_hyb": 1,
         "struct_local": 2,
         "ctx_kw": 1,
-        "ctx_hyb": 5
+        "ctx_hyb": null
       }
     },
     {
@@ -2295,13 +2295,13 @@
       "question": "Which manufacturer makes the aspirin 10 mg ointment listed under code F-10858 in the price schedule?",
       "ranks": {
         "fixed_vec": null,
-        "fixed_hyb": 4,
+        "fixed_hyb": null,
         "semantic_vec": null,
         "hier_vec": null,
-        "hier_hyb": 4,
+        "hier_hyb": null,
         "struct_kw": 1,
         "struct_hyb": 1,
-        "struct_local": 2,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2311,10 +2311,10 @@
       "question": "What is the ceiling price in INR for the Losartan 100 mcg inhaler under product code F-11880 from Suryodaya Remedies?",
       "ranks": {
         "fixed_vec": null,
-        "fixed_hyb": 4,
+        "fixed_hyb": null,
         "semantic_vec": null,
         "hier_vec": 3,
-        "hier_hyb": 4,
+        "hier_hyb": 3,
         "struct_kw": 1,
         "struct_hyb": 1,
         "struct_local": 1,
@@ -2588,7 +2588,7 @@
         "hier_vec": 1,
         "hier_hyb": 1,
         "struct_kw": 2,
-        "struct_hyb": 1,
+        "struct_hyb": 2,
         "struct_local": 2,
         "ctx_kw": 1,
         "ctx_hyb": 1
@@ -2831,7 +2831,7 @@
         "struct_hyb": 1,
         "struct_local": 1,
         "ctx_kw": 2,
-        "ctx_hyb": 1
+        "ctx_hyb": 2
       }
     },
     {
@@ -2845,7 +2845,7 @@
         "hier_hyb": null,
         "struct_kw": 2,
         "struct_hyb": 2,
-        "struct_local": 3,
+        "struct_local": 2,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
@@ -2925,7 +2925,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
-        "struct_local": 2,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -2957,7 +2957,7 @@
         "hier_hyb": 3,
         "struct_kw": null,
         "struct_hyb": 4,
-        "struct_local": 2,
+        "struct_local": 1,
         "ctx_kw": 4,
         "ctx_hyb": 2
       }
@@ -2989,7 +2989,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
-        "struct_local": 5,
+        "struct_local": 3,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }
@@ -3002,10 +3002,10 @@
         "fixed_hyb": null,
         "semantic_vec": null,
         "hier_vec": 1,
-        "hier_hyb": 1,
+        "hier_hyb": 2,
         "struct_kw": null,
         "struct_hyb": 1,
-        "struct_local": 2,
+        "struct_local": 1,
         "ctx_kw": null,
         "ctx_hyb": 1
       }
@@ -3021,7 +3021,7 @@
         "hier_hyb": 1,
         "struct_kw": null,
         "struct_hyb": 2,
-        "struct_local": 2,
+        "struct_local": 1,
         "ctx_kw": null,
         "ctx_hyb": 2
       }
@@ -3037,7 +3037,7 @@
         "hier_hyb": 1,
         "struct_kw": 2,
         "struct_hyb": 1,
-        "struct_local": 4,
+        "struct_local": 1,
         "ctx_kw": 1,
         "ctx_hyb": 1
       }

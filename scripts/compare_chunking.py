@@ -263,6 +263,10 @@ def _norm(s: str) -> str:
 
 
 LOCAL_SETUPS = {"struct_local"}       # meaning search from the local model's vectors (embedding_local)
+# The search page asks for 8 results (web/src/app/api/search/route.ts) and the SQL draws 4 times that many
+# candidates from each list. hybrid_search_local scores passages with little text of their own lower within those
+# candidates (section 29), so the count changes the order: every setup is searched with the app's 8, top 5 scored.
+APP_K = 8
 
 
 def _search(cur, q: str, emb, strategy: str, doc_id: str, kw: float, vec: float, k: int, fn: str = "hybrid_search") -> list[dict]:
@@ -302,9 +306,9 @@ def evaluate(k: int = 5) -> None:
         for qi, ((doc_id, name, question, needle, page), emb) in enumerate(zip(questions, embs)):
             for key, _label, strategy, kw, vec, parents in setups:
                 if key in LOCAL_SETUPS:
-                    hits = _search(cur, question, local_embs[qi], strategy, doc_id, kw, vec, k, "hybrid_search_local")
+                    hits = _search(cur, question, local_embs[qi], strategy, doc_id, kw, vec, max(k, APP_K), "hybrid_search_local")
                 else:
-                    hits = _search(cur, question, emb, strategy, doc_id, kw, vec, k)
+                    hits = _search(cur, question, emb, strategy, doc_id, kw, vec, max(k, APP_K))
                 if parents:                                  # children replaced by their parents, duplicates dropped
                     ids = [h["parent_id"] for h in hits if h["parent_id"]]
                     missing = [i for i in ids if i not in parent_cache]
