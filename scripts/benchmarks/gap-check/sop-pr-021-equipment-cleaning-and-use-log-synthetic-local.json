@@ -1,0 +1,624 @@
+{
+  "sop": "SOP-PR-021 Equipment cleaning and use log (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.182",
+    "211.67"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.182",
+        "title": "211.182 Equipment cleaning and use log.",
+        "score": 0.714,
+        "in_scope": true
+      },
+      {
+        "section": "211.67",
+        "title": "211.67 Equipment cleaning and maintenance.",
+        "score": 0.569,
+        "in_scope": true
+      },
+      {
+        "section": "211.58",
+        "title": "211.58 Maintenance.",
+        "score": 0.232,
+        "in_scope": false
+      },
+      {
+        "section": "211.63",
+        "title": "211.63 Equipment design, size, and location.",
+        "score": 0.223,
+        "in_scope": false
+      },
+      {
+        "section": "211.65",
+        "title": "211.65 Equipment construction.",
+        "score": 0.18,
+        "in_scope": false
+      },
+      {
+        "section": "211.56",
+        "title": "211.56 Sanitation.",
+        "score": 0.176,
+        "in_scope": false
+      },
+      {
+        "section": "211.105",
+        "title": "211.105 Equipment identification.",
+        "score": 0.166,
+        "in_scope": false
+      },
+      {
+        "section": "211.28",
+        "title": "211.28 Personnel responsibilities.",
+        "score": 0.163,
+        "in_scope": false
+      },
+      {
+        "section": "211.52",
+        "title": "211.52 Washing and toilet facilities.",
+        "score": 0.16,
+        "in_scope": false
+      },
+      {
+        "section": "211.68",
+        "title": "211.68 Automatic, mechanical, and electronic equipment.",
+        "score": 0.094,
+        "in_scope": false
+      },
+      {
+        "section": "211.50",
+        "title": "211.50 Sewage and refuse.",
+        "score": 0.089,
+        "in_scope": false
+      },
+      {
+        "section": "211.46",
+        "title": "211.46 Ventilation, air filtration, air heating and cooling.",
+        "score": 0.075,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 15,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 4,
+  "left_for_review": 11,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.67(a)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance.",
+      "text": "Equipment and utensils shall be cleaned, maintained, and, as appropriate for the nature of the drug, sanitized and/or sterilized at appropriate intervals to prevent malfunctions or contamination that would alter the safety, identity, strength, quality, or purity of the drug product beyond the official or other established requirements.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "5. Maintenance\n\nPreventive maintenance follows the schedule in the maintenance plan. Punches and dies are inspected for wear at every change of tooling. Lubricants must not come into contact with product."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: utensils, nature, sterilized, intervals, prevent."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: utensils, nature, sterilized, intervals, prevent."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b), sentence 1",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance.",
+      "text": "Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: followed, utensils, manufacture, packing, holding."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: followed, utensils, manufacture, packing, holding."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b), sentence 2",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance.",
+      "text": "These procedures shall include, but are not necessarily limited to, the following:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "5. Maintenance\n\nPreventive maintenance follows the schedule in the maintenance plan. Punches and dies are inspected for wear at every change of tooling. Lubricants must not come into contact with product."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(1)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "Assignment of responsibility for cleaning and maintaining equipment;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: assignment, responsibility."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: assignment, responsibility."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(2)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "Maintenance and cleaning schedules, including, where appropriate, sanitizing schedules;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 75% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 75% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(3)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "A description in sufficient detail of the methods, equipment, and materials used in cleaning and maintenance operations, and the methods of disassembling and reassembling equipment as necessary to assure proper cleaning and maintenance;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: description, sufficient, detail, materials, maintenance."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: description, sufficient, detail, materials, maintenance."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(4)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "Removal or obliteration of previous batch identification;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: removal, obliteration, previous, identification."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: removal, obliteration, previous, identification."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(5)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "Protection of clean equipment from contamination prior to use;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(b)(6)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance. > Written procedures shall be established and followed for cleaning and maintenance of equipment, including utensils, used in the manufacture, processing, packing, or holding of a drug product. These procedures shall include, but are not necessarily limited to, the following:",
+      "text": "Inspection of equipment for cleanliness immediately before use.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of produc",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.67(c)",
+      "section_title": "211.67 Equipment cleaning and maintenance.",
+      "context": "211.67 Equipment cleaning and maintenance.",
+      "text": "Records shall be kept of maintenance, cleaning, sanitizing, and inspection as specified in §§ 211.180 and 211.182.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 44% of the terms; missing: maintenance, inspection, specified, 211.180, 211.182."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 44% of the terms; missing: maintenance, inspection, specified, 211.180, 211.182."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.182, sentence 1",
+      "section_title": "211.182 Equipment cleaning and use log.",
+      "context": "211.182 Equipment cleaning and use log.",
+      "text": "A written record of major equipment cleaning, maintenance (except routine maintenance such as lubrication and adjustments), and use shall be included in individual equipment logs that show the date, time, product, and lot number of each batch processed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage has most of it but not: time."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage has most of it but not: time."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.182, sentence 2",
+      "section_title": "211.182 Equipment cleaning and use log.",
+      "context": "211.182 Equipment cleaning and use log.",
+      "text": "If equipment is dedicated to manufacture of one product, then individual equipment logs are not required, provided that lots or batches of such product follow in numerical order and are manufactured in numerical sequence.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 47% of the terms; missing: dedicated, then, individual, provided, follow."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 47% of the terms; missing: dedicated, then, individual, provided, follow."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.182, sentence 3",
+      "section_title": "211.182 Equipment cleaning and use log.",
+      "context": "211.182 Equipment cleaning and use log.",
+      "text": "In cases where dedicated equipment is employed, the records of cleaning, maintenance, and use shall be part of the batch record.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: cases, dedicated, employed."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: cases, dedicated, employed."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.182, sentence 4",
+      "section_title": "211.182 Equipment cleaning and use log.",
+      "context": "211.182 Equipment cleaning and use log.",
+      "text": "The persons performing and double-checking the cleaning and maintenance (or, if the cleaning and maintenance is performed using automated equipment under § 211.68, just the person verifying the cleaning and maintenance done by the automated equipment) shall date and sign or initial the log indicating that the work was performed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: performing, double-checking, indicating, work."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: performing, double-checking, indicating, work."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.182, sentence 5",
+      "section_title": "211.182 Equipment cleaning and use log.",
+      "context": "211.182 Equipment cleaning and use log.",
+      "text": "Entries in the log shall be in chronological order.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo define how manufacturing equipment is cleaned, maintained and sanitized between batches and between products, and how cleaning and use are recorded, at the Chennai tablet plant."
+        },
+        {
+          "page": 1,
+          "text": "4. Cleaning\n\n4.1 Each machine has a written cleaning instruction naming who cleans it, the schedule, the detergent and its concentration, the method and the equipment used, and how parts are taken apart and put back together. 4.2 A machine is cleaned after every batch and before any change of product. 4.3 Clean equipment is tagged with the date and time of cleaning and protected from contamination before use. 4.4 Equipment is inspected for cleanliness by the supervisor immediately before use."
+        },
+        {
+          "page": 1,
+          "text": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order.",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "6. Equipment log\n\nEvery major machine has a bound cleaning and use log. Each entry gives the date, the product and batch number processed, the cleaning or maintenance done, and the initials of the person who did it and of the person who checked it. Entries are made in chronological order.",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

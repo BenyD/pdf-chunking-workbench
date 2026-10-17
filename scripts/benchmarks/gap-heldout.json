@@ -1,0 +1,76 @@
+{
+  "_note": "Written 2026-10-17, after the rules judge in scripts/gap_check.py was first frozen and before the three SOPs were generated or ingested (samples/generate/make_gap_heldout.py makes them). Verdicts are what a QA reviewer would write for each line of the SOP's own sections. The first run decided 6 of 33 lines and got 3 right; the three general flaws it showed were then fixed, so later runs on these SOPs are no longer held out (DECISIONS section 30).",
+  "SOP-PR-015 In-process controls and yield (synthetic)": {
+    "sections": [
+      "211.110",
+      "211.103"
+    ],
+    "lines": {
+      "211.110(a), sentence 1": "met",
+      "211.110(a), sentence 2": "met",
+      "211.110(a), sentence 3": "partly_met",
+      "211.110(a)(1)": "met",
+      "211.110(a)(2)": "not_met",
+      "211.110(a)(3)": "met",
+      "211.110(a)(4)": "met",
+      "211.110(a)(5)": "not_applicable",
+      "211.110(a)(6)": "not_applicable",
+      "211.110(b), sentence 1": "partly_met",
+      "211.110(b), sentence 2": "met",
+      "211.110(c)": "met",
+      "211.110(d)": "met",
+      "211.103, sentence 1": "met",
+      "211.103, sentence 2": "not_met"
+    },
+    "planted": {
+      "211.110(a)(2)": "no disintegration check at all",
+      "211.110(b), sentence 1": "limits are copied from the master record, never derived from process averages or statistics",
+      "211.103, sentence 2": "nobody verifies the operator's yield calculation",
+      "211.110(d)": "met in other words: a locked reject cage, the word quarantine is never used"
+    }
+  },
+  "SOP-HR-002 Personnel qualification, training and hygiene (synthetic)": {
+    "sections": [
+      "211.25",
+      "211.28"
+    ],
+    "lines": {
+      "211.25(a), sentence 1": "met",
+      "211.25(a), sentence 2": "met",
+      "211.25(a), sentence 3": "partly_met",
+      "211.25(b)": "met",
+      "211.25(c)": "not_met",
+      "211.28(a), sentence 1": "met",
+      "211.28(a), sentence 2": "met",
+      "211.28(b)": "met",
+      "211.28(c)": "met",
+      "211.28(d), sentence 1": "partly_met",
+      "211.28(d), sentence 2": "not_met"
+    },
+    "planted": {
+      "211.25(a), sentence 3": "GMP training only at induction, never on a continuing basis",
+      "211.25(c)": "nothing on having enough qualified people",
+      "211.28(d), sentence 1": "only open wounds on the hands; no illness, no medical clearance",
+      "211.28(d), sentence 2": "staff are never told to report health conditions"
+    }
+  },
+  "SOP-QA-008 Production procedures, deviations and reprocessing (synthetic)": {
+    "sections": [
+      "211.100",
+      "211.115"
+    ],
+    "lines": {
+      "211.100(a), sentence 1": "met",
+      "211.100(a), sentence 2": "met",
+      "211.100(a), sentence 3": "met",
+      "211.100(b), sentence 1": "partly_met",
+      "211.100(b), sentence 2": "met",
+      "211.115(a)": "met",
+      "211.115(b)": "not_met"
+    },
+    "planted": {
+      "211.100(b), sentence 1": "batch record filled in at the end of the shift, not at the time of performance",
+      "211.115(b)": "the production manager, not the quality unit, approves reprocessing"
+    }
+  }
+}

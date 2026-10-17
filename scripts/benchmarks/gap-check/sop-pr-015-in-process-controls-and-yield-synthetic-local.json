@@ -1,0 +1,624 @@
+{
+  "sop": "SOP-PR-015 In-process controls and yield (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.103",
+    "211.110"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.103",
+        "title": "211.103 Calculation of yield.",
+        "score": 0.369,
+        "in_scope": true
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.299,
+        "in_scope": true
+      },
+      {
+        "section": "211.186",
+        "title": "211.186 Master production and control records.",
+        "score": 0.195,
+        "in_scope": false
+      },
+      {
+        "section": "211.111",
+        "title": "211.111 Time limitations on production.",
+        "score": 0.123,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.11,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.107,
+        "in_scope": false
+      },
+      {
+        "section": "211.89",
+        "title": "211.89 Rejected components, drug product containers, and closures.",
+        "score": 0.103,
+        "in_scope": false
+      },
+      {
+        "section": "211.65",
+        "title": "211.65 Equipment construction.",
+        "score": 0.074,
+        "in_scope": false
+      },
+      {
+        "section": "211.42",
+        "title": "211.42 Design and construction features.",
+        "score": 0.067,
+        "in_scope": false
+      },
+      {
+        "section": "211.44",
+        "title": "211.44 Lighting.",
+        "score": 0.055,
+        "in_scope": false
+      },
+      {
+        "section": "211.130",
+        "title": "211.130 Packaging and labeling operations.",
+        "score": 0.054,
+        "in_scope": false
+      },
+      {
+        "section": "211.68",
+        "title": "211.68 Automatic, mechanical, and electronic equipment.",
+        "score": 0.05,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 15,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 1,
+  "left_for_review": 14,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.103, sentence 1",
+      "section_title": "211.103 Calculation of yield.",
+      "context": "211.103 Calculation of yield.",
+      "text": "Actual yields and percentages of theoretical yield shall be determined at the conclusion of each appropriate phase of manufacturing, processing, packaging, or holding of the drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to the granulation, compression and coating of tablets in the oral solid dosage block."
+        },
+        {
+          "page": 1,
+          "text": "5. Yield\n\nYield is calculated at the end of granulation, compression and coating as a percentage of the theoretical yield. The operator calculates and records each yield in the batch record."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: actual, conclusion, phase, manufacturing, processing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: actual, conclusion, phase, manufacturing, processing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.103, sentence 2",
+      "section_title": "211.103 Calculation of yield.",
+      "context": "211.103 Calculation of yield.",
+      "text": "Such calculations shall either be performed by one person and independently verified by a second person, or, if the yield is calculated by automated equipment under § 211.68, be independently verified by one person.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "5. Yield\n\nYield is calculated at the end of granulation, compression and coating as a percentage of the theoretical yield. The operator calculates and records each yield in the batch record."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 30% of the terms; missing: either, person, independently, verified, second."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 30% of the terms; missing: either, person, independently, verified, second."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a), sentence 1",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: describe, controls, examinations, conducted, materials."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: describe, controls, examinations, conducted, materials."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a), sentence 2",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be responsible for causing variability in the characteristics of in-process material and the drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 54% of the terms; missing: control, manufacturing, responsible, causing, variability."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 54% of the terms; missing: control, manufacturing, responsible, causing, variability."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a), sentence 3",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "Such control procedures shall include, but are not limited to, the following, where appropriate:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(1)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Tablet or capsule weight variation;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to the granulation, compression and coating of tablets in the oral solid dosage block."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: capsule, variation."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: capsule, variation."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(2)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Disintegration time;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: disintegration, time."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: disintegration, time."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(3)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Adequacy of mixing to assure uniformity and homogeneity;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: adequacy, mixing, homogeneity."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: adequacy, mixing, homogeneity."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(4)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Dissolution time and rate;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to the granulation, compression and coating of tablets in the oral solid dosage block."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: time, rate."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: time, rate."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(5)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Clarity, completeness, or pH of solutions.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: clarity, completeness, solutions."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: clarity, completeness, solutions."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(a)(6)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products. > To assure batch uniformity and integrity of drug products, written procedures shall be established and followed that describe the in-process controls, and tests, or examinations to be conducted on appropriate samples of in-process materials of each batch. Such control procedures shall be established to monitor the output and to validate the performance of those manufacturing processes that may be ...",
+      "text": "Bioburden testing.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "3.6 Bioburden is not tested in process, as no step uses water.",
+        "reason": "The SOP's sentence on this says what is not done."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "3.6 Bioburden is not tested in process, as no step uses water.",
+        "reason": "The SOP's sentence on this says what is not done."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(b), sentence 1",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "Valid in-process specifications for such characteristics shall be consistent with drug product final specifications and shall be derived from previous acceptable process average and process variability estimates where possible and determined by the application of suitable statistical procedures where appropriate.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions statistical."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions statistical."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(b), sentence 2",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "Examination and testing of samples shall assure that the drug product and in-process material conform to specifications.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: examination, material, conform, specifications."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: examination, material, conform, specifications."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(c)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "In-process materials shall be tested for identity, strength, quality, and purity as appropriate, and approved or rejected by the quality control unit, during the production process, e.g., at commencement or completion of significant phases or after storage for long periods.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 18% of the terms; missing: tested, identity, strength, quality, purity."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 18% of the terms; missing: tested, identity, strength, quality, purity."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.110(d)",
+      "section_title": "211.110 Sampling and testing of in-process materials and drug products.",
+      "context": "211.110 Sampling and testing of in-process materials and drug products.",
+      "text": "Rejected in-process materials shall be identified and controlled under a quarantine system designed to prevent their use in manufacturing or processing operations for which they are unsuitable.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out the checks made on in-process material during granulation, blending, compression and coating, and how the yield of each step is worked out."
+        },
+        {
+          "page": 1,
+          "text": "3. In-process checks\n\n3.1 The master record of each product lists the in-process checks, the samples taken for them and the limits; operators follow it for every batch. 3.2 These checks monitor the output of each step and show whether granulation, blending and compression perform as validated. 3.3 At the press, the weight of 20 tablets is checked every 30 minutes against the weight limits, with hardness, thickness and friability. 3.4 Blend uniformity is shown by ten samples from the blender tested for content uniformity. 3.5 Dissolution of the coated tablets is tested at the end of coating. 3."
+        },
+        {
+          "page": 1,
+          "text": "4. Limits and results\n\n4.1 In-process limits are those written in the master record. 4.2 Each result is compared with its limit; a result outside the limit stops the step until QA decides. 4.3 Blend samples are tested by QC for assay and uniformity, and QA releases the blend before compression starts. 4.4 Rejected granules or tablets are labelled REJECTED and moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 31% of the terms; missing: materials, identified, controlled, system, prevent."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 31% of the terms; missing: materials, identified, controlled, system, prevent."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

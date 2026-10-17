@@ -1,0 +1,921 @@
+{
+  "sop": "SOP-WH-004 Receipt and sampling of incoming materials (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.82",
+    "211.84"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.82",
+        "title": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+        "score": 0.367,
+        "in_scope": true
+      },
+      {
+        "section": "211.84",
+        "title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+        "score": 0.328,
+        "in_scope": true
+      },
+      {
+        "section": "211.80",
+        "title": "211.80 General requirements.",
+        "score": 0.272,
+        "in_scope": false
+      },
+      {
+        "section": "211.142",
+        "title": "211.142 Warehousing procedures.",
+        "score": 0.261,
+        "in_scope": false
+      },
+      {
+        "section": "211.87",
+        "title": "211.87 Retesting of approved components, drug product containers, and closures.",
+        "score": 0.25,
+        "in_scope": false
+      },
+      {
+        "section": "211.89",
+        "title": "211.89 Rejected components, drug product containers, and closures.",
+        "score": 0.233,
+        "in_scope": false
+      },
+      {
+        "section": "211.122",
+        "title": "211.122 Materials examination and usage criteria.",
+        "score": 0.177,
+        "in_scope": false
+      },
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.157,
+        "in_scope": false
+      },
+      {
+        "section": "211.184",
+        "title": "211.184 Component, drug product container, closure, and labeling records.",
+        "score": 0.142,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.137,
+        "in_scope": false
+      },
+      {
+        "section": "211.86",
+        "title": "211.86 Use of approved components, drug product containers, and closures.",
+        "score": 0.119,
+        "in_scope": false
+      },
+      {
+        "section": "211.130",
+        "title": "211.130 Packaging and labeling operations.",
+        "score": 0.106,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 24,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 4,
+  "left_for_review": 20,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.82(a)",
+      "section_title": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "context": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "text": "Upon receipt and before acceptance, each container or grouping of containers of components, drug product containers, and closures shall be examined visually for appropriate labeling as to contents, container damage or broken seals, and contamination.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "3. Receipt\n\n3.1 Each delivery is checked against the purchase order. Every container is examined for damage, broken seals and contamination, and the result is written on the goods receipt note. 3.2 Each lot receives an internal receipt number, and every container is labelled with it and with the status QUARANTINE. 3.3 Quarantined material is stored off the floor, in the yellow-lined quarantine area, until QC releases it."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions visually."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions visually."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.82(b), sentence 1",
+      "section_title": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "context": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "text": "Components, drug product containers, and closures shall be stored under quarantine until they have been tested or examined, whichever is appropriate, and released.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "3. Receipt\n\n3.1 Each delivery is checked against the purchase order. Every container is examined for damage, broken seals and contamination, and the result is written on the goods receipt note. 3.2 Each lot receives an internal receipt number, and every container is labelled with it and with the status QUARANTINE. 3.3 Quarantined material is stored off the floor, in the yellow-lined quarantine area, until QC releases it."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: product, stored, until, they, examined."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: product, stored, until, they, examined."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.82(b), sentence 2",
+      "section_title": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "context": "211.82 Receipt and storage of untested components, drug product containers, and closures.",
+      "text": "Storage within the area shall conform to the requirements of § 211.80.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every delivery of active ingredients, excipients, bottles, caps and printed foil received at the Chennai warehouse."
+        },
+        {
+          "page": 1,
+          "text": "3. Receipt\n\n3.1 Each delivery is checked against the purchase order. Every container is examined for damage, broken seals and contamination, and the result is written on the goods receipt note. 3.2 Each lot receives an internal receipt number, and every container is labelled with it and with the status QUARANTINE. 3.3 Quarantined material is stored off the floor, in the yellow-lined quarantine area, until QC releases it."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: conform."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: conform."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(a)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "Each lot of components, drug product containers, and closures shall be withheld from use until the lot has been sampled, tested, or examined, as appropriate, and released for use by the quality control unit.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 46% of the terms; missing: product, withheld, until, examined, quality."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 46% of the terms; missing: product, withheld, until, examined, quality."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(b), sentence 1",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "Representative samples of each shipment of each lot shall be collected for testing or examination.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: representative, shipment, collected, examination."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: representative, shipment, collected, examination."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(b), sentence 2",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "The number of containers to be sampled, and the amount of material to be taken from each container, shall be based upon appropriate criteria such as statistical criteria for component variability, confidence levels, and degree of precision desired, the past quality history of the supplier, and the quantity needed for analysis and reserve where required by § 211.170.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: number, amount, taken, criteria, statistical."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: number, amount, taken, criteria, statistical."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "Samples shall be collected in accordance with the following procedures:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(1)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "The containers of components selected shall be cleaned when necessary in a manner to prevent introduction of contaminants into the component.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every delivery of active ingredients, excipients, bottles, caps and printed foil received at the Chennai warehouse."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: selected, cleaned, manner, prevent, introduction."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: selected, cleaned, manner, prevent, introduction."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(2)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "The containers shall be opened, sampled, and resealed in a manner designed to prevent contamination of their contents and contamination of other components, drug product containers, or closures.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 36% of the terms; missing: opened, resealed, manner, prevent, contamination."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 36% of the terms; missing: opened, resealed, manner, prevent, contamination."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(3)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "Sterile equipment and aseptic sampling techniques shall be used when necessary.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: sterile, equipment, aseptic, techniques."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: sterile, equipment, aseptic, techniques."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(4)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "If it is necessary to sample a component from the top, middle, and bottom of its container, such sample subdivisions shall not be composited for testing.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: middle, bottom, subdivisions, composited."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: middle, bottom, subdivisions, composited."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(5)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "Sample containers shall be identified so that the following information can be determined: name of the material sampled, the lot number, the container from which the sample was taken, the date on which the sample was taken, and the name of the person who collected the sample.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 62% of the terms; missing: identified, information, taken, person, collected."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 62% of the terms; missing: identified, information, taken, person, collected."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(c)(6)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be collected in accordance with the following procedures:",
+      "text": "Containers from which samples have been taken shall be marked to show that samples have been removed from them.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: taken, show, removed, them."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: taken, show, removed, them."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(1), sentence 1",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "At least one test shall be conducted to verify the identity of each component of a drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: conducted, verify, component, product."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: conducted, verify, component, product."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(1), sentence 2",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "Specific identity tests, if they exist, shall be used.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: they, exist."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: they, exist."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(2), sentence 1",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "Each component shall be tested for conformity with all appropriate written specifications for purity, strength, and quality.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: conformity, specifications, purity, strength, quality."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: conformity, specifications, purity, strength, quality."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(2), sentence 2",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "In lieu of such testing by the manufacturer, a report of analysis may be accepted from the supplier of a component, provided that at least one specific identity test is conducted on such component by the manufacturer, and provided that the manufacturer establishes the reliability of the supplier's analyses through appropriate validation of the supplier's test results at appropriate intervals.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 48% of the terms; missing: lieu, manufacturer, report, component, provided."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 48% of the terms; missing: lieu, manufacturer, report, component, provided."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(3), sentence 1",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "Containers and closures shall be tested for conformity with all appropriate written specifications.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every delivery of active ingredients, excipients, bottles, caps and printed foil received at the Chennai warehouse."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(3), sentence 2",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "In lieu of such testing by the manufacturer, a certificate of testing may be accepted from the supplier, provided that at least a visual identification is conducted on such containers/closures by the manufacturer and provided that the manufacturer establishes the reliability of the supplier's test results through appropriate validation of the supplier's test results at appropriate intervals.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "4. Sampling\n\n4.1 QC samples a statistically chosen number of containers of each lot (the square root of the number of containers plus one). 4.2 Containers are opened only in the sampling booth and resealed, and each sampled container is marked. 4.3 The sample containers are labelled with the material name, receipt number, the container it came from, the date and the name of the sampler."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions visual."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions visual."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(4)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "When appropriate, components shall be microscopically examined.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every delivery of active ingredients, excipients, bottles, caps and printed foil received at the Chennai warehouse."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: microscopically, examined."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: microscopically, examined."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(5)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "Each lot of a component, drug product container, or closure that is liable to contamination with filth, insect infestation, or other extraneous adulterant shall be examined against established specifications for such contamination.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "3. Receipt\n\n3.1 Each delivery is checked against the purchase order. Every container is examined for damage, broken seals and contamination, and the result is written on the goods receipt note. 3.2 Each lot receives an internal receipt number, and every container is labelled with it and with the status QUARANTINE. 3.3 Quarantined material is stored off the floor, in the yellow-lined quarantine area, until QC releases it."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: component, product, closure, liable, filth."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: component, product, closure, liable, filth."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(d)(6)",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures. > Samples shall be examined and tested as follows:",
+      "text": "Each lot of a component, drug product container, or closure with potential for microbiological contamination that is objectionable in view of its intended use shall be subjected to microbiological tests before use.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions microbiological."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions microbiological."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(e), sentence 1",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "Any lot of components, drug product containers, or closures that meets the appropriate written specifications of identity, strength, quality, and purity and related tests under paragraph (d) of this section may be approved and released for use.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: components, product, strength, quality, purity."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: components, product, strength, quality, purity."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.84(e), sentence 2",
+      "section_title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "context": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+      "text": "Any lot of such material that does not meet such specifications shall be rejected.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how raw materials, containers and closures are received, held in quarantine, sampled, tested and released or rejected."
+        },
+        {
+          "page": 1,
+          "text": "5. Testing and release\n\n5.1 Every lot is tested for identity. For the other specification tests, the supplier's certificate of analysis may be accepted once QC has qualified the supplier and confirms the certificate's results at least once a year. 5.2 Containers and closures are tested against their drawings. 5.3 QC changes the status label to RELEASED or REJECTED. Rejected lots are moved to the locked reject cage."
+        },
+        {
+          "page": 1,
+          "text": "6. Use and retest\n\nReleased material is issued first in, first out. A lot past its retest date is held and retested before use."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: does, specifications."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: does, specifications."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

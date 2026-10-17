@@ -1,0 +1,492 @@
+{
+  "sop": "SOP-HR-002 Personnel qualification, training and hygiene (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.25",
+    "211.28"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.25",
+        "title": "211.25 Personnel qualifications.",
+        "score": 0.428,
+        "in_scope": true
+      },
+      {
+        "section": "211.28",
+        "title": "211.28 Personnel responsibilities.",
+        "score": 0.304,
+        "in_scope": true
+      },
+      {
+        "section": "211.52",
+        "title": "211.52 Washing and toilet facilities.",
+        "score": 0.204,
+        "in_scope": false
+      },
+      {
+        "section": "211.34",
+        "title": "211.34 Consultants.",
+        "score": 0.169,
+        "in_scope": false
+      },
+      {
+        "section": "211.142",
+        "title": "211.142 Warehousing procedures.",
+        "score": 0.099,
+        "in_scope": false
+      },
+      {
+        "section": "211.56",
+        "title": "211.56 Sanitation.",
+        "score": 0.082,
+        "in_scope": false
+      },
+      {
+        "section": "211.46",
+        "title": "211.46 Ventilation, air filtration, air heating and cooling.",
+        "score": 0.059,
+        "in_scope": false
+      },
+      {
+        "section": "211.65",
+        "title": "211.65 Equipment construction.",
+        "score": 0.051,
+        "in_scope": false
+      },
+      {
+        "section": "211.58",
+        "title": "211.58 Maintenance.",
+        "score": 0.035,
+        "in_scope": false
+      },
+      {
+        "section": "211.48",
+        "title": "211.48 Plumbing.",
+        "score": 0.033,
+        "in_scope": false
+      },
+      {
+        "section": "211.44",
+        "title": "211.44 Lighting.",
+        "score": 0.03,
+        "in_scope": false
+      },
+      {
+        "section": "211.50",
+        "title": "211.50 Sewage and refuse.",
+        "score": 0.025,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 11,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 0,
+  "left_for_review": 11,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.25(a), sentence 1",
+      "section_title": "211.25 Personnel qualifications.",
+      "context": "211.25 Personnel qualifications.",
+      "text": "Each person engaged in the manufacture, processing, packing, or holding of a drug product shall have education, training, and experience, or any combination thereof, to enable that person to perform the assigned functions.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        },
+        {
+          "page": 1,
+          "text": "4. Training\n\n4.1 Each person is trained in the SOPs of their own job and in GMP as it applies to that job, and the training is recorded. 4.2 GMP induction training is given by the QA training officer when a person joins."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: person, engaged, manufacture, processing, packing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 20% of the terms; missing: person, engaged, manufacture, processing, packing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.25(a), sentence 2",
+      "section_title": "211.25 Personnel qualifications.",
+      "context": "211.25 Personnel qualifications.",
+      "text": "Training shall be in the particular operations that the employee performs and in current good manufacturing practice (including the current good manufacturing practice regulations in this chapter and written procedures required by these regulations) as they relate to the employee's functions.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        },
+        {
+          "page": 1,
+          "text": "4. Training\n\n4.1 Each person is trained in the SOPs of their own job and in GMP as it applies to that job, and the training is recorded. 4.2 GMP induction training is given by the QA training officer when a person joins."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 8% of the terms; missing: training, particular, operations, employee, performs."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 8% of the terms; missing: training, particular, operations, employee, performs."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.25(a), sentence 3",
+      "section_title": "211.25 Personnel qualifications.",
+      "context": "211.25 Personnel qualifications.",
+      "text": "Training in current good manufacturing practice shall be conducted by qualified individuals on a continuing basis and with sufficient frequency to assure that employees remain familiar with CGMP requirements applicable to them.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        },
+        {
+          "page": 1,
+          "text": "4. Training\n\n4.1 Each person is trained in the SOPs of their own job and in GMP as it applies to that job, and the training is recorded. 4.2 GMP induction training is given by the QA training officer when a person joins."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 6% of the terms; missing: training, current, good, manufacturing, practice."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 6% of the terms; missing: training, current, good, manufacturing, practice."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.25(b)",
+      "section_title": "211.25 Personnel qualifications.",
+      "context": "211.25 Personnel qualifications.",
+      "text": "Each person responsible for supervising the manufacture, processing, packing, or holding of a drug product shall have the education, training, and experience, or any combination thereof, to perform assigned functions in such a manner as to provide assurance that the drug product has the safety, identity, strength, quality, and purity that it purports or is represented to possess.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        },
+        {
+          "page": 1,
+          "text": "4. Training\n\n4.1 Each person is trained in the SOPs of their own job and in GMP as it applies to that job, and the training is recorded. 4.2 GMP induction training is given by the QA training officer when a person joins."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 15% of the terms; missing: person, responsible, manufacture, processing, packing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 15% of the terms; missing: person, responsible, manufacture, processing, packing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.25(c)",
+      "section_title": "211.25 Personnel qualifications.",
+      "context": "211.25 Personnel qualifications.",
+      "text": "There shall be an adequate number of qualified personnel to perform and supervise the manufacture, processing, packing, or holding of each drug product.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all permanent and contract staff in production, packaging, the QC laboratory and the warehouse at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: number, personnel, manufacture, processing, packing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: number, personnel, manufacture, processing, packing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(a), sentence 1",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "Personnel engaged in the manufacture, processing, packing, or holding of a drug product shall wear clean clothing appropriate for the duties they perform.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        },
+        {
+          "page": 1,
+          "text": "5. Clothing and hygiene\n\n5.1 Clean factory uniforms are issued every day. 5.2 Hair covers, face masks, gloves and sleeve covers are worn in the dispensing and compression rooms. 5.3 Staff wash and sanitize their hands on entry; eating, drinking and smoking are banned in production areas. 5.4 Only staff whose badge is authorised by the production manager can open the doors of the dispensing and compression rooms."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: personnel, engaged, manufacture, processing, packing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: personnel, engaged, manufacture, processing, packing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(a), sentence 2",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "Protective apparel, such as head, face, hand, and arm coverings, shall be worn as necessary to protect drug products from contamination.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "5. Clothing and hygiene\n\n5.1 Clean factory uniforms are issued every day. 5.2 Hair covers, face masks, gloves and sleeve covers are worn in the dispensing and compression rooms. 5.3 Staff wash and sanitize their hands on entry; eating, drinking and smoking are banned in production areas. 5.4 Only staff whose badge is authorised by the production manager can open the doors of the dispensing and compression rooms."
+        },
+        {
+          "page": 1,
+          "text": "6. Health\n\nAnyone with an open wound on the hands is moved away from open product until it has healed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 40% of the terms; missing: protective, apparel, head, coverings, protect."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 40% of the terms; missing: protective, apparel, head, coverings, protect."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(b)",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "Personnel shall practice good sanitation and health habits.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all permanent and contract staff in production, packaging, the QC laboratory and the warehouse at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: personnel, practice, good, sanitation, health."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: personnel, practice, good, sanitation, health."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(c)",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "Only personnel authorized by supervisory personnel shall enter those areas of the buildings and facilities designated as limited-access areas.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all permanent and contract staff in production, packaging, the QC laboratory and the warehouse at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 10% of the terms; missing: only, personnel, authorized, enter, areas."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 10% of the terms; missing: only, personnel, authorized, enter, areas."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(d), sentence 1",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "Any person shown at any time (either by medical examination or supervisory observation) to have an apparent illness or open lesions that may adversely affect the safety or quality of drug products shall be excluded from direct contact with components, drug product containers, closures, in-process materials, and drug products until the condition is corrected or determined by competent medical personnel not to jeopardize the safety or quality of drug products.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all permanent and contract staff in production, packaging, the QC laboratory and the warehouse at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "6. Health\n\nAnyone with an open wound on the hands is moved away from open product until it has healed."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 14% of the terms; missing: person, shown, time, apparent, illness."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 14% of the terms; missing: person, shown, time, apparent, illness."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.28(d), sentence 2",
+      "section_title": "211.28 Personnel responsibilities.",
+      "context": "211.28 Personnel responsibilities.",
+      "text": "All personnel shall be instructed to report to supervisory personnel any health conditions that may have an adverse effect on drug products.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo make sure that people who make, pack, test or store products are qualified and trained for their work, and that they do not contaminate the product."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to all permanent and contract staff in production, packaging, the QC laboratory and the warehouse at the Chennai site."
+        },
+        {
+          "page": 1,
+          "text": "3. Qualification\n\n3.1 Each job has a written description stating the education and experience it needs, and new staff are trained before they work alone. 3.2 Supervisors hold a degree in pharmacy or science and have at least three years in production."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 22% of the terms; missing: personnel, instructed, report, health, conditions."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 22% of the terms; missing: personnel, instructed, report, health, conditions."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

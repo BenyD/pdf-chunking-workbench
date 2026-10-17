@@ -1,0 +1,360 @@
+{
+  "sop": "SOP-QA-008 Production procedures, deviations and reprocessing (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.115",
+    "211.100"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.115",
+        "title": "211.115 Reprocessing.",
+        "score": 0.527,
+        "in_scope": true
+      },
+      {
+        "section": "211.100",
+        "title": "211.100 Written procedures; deviations.",
+        "score": 0.408,
+        "in_scope": true
+      },
+      {
+        "section": "211.111",
+        "title": "211.111 Time limitations on production.",
+        "score": 0.177,
+        "in_scope": false
+      },
+      {
+        "section": "211.86",
+        "title": "211.86 Use of approved components, drug product containers, and closures.",
+        "score": 0.161,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.159,
+        "in_scope": false
+      },
+      {
+        "section": "211.204",
+        "title": "211.204 Returned drug products.",
+        "score": 0.114,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.083,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.079,
+        "in_scope": false
+      },
+      {
+        "section": "211.130",
+        "title": "211.130 Packaging and labeling operations.",
+        "score": 0.074,
+        "in_scope": false
+      },
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.066,
+        "in_scope": false
+      },
+      {
+        "section": "211.1",
+        "title": "211.1 Scope.",
+        "score": 0.061,
+        "in_scope": false
+      },
+      {
+        "section": "211.63",
+        "title": "211.63 Equipment design, size, and location.",
+        "score": 0.059,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 7,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 1,
+  "left_for_review": 6,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.100(a), sentence 1",
+      "section_title": "211.100 Written procedures; deviations.",
+      "context": "211.100 Written procedures; deviations.",
+      "text": "There shall be written procedures for production and process control designed to assure that the drug products have the identity, strength, quality, and purity they purport or are represented to possess.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "4. Deviations\n\nAny departure from a written procedure is recorded on a deviation form with its reason and QA's assessment."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: identity, strength, quality, purity, they."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: identity, strength, quality, purity, they."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.100(a), sentence 2",
+      "section_title": "211.100 Written procedures; deviations.",
+      "context": "211.100 Written procedures; deviations.",
+      "text": "Such procedures shall include all requirements in this subpart.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "4. Deviations\n\nAny departure from a written procedure is recorded on a deviation form with its reason and QA's assessment."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is i",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is i",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.100(a), sentence 3",
+      "section_title": "211.100 Written procedures; deviations.",
+      "context": "211.100 Written procedures; deviations.",
+      "text": "These written procedures, including any changes, shall be drafted, reviewed, and approved by the appropriate organizational units and reviewed and approved by the quality control unit.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "4. Deviations\n\nAny departure from a written procedure is recorded on a deviation form with its reason and QA's assessment."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 44% of the terms; missing: drafted, organizational, units, quality, unit."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 44% of the terms; missing: drafted, organizational, units, quality, unit."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.100(b), sentence 1",
+      "section_title": "211.100 Written procedures; deviations.",
+      "context": "211.100 Written procedures; deviations.",
+      "text": "Written production and process control procedures shall be followed in the execution of the various production and process control functions and shall be documented at the time of performance.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "4. Deviations\n\nAny departure from a written procedure is recorded on a deviation form with its reason and QA's assessment."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: execution, various, functions, time, performance."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: execution, various, functions, time, performance."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.100(b), sentence 2",
+      "section_title": "211.100 Written procedures; deviations.",
+      "context": "211.100 Written procedures; deviations.",
+      "text": "Any deviation from the written procedures shall be recorded and justified.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "4. Deviations\n\nAny departure from a written procedure is recorded on a deviation form with its reason and QA's assessment."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: justified."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: justified."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.115(a)",
+      "section_title": "211.115 Reprocessing.",
+      "context": "211.115 Reprocessing.",
+      "text": "Written procedures shall be established and followed prescribing a system for reprocessing batches that do not conform to standards or specifications and the steps to be taken to insure that the reprocessed batches will conform with all established standards, specifications, and characteristics.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "5. Reprocessing\n\n5.1 A batch that fails a specification may be reprocessed only under a written reprocessing protocol that states the steps to be taken and the tests the reprocessed batch must pass. 5.2 The production manager approves each reprocessing protocol."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: followed, prescribing, system, conform, insure."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: followed, prescribing, system, conform, insure."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.115(b)",
+      "section_title": "211.115 Reprocessing.",
+      "context": "211.115 Reprocessing.",
+      "text": "Reprocessing shall not be performed without the review and approval of the quality control unit.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how production and process control procedures are written, approved and followed, how departures from them are handled, and when a batch may be reprocessed."
+        },
+        {
+          "page": 1,
+          "text": "3. Production procedures\n\n3.1 Every production and process control step is described in a written procedure. Together, the production SOPs listed in Annex 1 cover every requirement of 21 CFR 211 Subpart F. 3.2 Each production SOP is written by Production, reviewed by Engineering where equipment is involved, and approved by QA. Changes follow the same route. 3.3 Operators follow the procedures and complete the batch record at the end of each shift."
+        },
+        {
+          "page": 1,
+          "text": "5. Reprocessing\n\n5.1 A batch that fails a specification may be reprocessed only under a written reprocessing protocol that states the steps to be taken and the tests the reprocessed batch must pass. 5.2 The production manager approves each reprocessing protocol."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: without, review, quality, unit."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: without, review, quality, unit."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

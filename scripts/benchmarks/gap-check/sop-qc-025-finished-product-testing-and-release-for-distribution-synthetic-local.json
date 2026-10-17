@@ -1,0 +1,491 @@
+{
+  "sop": "SOP-QC-025 Finished product testing and release for distribution (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.165"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.165",
+        "title": "211.165 Testing and release for distribution.",
+        "score": 0.407,
+        "in_scope": true
+      },
+      {
+        "section": "211.84",
+        "title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+        "score": 0.268,
+        "in_scope": false
+      },
+      {
+        "section": "211.167",
+        "title": "211.167 Special testing requirements.",
+        "score": 0.259,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.23,
+        "in_scope": false
+      },
+      {
+        "section": "211.134",
+        "title": "211.134 Drug product inspection.",
+        "score": 0.15,
+        "in_scope": false
+      },
+      {
+        "section": "211.89",
+        "title": "211.89 Rejected components, drug product containers, and closures.",
+        "score": 0.146,
+        "in_scope": false
+      },
+      {
+        "section": "211.94",
+        "title": "211.94 Drug product containers and closures.",
+        "score": 0.13,
+        "in_scope": false
+      },
+      {
+        "section": "211.115",
+        "title": "211.115 Reprocessing.",
+        "score": 0.118,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.108,
+        "in_scope": false
+      },
+      {
+        "section": "211.194",
+        "title": "211.194 Laboratory records.",
+        "score": 0.108,
+        "in_scope": false
+      },
+      {
+        "section": "211.87",
+        "title": "211.87 Retesting of approved components, drug product containers, and closures.",
+        "score": 0.105,
+        "in_scope": false
+      },
+      {
+        "section": "211.150",
+        "title": "211.150 Distribution procedures.",
+        "score": 0.099,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 11,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 2,
+  "left_for_review": 9,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.165(a), sentence 1",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "For each batch of drug product, there shall be appropriate laboratory determination of satisfactory conformance to final specifications for the drug product, including the identity and strength of each active ingredient, prior to release.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; any departure is recorded and approved by the QC manager before testing."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 54% of the terms; missing: laboratory, satisfactory, conformance, final, strength."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 54% of the terms; missing: laboratory, satisfactory, conformance, final, strength."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(a), sentence 2",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Where sterility and/or pyrogen testing are conducted on specific batches of shortlived radiopharmaceuticals, such batches may be released prior to completion of sterility and/or pyrogen testing, provided such testing is completed as soon as possible.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every commercial batch of tablets and capsules made at the Chennai site. The site makes no sterile, pyrogen-tested or radiopharmaceutical products."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: conducted, specific, shortlived, released, prior."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: conducted, specific, shortlived, released, prior."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(b)",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "There shall be appropriate laboratory testing, as necessary, of each batch of drug product required to be free of objectionable microorganisms.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every commercial batch of tablets and capsules made at the Chennai site. The site makes no sterile, pyrogen-tested or radiopharmaceutical products."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions microorganisms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions microorganisms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(c)",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Any sampling and testing plans shall be described in written procedures that shall include the method of sampling and the number of units per batch to be tested; such written procedure shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; any departure is recorded and approved by the QC manager before testing."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; ",
+        "reason": "One passage holds 78% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; ",
+        "reason": "One passage holds 78% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(d), sentence 1",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Acceptance criteria for the sampling and testing conducted by the quality control unit shall be adequate to assure that batches of drug products meet each appropriate specification and appropriate statistical quality control criteria as a condition for their approval and release.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; any departure is recorded and approved by the QC manager before testing."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: criteria, conducted, quality, control, condition."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: criteria, conducted, quality, control, condition."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(d), sentence 2",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "The statistical quality control criteria shall include appropriate acceptance levels and/or appropriate rejection levels.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "Version 3   Effective 01-Jun-2026   Department: Quality Control   Site: Chennai"
+        },
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: quality, control, criteria, levels."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: quality, control, criteria, levels."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(e), sentence 1",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "The accuracy, sensitivity, specificity, and reproducibility of test methods employed by the firm shall be established and documented.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "3. Sampling\n\n3.1 QC samples each batch at the end of packing by the sampling plan in the product's specification, which states how the samples are drawn, from which part of the run, and the number of units taken from the batch and tested for each attribute. 3.2 The plan is followed for every batch; any departure is recorded and approved by the QC manager before testing."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 56% of the terms; missing: sensitivity, employed, firm, documented."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 56% of the terms; missing: sensitivity, employed, firm, documented."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(e), sentence 2",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Such validation and documentation may be accomplished in accordance with § 211.194(a)(2).",
+      "passages": [
+        {
+          "page": 1,
+          "text": "Version 3   Effective 01-Jun-2026   Department: Quality Control   Site: Chennai"
+        },
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: documentation, accomplished."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: documentation, accomplished."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(f), sentence 1",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Drug products failing to meet established standards or specifications and any other relevant quality control criteria shall be rejected.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "Version 3   Effective 01-Jun-2026   Department: Quality Control   Site: Chennai"
+        },
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 38% of the terms; missing: failing, relevant, quality, control, criteria."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 38% of the terms; missing: failing, relevant, quality, control, criteria."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(f), sentence 2",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Reprocessing may be performed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "Version 3   Effective 01-Jun-2026   Department: Quality Control   Site: Chennai"
+        },
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: reprocessing."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 0% of the terms; missing: reprocessing."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.165(f), sentence 3",
+      "section_title": "211.165 Testing and release for distribution.",
+      "context": "211.165 Testing and release for distribution.",
+      "text": "Prior to acceptance and use, reprocessed material must meet appropriate standards, specifications, and any other relevant criteria.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "Version 3   Effective 01-Jun-2026   Department: Quality Control   Site: Chennai"
+        },
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out how each batch of finished tablets and capsules is sampled and tested against its specification before QA may release it for distribution."
+        },
+        {
+          "page": 1,
+          "text": "4. Testing\n\n4.1 Every batch is tested against the full finished product specification before it may be released: description, identification and assay of each active ingredient, related substances, dissolution, uniformity of dosage units and water content. 4.2 Dissolution and uniformity of dosage units are judged by the pharmacopoeial acceptance tables. For any attribute judged on a statistical sample, the specification states the acceptance number and the rejection number. 4.3 Only test methods whose accuracy, precision, specificity, detection limit and reproducibility have been established i"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: prior, reprocessed, material, relevant, criteria."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 29% of the terms; missing: prior, reprocessed, material, relevant, criteria."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

@@ -1,0 +1,557 @@
+{
+  "sop": "SOP-PR-030 Master production and control records (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.186"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.186",
+        "title": "211.186 Master production and control records.",
+        "score": 0.529,
+        "in_scope": true
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.238,
+        "in_scope": false
+      },
+      {
+        "section": "211.103",
+        "title": "211.103 Calculation of yield.",
+        "score": 0.212,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.21,
+        "in_scope": false
+      },
+      {
+        "section": "211.196",
+        "title": "211.196 Distribution records.",
+        "score": 0.21,
+        "in_scope": false
+      },
+      {
+        "section": "211.105",
+        "title": "211.105 Equipment identification.",
+        "score": 0.158,
+        "in_scope": false
+      },
+      {
+        "section": "211.110",
+        "title": "211.110 Sampling and testing of in-process materials and drug products.",
+        "score": 0.138,
+        "in_scope": false
+      },
+      {
+        "section": "211.101",
+        "title": "211.101 Charge-in of components.",
+        "score": 0.128,
+        "in_scope": false
+      },
+      {
+        "section": "211.122",
+        "title": "211.122 Materials examination and usage criteria.",
+        "score": 0.123,
+        "in_scope": false
+      },
+      {
+        "section": "211.63",
+        "title": "211.63 Equipment design, size, and location.",
+        "score": 0.115,
+        "in_scope": false
+      },
+      {
+        "section": "211.125",
+        "title": "211.125 Labeling issuance.",
+        "score": 0.113,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.11,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 13,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 2,
+  "left_for_review": 11,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.186(a), sentence 1",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "To assure uniformity from batch to batch, master production and control records for each drug product, including each batch size thereof, shall be prepared, dated, and signed (full signature, handwritten) by one person and independently checked, dated, and signed by a second person.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: control, thereof, prepared, dated, checked."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: control, thereof, prepared, dated, checked."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(a), sentence 2",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "The preparation of master production and control records shall be described in a written procedure and such written procedure shall be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: preparation, followed."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 67% of the terms; missing: preparation, followed."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records.",
+      "text": "Master production and control records shall include:",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "A lead-in: the items under it are checked one by one."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(1)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "The name and strength of the product and a description of the dosage form;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade mat",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade mat",
+        "reason": "One passage holds 100% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(2)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "The name and weight or measure of each active ingredient per dosage unit or per unit of weight or measure of the drug product, and a statement of the total weight or measure of any dosage unit;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: measure, unit, statement, total."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: measure, unit, statement, total."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(3)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A complete list of components designated by names or codes sufficiently specific to indicate any special quality characteristic;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: designated, names, codes, sufficiently, indicate."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: designated, names, codes, sufficiently, indicate."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(4), sentence 1",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "An accurate statement of the weight or measure of each component, using the same weight system (metric, avoirdupois, or apothecary) for each component.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: accurate, statement, measure, using, same."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 25% of the terms; missing: accurate, statement, measure, using, same."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(4), sentence 2",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "Reasonable variations may be permitted, however, in the amount of components necessary for the preparation in the dosage form, provided they are justified in the master production and control records;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: variations, permitted, however, amount, preparation."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: variations, permitted, however, amount, preparation."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(5)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement concerning any calculated excess of component;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions calculated."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions calculated."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(6)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement of theoretical weight or measure at appropriate phases of processing;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: statement, measure, phases."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: statement, measure, phases."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(7)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A statement of theoretical yield, including the maximum and minimum percentages of theoretical yield beyond which investigation according to § 211.192 is required;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 30% of the terms; missing: statement, maximum, minimum, percentages, beyond."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 30% of the terms; missing: statement, maximum, minimum, percentages, beyond."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(8)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "A description of the drug product containers, closures, and packaging materials, including a specimen or copy of each label and all other labeling signed and dated by the person or persons responsible for approval of such labeling;",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 69% of the terms; missing: containers, closures, packaging, copy, responsible."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 69% of the terms; missing: containers, closures, packaging, copy, responsible."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.186(b)(9)",
+      "section_title": "211.186 Master production and control records.",
+      "context": "211.186 Master production and control records. > Master production and control records shall include:",
+      "text": "Complete manufacturing and control instructions, sampling and testing procedures, specifications, special notations, and precautions to be followed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo describe how the master manufacturing and packaging record of each product is written, checked, approved and issued, so that every batch is made the same way."
+        },
+        {
+          "page": 1,
+          "text": "3. Writing and approval\n\n3.1 Production writes a master record for each product and each batch size, on the template in this SOP. 3.2 The author signs it in full by hand and dates it. A second person from QA checks it independently against the product's registered formula, then signs and dates it."
+        },
+        {
+          "page": 1,
+          "text": "4. Contents\n\n4.1 The master record states the product name, strength and dosage form, the name and quantity of each active ingredient per tablet or capsule, and the target weight of one tablet or capsule fill. 4.2 It lists every component by material code and name, with the grade where the grade matters (for example micronised), and the quantity of each per batch in kilograms or grams. Any range allowed for a component is stated with its reason. 4.3 It gives the theoretical yield of the batch with the lowest and highest yield accepted; a yield outside these limits is investigated under SOP-QA-"
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage has most of it but not: notations."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage has most of it but not: notations."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

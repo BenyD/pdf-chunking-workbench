@@ -1,0 +1,656 @@
+{
+  "sop": "SOP-QC-020 Laboratory records and review (synthetic)",
+  "regulation": "21 CFR Part 211",
+  "regulation_as_of": "2026-10-13",
+  "sections": [
+    "211.194"
+  ],
+  "scope": {
+    "how": "measured",
+    "vectors": "snowflake/snowflake-arctic-embed-s",
+    "threshold": 0.275,
+    "ranking": [
+      {
+        "section": "211.194",
+        "title": "211.194 Laboratory records.",
+        "score": 0.462,
+        "in_scope": true
+      },
+      {
+        "section": "211.166",
+        "title": "211.166 Stability testing.",
+        "score": 0.2,
+        "in_scope": false
+      },
+      {
+        "section": "211.173",
+        "title": "211.173 Laboratory animals.",
+        "score": 0.161,
+        "in_scope": false
+      },
+      {
+        "section": "211.186",
+        "title": "211.186 Master production and control records.",
+        "score": 0.151,
+        "in_scope": false
+      },
+      {
+        "section": "211.84",
+        "title": "211.84 Testing and approval or rejection of components, drug product containers, and closures.",
+        "score": 0.145,
+        "in_scope": false
+      },
+      {
+        "section": "211.160",
+        "title": "211.160 General requirements.",
+        "score": 0.138,
+        "in_scope": false
+      },
+      {
+        "section": "211.113",
+        "title": "211.113 Control of microbiological contamination.",
+        "score": 0.128,
+        "in_scope": false
+      },
+      {
+        "section": "211.188",
+        "title": "211.188 Batch production and control records.",
+        "score": 0.103,
+        "in_scope": false
+      },
+      {
+        "section": "211.68",
+        "title": "211.68 Automatic, mechanical, and electronic equipment.",
+        "score": 0.1,
+        "in_scope": false
+      },
+      {
+        "section": "211.22",
+        "title": "211.22 Responsibilities of quality control unit.",
+        "score": 0.098,
+        "in_scope": false
+      },
+      {
+        "section": "211.94",
+        "title": "211.94 Drug product containers and closures.",
+        "score": 0.098,
+        "in_scope": false
+      },
+      {
+        "section": "211.192",
+        "title": "211.192 Production record review.",
+        "score": 0.082,
+        "in_scope": false
+      }
+    ]
+  },
+  "requirements": 16,
+  "judge": "rules",
+  "rules_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "model_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "verdict_score": {
+    "graded": 0,
+    "decided": 0,
+    "right": 0,
+    "unsure": 0
+  },
+  "decided_by_rules": 5,
+  "left_for_review": 11,
+  "model_usage": {
+    "model": "claude-haiku-5-5",
+    "calls": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0,
+    "dollars_per_requirement": 0.0,
+    "batch_calls": 0
+  },
+  "this_run": {
+    "calls": 0,
+    "from_cache": 0,
+    "shared": 0,
+    "in": 0,
+    "out": 0,
+    "dollars": 0
+  },
+  "rows": [
+    {
+      "cite": "211.194(a)(1)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A description of the sample received for testing with identification of source (that is, location from where sample was obtained), quantity, lot number or other distinctive code, date sample was taken, and date sample was received for testing.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 58% of the terms; missing: description, identification, source, distinctive, code."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 58% of the terms; missing: description, identification, source, distinctive, code."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(2), sentence 1",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A statement of each method used in the testing of the sample.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 75% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 75% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(2), sentence 2",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "The statement shall indicate the location of data that establish that the methods used in the testing of the sample meet proper standards of accuracy and reliability as applied to the product tested.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: statement, indicate, location, establish, proper."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: statement, indicate, location, establish, proper."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(2), sentence 3",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "(If the method employed is in the current revision of the United States Pharmacopeia, National Formulary, AOAC INTERNATIONAL, Book of Methods,\n1\n or in other recognized standard references, or is detailed in an approved new drug application and the referenced method is not modified, a statement indicating the method and reference will suffice).",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "Nothing distinctive to look for."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "Nothing distinctive to look for."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(2), sentence 4",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "The suitability of all testing methods used shall be verified under actual conditions of use.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: suitability, verified, actual, conditions."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 33% of the terms; missing: suitability, verified, actual, conditions."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(3)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A statement of the weight or measure of sample used for each test, where appropriate.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: statement, measure."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: statement, measure."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(4)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A complete record of all data secured in the course of each test, including all graphs, charts, and spectra from laboratory instrumentation, properly identified to show the specific component, drug product container, closure, in-process material, or drug product, and lot tested.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 45% of the terms; missing: complete, data, secured, course, graphs."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 45% of the terms; missing: complete, data, secured, course, graphs."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(5)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A record of all calculations performed in connection with the test, including units of measure, conversion factors, and equivalency factors.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 78% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 78% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(6)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "A statement of the results of tests and how the results compare with established standards of identity, strength, quality, and purity for the component, drug product container, closure, in-process material, or drug product tested.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 53% of the terms; missing: statement, results, compare, identity, strength."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 53% of the terms; missing: statement, results, compare, identity, strength."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(7)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "The initials or signature of the person who performs each test and the date(s) the tests were performed.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 71% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification ",
+        "reason": "One passage holds 71% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(a)(8)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records. > Laboratory records shall include complete data derived from all tests necessary to assure compliance with established specifications and standards, including examinations and assays, as follows:",
+      "text": "The initials or signature of a second person showing that the original records have been reviewed for accuracy, completeness, and compliance with established standards.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 45% of the terms; missing: second, person, showing, original, reviewed."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 45% of the terms; missing: second, person, showing, original, reviewed."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(b), sentence 1",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records.",
+      "text": "Complete records shall be maintained of any modification of an established method employed in testing.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: complete, maintained, modification, employed."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 43% of the terms; missing: complete, maintained, modification, employed."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(b), sentence 2",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records.",
+      "text": "Such records shall include the reason for the modification and data to verify that the modification produced results that are at least as accurate and reliable for the material being tested as the established method.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: reason, modification, verify, produced, least."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 50% of the terms; missing: reason, modification, verify, produced, least."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(c)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records.",
+      "text": "Complete records shall be maintained of any testing and standardization of laboratory reference standards, reagents, and standard solutions.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "3. The test record\n\n3.1 Each sample is entered in the sample register when it arrives, with where it was taken from, the quantity, the lot or receipt number, the date it was taken and the date it was received. 3.2 The analyst writes on the worksheet the method used, by number, and the specification tested against. For a pharmacopoeial method the worksheet names the monograph and its edition; for an in-house method it names the validation report that holds the method's accuracy and precision data. 3.3 The weight or volume of sample taken for each test is written on the worksheet. 3.4 Every chro"
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "met",
+        "quote": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "model": null,
+      "verdict": {
+        "status": "met",
+        "quote": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014",
+        "reason": "One passage holds 80% of the requirement's terms."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(d)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records.",
+      "text": "Complete records shall be maintained of the periodic calibration of laboratory instruments, apparatus, gauges, and recording devices required by § 211.160(b)(4).",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        },
+        {
+          "page": 1,
+          "text": "6. Keeping the records\n\nWorksheets and the sample register are filed with the batch documents and kept under SOP-QA-040."
+        }
+      ],
+      "rules": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions calibration."
+      },
+      "model": null,
+      "verdict": {
+        "status": "not_met",
+        "quote": "",
+        "reason": "The SOP never mentions calibration."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    },
+    {
+      "cite": "211.194(e)",
+      "section_title": "211.194 Laboratory records.",
+      "context": "211.194 Laboratory records.",
+      "text": "Complete records shall be maintained of all stability testing performed in accordance with § 211.166.",
+      "passages": [
+        {
+          "page": 1,
+          "text": "1. Purpose\n\nTo set out what the record of every laboratory test must hold and how test records are checked, for raw materials, containers, closures, in-process samples and finished products tested in the Chennai QC laboratory."
+        },
+        {
+          "page": 1,
+          "text": "2. Scope\n\nApplies to every chemical and physical test done in the Chennai QC laboratory, including stability tests run under SOP-QC-014. Microbiology records are covered by SOP-MB-003."
+        },
+        {
+          "page": 1,
+          "text": "5. Other laboratory records\n\n5.1 Reference standards, reagents and volumetric solutions are logged when received or prepared, and every standardisation is recorded with its result, the date and the analyst's initials. 5.2 Stability test results are recorded in the stability database under SOP-QC-014."
+        }
+      ],
+      "rules": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: complete, maintained."
+      },
+      "model": null,
+      "verdict": {
+        "status": "unsure",
+        "quote": "",
+        "reason": "The closest passage holds 60% of the terms; missing: complete, maintained."
+      },
+      "expected": null,
+      "verdict_from": "rules"
+    }
+  ]
+}

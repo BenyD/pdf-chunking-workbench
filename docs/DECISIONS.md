@@ -1266,3 +1266,108 @@ on. Otherwise links with no AI are the default.
 - A table with no caption and no number cannot be a target.
 - The questions were drawn from links the rules found, so a reference
   the rules miss is not counted as a miss here.
+
+## 29. Passages with no text of their own stop coming first
+
+**Why.** The local model scores a short or list-like passage close to many
+questions it does not answer. On the live site, "What action was decided
+for the bowl in Figure 1 given its rim dent?" across all documents put the
+WHO guide's contents line "15. Documentation 115 General 115 Documents
+required 116" first, tied with the inspection report's Figure 1. The
+chunker cuts the WHO contents pages at their numbered headings, so each
+entry is a passage of its own (18 of them), each looking like the start of
+its section. A lone "A" left by the layout and a figure whose only text is
+"Figure J" do the same.
+
+**Measured first.** `scripts/eval_hubs.py` runs the 129 questions through
+pure-mode search and counts, in the top five, contents passages (at least
+half "Title ... page" entries) and passages under 40 characters. Before the
+change, 32 of the in-document top-five slots were contents passages, and in
+9 questions one came first without being the answer; 18 slots held a
+passage under 40 characters.
+
+`_is_toc` in `references.py` was not usable as the signal: it needs three
+entries in one passage, so it misses 13 of the 18 WHO entries, the
+"15. Documentation" line among them, and it flags two Humira results tables
+and three passages of prose.
+
+**Decision.** A prior in `hybrid_search_local`, at search time, in SQL
+(migration 20261019000000). Nothing is stored and nothing deleted.
+- `own_text_length(raw_text)` is a passage's length once contents entries
+  are taken out: a title starting with a capital, with no digit or full
+  stop, then a page number of up to three digits, then the next entry or
+  the end. "15. Documentation 115 ..." keeps 45 characters (its number and
+  the page footer). The WHO contents passage that also holds a footnote
+  ("previously published in ... No. 961, 2011, Annex 3") keeps 207, and
+  that footnote answers a benchmark question.
+- A text or figure passage with fewer than 200 characters of its own has
+  its fused score scaled by 1 − 0.8 × (1 − own / 200): down to a fifth for
+  a passage with none. Tables, rows and records keep their score; a row is
+  short by nature and is often the answer.
+- When the question mentions a page, contents entries count as the
+  passage's own text: "On which page does the subsection on reference
+  standards begin?" is answered by the contents page.
+- A multiplier, not a rank penalty. Fused scores sit close together (1/61
+  for first place, 1/65 for fifth), and a hub that is in both lists gets
+  two shares; pushing its rank down 40 places in each list still left 17
+  to 20 contents passages in the top five.
+- In SQL rather than a flag written at ingest, so every stored passage on
+  production is covered without reading documents again or redeploying the
+  worker. It runs only on the fused candidates (at most 64 rows); the
+  query took 25 ms locally.
+- Tried offline on the candidate lists first: limits of 60 to 300
+  characters, weights of 0.3 to 0.9. 300 characters lost up to 6
+  questions (real short passages pushed out); 200 with 0.8 lost none.
+
+**Result.** 129 questions, top five, pure mode (`scripts/eval_hubs.py`;
+production through its API with `--base`):
+
+| | local before | local after | production before | production after |
+|---|---|---|---|---|
+| Recall@5, in the question's document | 93.8% | 94.6% | 92.2% | 93.8% |
+| MRR, in the question's document | 0.774 | 0.795 | 0.767 | 0.802 |
+| Recall@5, across all documents | 86.8% | 89.9% | 89.9% | 93.0% |
+| MRR, across all documents | 0.713 | 0.753 | 0.722 | 0.769 |
+| Contents passages in the top five, in-document | 32 | 3 | 34 | 3 |
+| ... ranked first without being the answer | 9 | 0 | 9 | 0 |
+| Under 40 characters in the top five, in-document | 18 | 0 | 22 | 0 |
+| Contents passages in the top five, all documents | 42 | 3 | 44 | 3 |
+| Under 40 characters in the top five, all documents | 39 | 0 | 30 | 0 |
+
+Local and production differ a little because the local copy is an older
+ingest (it still has the BNSS "5" and "A" fragments). The three contents
+passages left are answers (the footnote and the "which page" question). No
+question left the top five. Questions that moved (the full list prints
+from `eval_hubs.py` with no arguments):
+- Up in their own document, on both: eight WHO questions (record
+  retention, pest control, what a label shows, who releases contract
+  production, how to alter an entry, the reference-standards page, the
+  term for "the totality of systematic actions", the earlier annex), half
+  of them from second place to first, one from outside the top five.
+- Up across all documents: the BNSS compounding question and the
+  maintenance manual's "arrow marked D" come into the top five; Figure 1's
+  red arrow and the scanned bill's grand total move to first.
+- Down: locally, "How is cheating defined?" (BNS) went from first to
+  second in its document, and one rifaximin question from first to second
+  across all documents. Nothing went down on production.
+
+The reference links still pay as before: with links, 97% on the first
+cross-reference set and 86% on the hard set, both unchanged. On the hard
+set the plain top five went from 75% to 72%: one question's labelled
+answer is the WHO contents line "Good manufacturing practices for
+pharmaceutical products 90", which the "Section 2" link points at (below);
+it is still found through that link.
+
+**Not covered.**
+- `_is_toc` still misses single contents entries, so "Section 2" in the
+  WHO guide links to its contents line rather than to section 2. Using
+  `own_text_length`'s rule there and running `scripts/relink.py` is the
+  next step; the hard question above would then need its label fixed.
+- Contents without page numbers (the BNSS "Arrangement of clauses", the
+  Humira label's numbered contents) are not caught. They did not show up
+  as hubs on the benchmark.
+- The Hindi passages of the NPPA notices are the next hubs: the model reads
+  English only, so their vectors sit near everything. Across all documents
+  they take 19 top-five slots in 8 questions, before and after.
+- README and the Compare page still quote 93% for the app; both were
+  measured before this prior.
