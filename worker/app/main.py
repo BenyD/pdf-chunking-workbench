@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 import uuid
 
 from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException
@@ -11,7 +12,7 @@ from pydantic import BaseModel, Field
 from . import db, pipeline, storage
 from .chunk.model import ChunkDraft
 from .config import settings
-from .llm import claude, voyage
+from .llm import claude, local, voyage
 from .ocr import zonal
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -35,6 +36,8 @@ def health() -> dict:
         "skip_llm": settings.skip_llm,
         "pure": settings.pure,
         "local_embedding_model": settings.local_embedding_model,
+        "cpus": os.cpu_count(),
+        "embedding_threads": local.threads(),
         "fake_embeddings": settings.fake_embeddings,
         "anthropic_key": bool(settings.anthropic_api_key),
         "voyage_key": bool(settings.voyage_api_key),

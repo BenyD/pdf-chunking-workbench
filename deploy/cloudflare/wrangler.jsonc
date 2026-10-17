@@ -8,13 +8,15 @@
   "observability": { "enabled": true },
   // A running container keeps the env it started with; bump GENERATION after changing a secret so a fresh one starts.
   // PURE: no generative model at any step (see worker/app/config.py). GENERATION 4 starts a container with it.
-  "vars": { "GENERATION": "9", "PURE": "true" },
+  "vars": { "GENERATION": "10", "PURE": "true" },
   "containers": [
     {
       "class_name": "ChunklabWorker",
       "image": "../../worker/Dockerfile",
       "max_instances": 2,
-      "instance_type": "standard-1"
+      // 2 vCPU: the local model embeds passages on the CPU. CPU is billed only while working; the 8 GiB of
+      // memory costs about $0.07 an hour while the container is awake (Cloudflare pricing, 2026-10-18).
+      "instance_type": "standard-3"
     }
   ],
   "durable_objects": {

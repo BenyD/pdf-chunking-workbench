@@ -56,6 +56,7 @@ class Settings(BaseSettings):
     local_embedding_model: str = "snowflake/snowflake-arctic-embed-s"   # beat bge-small-en-v1.5 on our benchmark, 93% to 90% (scripts/compare_local_models.py)
     local_embedding_dim: int = 384
     local_model_cache: str | None = None    # the Docker image bakes the model into /app/models
+    local_embedding_threads: int | None = None   # default: the CPUs this container may use (llm/local.py)
 
     llm_concurrency: int = 6
     tesseract_cmd: str | None = None

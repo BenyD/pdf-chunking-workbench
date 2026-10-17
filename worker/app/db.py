@@ -168,10 +168,12 @@ def set_embeddings(pairs: list[tuple[str, list[float]]], column: str = "embeddin
     if not pairs:
         return
     col = _col(column)
+    # one statement per batch: from a server far from the database, a round trip per row is most of the time
     with conn() as c:
-        c.cursor().executemany(
-            f"update chunks set {col} = %s::vector where id = %s",
-            [("[" + ",".join(f"{x:.6f}" for x in v) + "]", cid) for cid, v in pairs],
+        c.execute(
+            f"""update chunks c set {col} = v.vec::vector
+                  from unnest(%s::uuid[], %s::text[]) as v(id, vec) where c.id = v.id""",
+            ([cid for cid, _ in pairs], ["[" + ",".join(f"{x:.6f}" for x in v) + "]" for _, v in pairs]),
         )
 
 
