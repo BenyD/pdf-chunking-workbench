@@ -1609,8 +1609,9 @@ out. It was found while the held-out SOPs were written, and fixed after the
 measurements above were first taken so that one change would not move
 both. The opening paragraph is now the lead-in of every item after it. The
 scope table's first and last rows and the two tables under "Four ways" are
-measured with the fix, and with the rule for short items after it; the
-rules judge's table is from before both.
+measured with the fix, and with the rule for short items and the
+cross-reference fix after it; the rules judge's table is from before all
+three.
 - 26 sentences in 25 paragraphs of 211.130, 211.142, 211.150, 211.184 and
   211.188 are now checked (Part 211: 394 to 420), 15 of them the items of
   211.188, the batch record. 23 lines of 211.101, 211.130 and 211.184 that
@@ -1665,10 +1666,34 @@ this subpart" is still met on "subpart", and right.
   Rules alone leave 194 of 278 lines for a person (was 189), and 5,000 SOPs
   cost $6.00 through the cascade (was $5.84). The five lines' Haiku
   verdicts were in the cache already, so nothing was spent.
-- Two of the five are short by accident: `obligation()` drops the words
+- Two of the five were short by accident: `obligation()` dropped the words
   after a cross-reference, so 211.198(b)(2) "Where an investigation under
   § 211.192 is conducted, the written record shall include the findings..."
-  keeps only "investigation" (Not covered, below).
+  kept only "investigation". With the whole sentence (next) they have 5 and
+  9 terms, and are still unsure: the closest passage holds 40% and 67%.
+
+**Cross-references.** `obligation()` leaves out "under § 211.192" and the
+like, which name another rule rather than ask anything. Its pattern for the
+citation took every lower-case letter, space and comma after "§", so it
+took the rest of the sentence too: 211.198(b)(2) above, and the 3-year
+periods for OTC products exempt from expiry dating (211.170(a)(3),
+211.180(a) and (b), 211.198(b)), which the numbers step then never saw. It
+now takes the citation alone: section numbers with their (a)(1) markers,
+joined by commas, "and" or "or", and "of this chapter" or the like.
+- 15 lines get words back. 211.184(b) loses two section numbers it had kept
+  as terms.
+- The words back showed that the numbers step read a period's own number
+  and event as its subject. 211.180(b), component records kept "1 year
+  after the expiration date ... 3 years after distribution", shared "1",
+  "3" and "distribution" with the records retention SOP's "3.1 The batch
+  ... distribution records of a batch are kept for at least one year after
+  the expiry date", and the rules called it met. Haiku says partly met: that
+  SOP keeps component records two years after receipt. The subject is now
+  read without each period's number, unit and event.
+- No line changes in any mode, and nothing was spent: rules 36 of 74, the
+  cascade 60, 194 of 278 lines left for a person, $6.00 for 5,000 SOPs.
+  None of the 14 SOPs keeps anything for a time after distribution, so the
+  numbers step has nothing to compare the OTC periods with.
 
 **The SOP check page.** Its scores card showed the old rules (sure about 15
 of 41) and its cost card assumed the model on every line. Both now read
@@ -1688,12 +1713,6 @@ more verdicts after the fix for unmarked opening paragraphs.
   or in-process material used" and (b)(8) "Complete labeling control
   records"), with 6 to 10 terms each, where Haiku says partly or not met:
   the master record names the same things as each batch's record.
-- `obligation()` drops a cross-reference with every lower-case word after
-  it: the pattern for "under § 211.192" also takes "is conducted, the
-  written record shall include the findings of the investigation and
-  followup". 19 lines lose words this way, among them the 3-year periods
-  for OTC products exempt from expiry dating (211.170(a)(3), 211.180(a)
-  and (b), 211.198(b)), which the numbers step then never sees.
 - 211.132 puts its (1) on the same line as the paragraph's heading
   ("Labeling. (1) In order to alert consumers..."), so (b)(1) and (c)(1)
   are cited as (b) and (c), and (c)(1)(i) to (iii) are read as letters and

@@ -591,6 +591,13 @@ def _has(term: str, text: str) -> bool:
     return re.search(rf"\b{re.escape(stem)}", text) is not None
 
 
+# A citation and nothing after it: "§ 211.192", "§ 211.122(g)(2)", "§§ 211.198, 211.204, or 211.208 of these
+# regulations", "§ 211.82(a), § 211.84(d), or § 211.122(a)".
+_CITE = r"\d+\.\d+(?:\([a-z0-9]+\))*"
+_CITES = (rf"§§?\s*{_CITE}(?:(?:,|,? and|,? or)\s+(?:§\s*)?{_CITE})*"
+          r"(?:\s+of (?:this (?:chapter|part|section)|these regulations))?")
+
+
 def obligation(text: str) -> str:
     """The part of a requirement an SOP has to answer: without its purpose ("To assure that ..., "), its exceptions
     ("except those for sterility and pyrogens", "unless visual examination would ..."), and its cross-references
@@ -599,7 +606,7 @@ def obligation(text: str) -> str:
     t = re.sub(r"^Except for [^,]+, ", "", t)
     t = re.sub(r",?\s*\b(?:except|unless)\b[^,;.]*", "", t)
     t = re.sub(r"\s*\([^()]*\)", "", t)                    # "(either by medical examination or ...)", "(except routine ...)"
-    t = re.sub(r"\(?\b(?:as )?(?:described in|in accordance with|under|required by|of) §§?\s*[\d.()a-z, and]+(?:of this (?:chapter|part|section))?\)?", "", t)
+    t = re.sub(r"\s*\(?\b(?:as )?(?:described in|in accordance with|under|required by|of) " + _CITES + r"\)?", "", t)
     t = re.sub(r"\b(?:described in )?paragraphs? \([a-z0-9]+\)(?:\s*\(\w+\))*(?: and \(\w+\))? of this section", "", t)
     return re.sub(r"\s+", " ", t).strip()
 
@@ -639,7 +646,8 @@ def _found(term: str, text: str) -> bool:
 NUMBER_WORDS = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
                 "eleven": 11, "twelve": 12, "eighteen": 18, "twenty-four": 24, "thirty": 30, "thirty-six": 36}
 UNIT_DAYS = {"day": 1, "week": 7, "month": 30, "year": 365}
-_PERIOD = re.compile(r"\b(\d+|" + "|".join(NUMBER_WORDS) + r")\s+(day|week|month|year)s?\s+(?:after|from|following)\s+(?:the\s+)?([a-z ]{3,40})")
+_SPAN = r"\b(\d+|" + "|".join(NUMBER_WORDS) + r")\s+(day|week|month|year)s?\s+(?:after|from|following)\s+(?:the\s+)?"
+_PERIOD = re.compile(_SPAN + r"([a-z ]{3,40})")
 ANCHORS = {"expir": "the expiry date", "distribut": "distribution", "receiv": "receipt", "manufactur": "manufacture"}
 
 
@@ -722,8 +730,9 @@ def rules_judge(req: Requirement, passages: list[dict], sop: dict) -> dict:
     if absent:
         return _v("not_met", "The SOP never mentions " + ", ".join(dict.fromkeys(absent)) + ".")
 
-    # Retention periods: the SOP's sentence must share the requirement's subject (two words beyond dates and keeping).
-    subject = [w for w in _terms(core) if not any(_SAME[i][0].fullmatch(w) for i in GENERIC)
+    # Retention periods: the SOP's sentence must share the requirement's subject (two words beyond dates and keeping),
+    # leaving out each period's number and event: "3 years after distribution" says when, not what.
+    subject = [w for w in _terms(re.sub(_SPAN + r"[a-z]+", " ", core.lower())) if not any(_SAME[i][0].fullmatch(w) for i in GENERIC)
                and w not in {"after", "date", "least", "years", "year", "months", "month", "days", "longer", "whichever"}]
     longer, matched, asked = None, set(), {a for _, _, a, _ in periods(core)}
     for days, said, anchor, _ in periods(core):
