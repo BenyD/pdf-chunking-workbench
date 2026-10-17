@@ -1401,8 +1401,30 @@ gives the same in-document recall@5 (94.6%) and MRR as "after".
 - The Hindi passages of the NPPA notices are the next hubs: the model reads
   English only, so their vectors sit near everything. Across all documents
   they take 19 top-five slots in 8 questions, before and after.
-- README and the Compare page still quote 93% for the app; both were
-  measured before this prior.
+
+**Re-run of the comparison (2026-10-18).** The prior works inside the
+candidates the SQL draws, four times the results asked for, so the count
+asked for now changes the order. `compare_chunking.py` asked for 5; the
+search page asks for 8. At 5 the app scored 95%, at 8 it scores 93% (120 of
+129), the same as before the prior, with the right passage ranked higher
+(MRR 0.78 to 0.81). Every setup in the comparison is now searched with 8
+and scored on its top five, so the numbers are the ones a user of the
+search page gets:
+
+| Setup | recall@5 | MRR | tokens read |
+|---|---|---|---|
+| Fixed-size 300, meaning / hybrid | 84% / 78% | 0.78 / 0.72 | 1,324 / 1,331 |
+| Semantic chunking | 82% | 0.73 | 1,045 |
+| Hierarchical 1,500 / 300, meaning / hybrid | 89% / 87% | 0.84 / 0.80 | 4,372 / 4,490 |
+| Our structure, keywords only | 86% | 0.70 | 1,597 |
+| The app: local model, no API | 93% | 0.81 | 1,511 |
+| Our structure + embeddings API | 95% | 0.85 | 1,371 |
+| With generative AI | 98% | 0.87 | 1,802 |
+
+Hierarchical reads more than before (3,461 tokens at 5) because eight
+children bring in more distinct parents. The cross-reference sets are
+unchanged: the app 75% to 86% with links on the hard set, 93% on the main
+set with or without them.
 
 ## 30. The SOP check with no AI, measured
 
