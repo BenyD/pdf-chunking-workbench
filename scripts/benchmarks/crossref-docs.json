@@ -1,0 +1,217 @@
+{
+  "generated": "2026-10-17",
+  "model": "claude-sonnet-5-5",
+  "hard": true,
+  "questions": [
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What is the offence under the Bharatiya Nyaya Sanhita's section 74, one of those listed where the information must be recorded by a woman police officer, and what punishment does it carry?",
+      "must_contain": "assaults or uses criminal force to any woman, intending to outrage or knowing it to be likely that he will thereby outrage her modesty",
+      "expected_page": 27,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 74",
+      "link_kind": "doc",
+      "from_page": 69
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What is the punishment for the offence under the Bharatiya Nyaya Sanhita provision that this section lists as a ground for declaring copies forfeited, specifically the one numbered 292?",
+      "must_contain": "fine which may extend to one thousand rupees",
+      "expected_page": 76,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 292",
+      "link_kind": "doc",
+      "from_page": 45
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What does the Bharatiya Nyaya Sanhita section 304, which section 283 lists among the thefts triable summarily, say about the maximum imprisonment for committing that offence?",
+      "must_contain": "imprisonment of either description for a term which may extend to three years",
+      "expected_page": 80,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 304",
+      "link_kind": "doc",
+      "from_page": 106
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What is the maximum punishment for the offence under section 220 of the Bharatiya Nyaya Sanhita, 2023 that a person who refuses without reasonable cause to attend and witness a search is deemed to have committed?",
+      "must_contain": "imprisonment of either description for a term which may extend to one month",
+      "expected_page": 62,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 220",
+      "link_kind": "doc",
+      "from_page": 47
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What is the offence under the Bharatiya Nyaya Sanhita section 213, cited in this provision on contempt committed in the view of a Court, and what punishment does it carry?",
+      "must_contain": "refuses to bind himself by an oath or affirmation to state the truth",
+      "expected_page": 61,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 213",
+      "link_kind": "doc",
+      "from_page": 136
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What conduct is punishable under the section of the Bharatiya Nyaya Sanhita, 2023 that sub-section (2) says only the woman's husband is deemed aggrieved by?",
+      "must_contain": "goes through the ceremony of being married, knowing that he is not thereby lawfully married",
+      "expected_page": 29,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 83",
+      "link_kind": "doc",
+      "from_page": 88
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment does section 67 of the Bharatiya Nyaya Sanhita, 2023, which is cited for the woman-officer recording requirement, prescribe for the offence it covers?",
+      "must_contain": "shall not be less than two years but which may extend to seven years",
+      "expected_page": 25,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 67",
+      "link_kind": "doc",
+      "from_page": 72
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What offence does the Bharatiya Nyaya Sanhita section 73, listed among the offences for which a woman's statement must be recorded by a woman officer, define, and what punishment applies?",
+      "must_contain": "imprisonment of either description for a term which may extend to two years",
+      "expected_page": 27,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 73",
+      "link_kind": "doc",
+      "from_page": 72
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What does section 349 of the Bharatiya Nyaya Sanhita, 2023, which section 283 cites for criminal intimidation, actually provide as the maximum punishment?",
+      "must_contain": "imprisonment of either description for a term which may extend to one year",
+      "expected_page": 97,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 349",
+      "link_kind": "doc",
+      "from_page": 106
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "In the charge for voluntarily causing grievous hurt under section 117(2) of the Bharatiya Nyaya Sanhita, what is the maximum imprisonment the offender can receive?",
+      "must_contain": "a term which may extend to seven years, and shall also be liable to fine",
+      "expected_page": 38,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 117",
+      "link_kind": "doc",
+      "from_page": 232
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What penalty does the Sanhita provision cited in the murder charge under sections 103 and 105 prescribe for committing murder?",
+      "must_contain": "punished with death or imprisonment for life",
+      "expected_page": 34,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 103",
+      "link_kind": "doc",
+      "from_page": 233
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment does the Bharatiya Nyaya Sanhita section that the illustration cites alongside section 98 prescribe for the offence it defines?",
+      "must_contain": "not be less than seven years but which may extend to fourteen years",
+      "expected_page": 31,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 99",
+      "link_kind": "doc",
+      "from_page": 93
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What does section 16 of the Bharatiya Nyaya Sanhita, 2023, which the charge cites, actually provide?",
+      "must_contain": "Nothing which is done in pursuance of, or which is warranted by the judgment or order of, a Court",
+      "expected_page": 11,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 16",
+      "link_kind": "doc",
+      "from_page": 235
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment applies to someone convicted under section 275 of the Bharatiya Nyaya Sanhita, whose food, drink, drug or medical preparation the Court may order destroyed?",
+      "must_contain": "imprisonment of either description for a term which may extend to six months",
+      "expected_page": 74,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 275",
+      "link_kind": "doc",
+      "from_page": 167
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Under the Bharatiya Nyaya Sanhita section 69 that sub-section (4) applies to imprisonment in default of compensation, what is the maximum term of imprisonment for the offence it describes?",
+      "must_contain": "imprisonment of either description for a term which may extend to ten years",
+      "expected_page": 26,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 69",
+      "link_kind": "doc",
+      "from_page": 104
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "In the illustration where A commits house-breaking by day with intent to commit adultery, what does the cited section of the Bharatiya Nyaya Sanhita say is required for a person to be said to commit house-breaking?",
+      "must_contain": "commits house-trespass if he effects his entrance into the house or any part of it in any of the six ways hereinafter described",
+      "expected_page": 90,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 330",
+      "link_kind": "doc",
+      "from_page": 96
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment does the penalty section cited in section 155 prescribe for a person who fails to comply with the order?",
+      "must_contain": "imprisonment of either description for a term which may extend to three months",
+      "expected_page": 62,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 221",
+      "link_kind": "doc",
+      "from_page": 64
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "In the illustration where A rescues B from lawful custody and causes grievous hurt to the constable, what is the punishment under the Bharatiya Nyaya Sanhita section 119 for voluntarily causing grievous hurt for the stated purposes?",
+      "must_contain": "imprisonment for life, or imprisonment of either description for a term which may extend to ten years",
+      "expected_page": 39,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 119",
+      "link_kind": "doc",
+      "from_page": 96
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment does the Bharatiya Nyaya Sanhita section 188, mentioned in the provision on compounding abetment and attempts, prescribe for the offence it covers?",
+      "must_contain": "imprisonment of either description for a term which may extend to seven years",
+      "expected_page": 54,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 188",
+      "link_kind": "doc",
+      "from_page": 127
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "What punishment does the section cited in the charge for knowingly delivering a counterfeit coin as genuine provide?",
+      "must_contain": "imprisonment for life, or with imprisonment of either description for a term which may extend to ten years",
+      "expected_page": 52,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 179",
+      "link_kind": "doc",
+      "from_page": 233
+    },
+    {
+      "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+      "question": "Which kinds of hurt count as grievous under the section of the Bharatiya Nyaya Sanhita, 2023, that A is charged under for voluntarily causing grievous hurt with an instrument for shooting?",
+      "must_contain": "Permanent disfiguration of the head or face;",
+      "expected_page": 38,
+      "answer_doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+      "link": "Bharatiya Nyaya Sanhita, section 116",
+      "link_kind": "doc",
+      "from_page": 94
+    }
+  ]
+}

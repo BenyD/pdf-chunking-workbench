@@ -24,7 +24,7 @@
     "recall": 0.862,
     "questions": 29,
     "passages": 8.2,
-    "tokens": 2472
+    "tokens": 2515
   },
   {
     "set": "crossref-hard",
@@ -48,10 +48,64 @@
     "set": "crossref-hard",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.778,
+    "recall": 0.806,
     "questions": 36,
     "passages": 8.2,
-    "tokens": 2445
+    "tokens": 2522
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Keywords only",
+    "way": "top 5",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 2105
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Keywords only",
+    "way": "top 10",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 4260
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Keywords only",
+    "way": "top 5 + links",
+    "recall": 0.048,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3292
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Keywords only",
+    "way": "top 5",
+    "recall": 0.381,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 1915
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Keywords only",
+    "way": "top 10",
+    "recall": 0.571,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3821
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Keywords only",
+    "way": "top 5 + links",
+    "recall": 0.381,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3133
   },
   {
     "set": "main",
@@ -75,10 +129,10 @@
     "set": "main",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.86,
+    "recall": 0.868,
     "questions": 129,
-    "passages": 6.6,
-    "tokens": 2008
+    "passages": 6.8,
+    "tokens": 2076
   },
   {
     "set": "crossref",
@@ -87,7 +141,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 5.0,
-    "tokens": 1403
+    "tokens": 1414
   },
   {
     "set": "crossref",
@@ -96,7 +150,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 2766
+    "tokens": 2838
   },
   {
     "set": "crossref",
@@ -104,8 +158,8 @@
     "way": "top 5 + links",
     "recall": 0.966,
     "questions": 29,
-    "passages": 8.3,
-    "tokens": 2302
+    "passages": 8.4,
+    "tokens": 2335
   },
   {
     "set": "crossref-hard",
@@ -114,7 +168,7 @@
     "recall": 0.75,
     "questions": 36,
     "passages": 5.0,
-    "tokens": 1331
+    "tokens": 1344
   },
   {
     "set": "crossref-hard",
@@ -123,7 +177,7 @@
     "recall": 0.806,
     "questions": 36,
     "passages": 10.0,
-    "tokens": 2686
+    "tokens": 2708
   },
   {
     "set": "crossref-hard",
@@ -131,35 +185,89 @@
     "way": "top 5 + links",
     "recall": 0.861,
     "questions": 36,
-    "passages": 7.6,
-    "tokens": 2138
+    "passages": 7.8,
+    "tokens": 2206
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "The app (local model)",
+    "way": "top 5",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 1811
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "The app (local model)",
+    "way": "top 10",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3517
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "The app (local model)",
+    "way": "top 5 + links",
+    "recall": 0.762,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3053
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "The app (local model)",
+    "way": "top 5",
+    "recall": 0.524,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 1718
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "The app (local model)",
+    "way": "top 10",
+    "recall": 0.667,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 3395
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "The app (local model)",
+    "way": "top 5 + links",
+    "recall": 0.667,
+    "questions": 21,
+    "passages": 9.9,
+    "tokens": 3201
   },
   {
     "set": "main",
     "setup": "The app (local model)",
     "way": "top 5",
-    "recall": 0.93,
+    "recall": 0.938,
     "questions": 129,
     "passages": 5.0,
-    "tokens": 1502
+    "tokens": 1501
   },
   {
     "set": "main",
     "setup": "The app (local model)",
     "way": "top 10",
-    "recall": 0.946,
+    "recall": 0.953,
     "questions": 129,
     "passages": 9.6,
-    "tokens": 2854
+    "tokens": 2842
   },
   {
     "set": "main",
     "setup": "The app (local model)",
     "way": "top 5 + links",
-    "recall": 0.93,
+    "recall": 0.938,
     "questions": 129,
-    "passages": 6.5,
-    "tokens": 1929
+    "passages": 6.7,
+    "tokens": 2011
   },
   {
     "set": "crossref",
@@ -168,7 +276,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 5.0,
-    "tokens": 1844
+    "tokens": 1833
   },
   {
     "set": "crossref",
@@ -177,7 +285,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 3396
+    "tokens": 3391
   },
   {
     "set": "crossref",
@@ -185,8 +293,8 @@
     "way": "top 5 + links",
     "recall": 0.966,
     "questions": 29,
-    "passages": 8.3,
-    "tokens": 3163
+    "passages": 8.4,
+    "tokens": 3220
   },
   {
     "set": "crossref-hard",
@@ -204,7 +312,7 @@
     "recall": 0.833,
     "questions": 36,
     "passages": 10.0,
-    "tokens": 3454
+    "tokens": 3453
   },
   {
     "set": "crossref-hard",
@@ -212,8 +320,62 @@
     "way": "top 5 + links",
     "recall": 1.0,
     "questions": 36,
-    "passages": 7.7,
-    "tokens": 2888
+    "passages": 7.8,
+    "tokens": 2930
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Generative AI",
+    "way": "top 5",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 2389
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Generative AI",
+    "way": "top 10",
+    "recall": 0.0,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 4275
+  },
+  {
+    "set": "crossref-docs",
+    "setup": "Generative AI",
+    "way": "top 5 + links",
+    "recall": 0.762,
+    "questions": 21,
+    "passages": 9.3,
+    "tokens": 4050
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Generative AI",
+    "way": "top 5",
+    "recall": 0.524,
+    "questions": 21,
+    "passages": 5.0,
+    "tokens": 2240
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Generative AI",
+    "way": "top 10",
+    "recall": 0.714,
+    "questions": 21,
+    "passages": 10.0,
+    "tokens": 4299
+  },
+  {
+    "set": "crossref-docs, all documents",
+    "setup": "Generative AI",
+    "way": "top 5 + links",
+    "recall": 0.762,
+    "questions": 21,
+    "passages": 9.4,
+    "tokens": 4075
   },
   {
     "set": "main",
@@ -222,7 +384,7 @@
     "recall": 0.977,
     "questions": 129,
     "passages": 5.0,
-    "tokens": 1799
+    "tokens": 1806
   },
   {
     "set": "main",
@@ -231,7 +393,7 @@
     "recall": 0.992,
     "questions": 129,
     "passages": 9.7,
-    "tokens": 3449
+    "tokens": 3454
   },
   {
     "set": "main",
@@ -239,7 +401,7 @@
     "way": "top 5 + links",
     "recall": 0.977,
     "questions": 129,
-    "passages": 6.3,
-    "tokens": 2315
+    "passages": 6.6,
+    "tokens": 2463
   }
 ]

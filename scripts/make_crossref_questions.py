@@ -2,6 +2,8 @@
 """Questions whose answer is somewhere other than the passage that matches them.
 
     cd worker && .venv/bin/python ../scripts/make_crossref_questions.py      # writes scripts/benchmarks/crossref.json
+    ... make_crossref_questions.py --hard                                      # crossref-hard.json, no wording borrowed from T
+    ... make_crossref_questions.py --hard --docs                               # crossref-docs.json: T is in another document
 
 From the links the document itself makes (worker/app/chunk/references.py: "see Table 2", "(5.1)", "See
 section 163", a unit number recorded in two places), pairs are drawn: a passage R where a reader starts, and
@@ -28,12 +30,16 @@ from app.config import settings  # noqa: E402
 
 OUT = ROOT / "scripts" / "benchmarks" / "crossref.json"
 OUT_HARD = ROOT / "scripts" / "benchmarks" / "crossref-hard.json"
+OUT_DOCS = ROOT / "scripts" / "benchmarks" / "crossref-docs.json"
 HARD = "--hard" in sys.argv
+DOCS = "--docs" in sys.argv          # pairs from links to another document (worker/app/chunk/doclinks.py)
 STOP = set("""a an and are as at be by can do does for from has have how in is it its may must of on or the their there
 this to was what when where which who why will with would should under any each other than shall not be""".split())
 PER_DOC = {"Bharatiya Nagarik": 8, "Bharatiya Nyaya": 6, "humira": 8, "who-trs986": 5, "QC Inspection": 3, "Tablet press": 3}
 if "--hard" in sys.argv:
     PER_DOC = {k: v * 2 for k, v in PER_DOC.items()}      # the stricter check drops more drafts
+if DOCS:
+    PER_DOC = {"Bharatiya Nagarik": 24, "Bharatiya Nyaya": 4}
 SYSTEM = (
     "You write test questions for a document search system. You get passage R, where a reader is, and passage T, "
     "which R refers to (by a figure, table, section or step number, or a shared unit or code). Write ONE question a "
@@ -63,11 +69,16 @@ def pairs() -> list[dict]:
                                   from chunks c join documents d on d.id = c.document_id
                                  where c.strategy = 'structural' and d.name ilike %s""", (f"%{prefix}%",)).fetchall()
             by_id = {r["id"]: r for r in rows}
+            if DOCS:                                       # targets in any document
+                by_id = {r["id"]: r for r in c.execute("""select c.id::text as id, c.raw_text, c.page_start, c.page_end, c.chunk_type,
+                                                                  c.metadata, d.name from chunks c join documents d on d.id = c.document_id
+                                                            where c.strategy = 'structural'""").fetchall()}
             cands = []
             for r in rows:
                 for l in r["metadata"].get("links", []):
-                    t = by_id.get(l["id"])
-                    if t and l["dir"] in ("out", "shared") and l["kind"] in ("ref", "shared", "key") and len(t["raw_text"]) > 60:
+                    t = by_id.get(l["id"]) if l.get("id") else None
+                    kinds = ("doc",) if DOCS else ("ref", "shared", "key")
+                    if t and l["dir"] in ("out", "shared") and l["kind"] in kinds and len(t["raw_text"]) > 60:
                         cands.append((r, t, l))
             rng.shuffle(cands)
             seen_t = set()
@@ -107,15 +118,15 @@ async def main() -> None:
             leak = words(q) & (words(p["T"]["raw_text"]) - words(p["R"]["raw_text"]))
             if len(leak) > 1:
                 return None
-        return {"doc": p["doc"], "question": q, "must_contain": a, "expected_page": p["T"]["page_start"],
+        return {"doc": p["doc"], "question": q, "must_contain": a, "expected_page": p["T"]["page_start"], "answer_doc": p["T"]["name"],
                 "link": p["link"]["label"], "link_kind": p["link"]["kind"], "from_page": p["R"]["page_start"]}
 
     got = [x for x in await asyncio.gather(*(one(p) for p in ps)) if x]
     final = []
     for prefix, n in PER_DOC.items():
         final += [g for g in got if prefix.lower() in g["doc"].lower()][:n]
-    final = [g for g in final if not re.search(r"\bwhich page\b", g["question"], re.I)]
-    out = OUT_HARD if HARD else OUT
+    final = [g for g in final if not re.search(r"\bwhich page\b", g["question"], re.I) and not re.search(r"\bR\b|\bpassage [RT]\b", g["question"])]
+    out = OUT_DOCS if DOCS else OUT_HARD if HARD else OUT
     out.write_text(json.dumps({"generated": "2026-10-17", "model": "claude-sonnet-5-5", "hard": HARD, "questions": final}, indent=2, ensure_ascii=False) + "\n")
     print(f"{len(ps)} pairs, {len(got)} kept, {len(final)} written to {out.relative_to(ROOT)}")
     for g in final:

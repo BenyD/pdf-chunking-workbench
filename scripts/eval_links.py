@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Does following the document's own references find answers that search alone misses, and at what cost?
 
-    cd worker && .venv/bin/python ../scripts/eval_links.py [--set crossref|main|both]
+    cd worker && .venv/bin/python ../scripts/eval_links.py [--set crossref|crossref-hard|crossref-docs|main|all]
+
+crossref-docs asks questions whose answer is in another document (the BNSS citing sections of the BNS),
+twice: searching the document the reader is in, and searching every document.
 
 For each question, three ways to fill the passages a reader sees:
   top 5            the search's best five
@@ -40,13 +43,17 @@ def norm(s: str) -> str:
 
 def questions(c, which: str) -> list[dict]:
     qs = []
-    for setname, fname in (("crossref", "crossref.json"), ("crossref-hard", "crossref-hard.json")):
+    for setname, fname in (("crossref", "crossref.json"), ("crossref-hard", "crossref-hard.json"), ("crossref-docs", "crossref-docs.json")):
         if which not in (setname, "both", "all") or not (ROOT / "scripts" / "benchmarks" / fname).exists():
             continue
         for q in json.loads((ROOT / "scripts" / "benchmarks" / fname).read_text())["questions"]:
             d = c.execute("select id::text from documents where name = %s and status = 'ready'", (q["doc"],)).fetchone()
+            a = c.execute("select id::text from documents where name = %s and status = 'ready'", (q["answer_doc"],)).fetchone() if q.get("answer_doc") else None
             if d:
+                q = {**q, "answer_doc_id": a["id"] if a else None}
                 qs.append({**q, "doc_id": d["id"], "set": setname})
+                if setname == "crossref-docs":
+                    qs.append({**q, "doc_id": None, "set": "crossref-docs, all documents"})
     if which in ("main", "both", "all"):
         for r in c.execute("""select q.document_id::text as doc_id, d.name as doc, q.question, q.must_contain, q.expected_page
                                 from eval_questions q join documents d on d.id = q.document_id where d.status = 'ready'""").fetchall():
@@ -56,7 +63,7 @@ def questions(c, which: str) -> list[dict]:
 
 def search(c, fn: str, q: str, vec, strategy: str, doc: str, k: int) -> list[dict]:
     v = None if vec is None else "[" + ",".join(f"{x:.6f}" for x in vec) + "]"
-    return c.execute(f"""select h.id::text as id, h.raw_text, h.page_start, h.page_end, h.metadata, c.token_count
+    return c.execute(f"""select h.id::text as id, h.document_id::text as document_id, h.raw_text, h.page_start, h.page_end, h.metadata, c.token_count
                            from {fn}(%s, %s::vector, %s, %s::uuid, %s, 60, 1, %s) h join chunks c on c.id = h.id
                           order by h.rrf_score desc""", (q, v, strategy, doc, k, 0 if vec is None else 1)).fetchall()
 
@@ -64,18 +71,19 @@ def search(c, fn: str, q: str, vec, strategy: str, doc: str, k: int) -> list[dic
 def expand(c, hits: list[dict], q: str = "", vec=None, which: str | None = None, extra: int = 5) -> list[dict]:
     """Every passage the top hits link to, ranked against the question (rank_linked), the best `extra` kept."""
     have = {h["id"] for h in hits}
-    ids = list(dict.fromkeys(l["id"] for h in hits for l in h["metadata"].get("links", []) if l["id"] not in have))
+    ids = list(dict.fromkeys(l["id"] for h in hits for l in h["metadata"].get("links", []) if l.get("id") and l["id"] not in have))
     if not ids:
         return []
     v = None if vec is None else "[" + ",".join(f"{x:.6f}" for x in vec) + "]"
-    return c.execute("""select id::text as id, raw_text, page_start, page_end, metadata, token_count
+    return c.execute("""select id::text as id, document_id::text as document_id, raw_text, page_start, page_end, metadata, token_count
                           from rank_linked(%s::uuid[], %s, %s::vector, %s::vector, %s)""",
                      (ids, q, v if which == "loc" else None, v if which == "api" else None, extra)).fetchall()
 
 
 def hit(rows: list[dict], q: dict) -> bool:
     n = norm(q["must_contain"])
-    return any(n in norm(r["raw_text"]) and (q["expected_page"] is None or r["page_start"] <= q["expected_page"] <= r["page_end"]) for r in rows)
+    return any(n in norm(r["raw_text"]) and (q["expected_page"] is None or r["page_start"] <= q["expected_page"] <= r["page_end"])
+               and (not q.get("answer_doc_id") or r["document_id"] == q["answer_doc_id"]) for r in rows)
 
 
 def main(which: str) -> None:
@@ -114,5 +122,5 @@ def main(which: str) -> None:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--set", default="all", choices=["crossref", "crossref-hard", "main", "both", "all"])
+    ap.add_argument("--set", default="all", choices=["crossref", "crossref-hard", "crossref-docs", "main", "both", "all"])
     main(ap.parse_args().set)
