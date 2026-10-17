@@ -1,6 +1,7 @@
 """The unit every strategy produces. Mirrors the `chunks` table."""
 from __future__ import annotations
 
+import json
 import uuid
 from dataclasses import dataclass, field
 
@@ -53,6 +54,14 @@ class ChunkDraft:
             "token_count": self.token_count,
             "embedding": self.embedding,
         }
+
+    @classmethod
+    def from_row(cls, r: dict) -> "ChunkDraft":
+        """A stored passage back as a draft, for rebuilding its links."""
+        md = r["metadata"] if isinstance(r["metadata"], dict) else json.loads(r["metadata"] or "{}")
+        return cls(chunk_type=r["chunk_type"], raw_text=r["raw_text"], context=r["context"], page_start=r["page_start"],
+                   page_end=r["page_end"], bboxes=[], metadata=md, id=str(r["id"]),
+                   parent_id=str(r["parent_id"]) if r.get("parent_id") else None, ordinal=r.get("ordinal") or 0)
 
 
 def link_sequence(chunks: list[ChunkDraft]) -> None:

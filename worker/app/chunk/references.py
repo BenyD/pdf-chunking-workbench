@@ -100,18 +100,15 @@ def _identifiers(text: str) -> set[str]:
 
 def _add(c: ChunkDraft, target: ChunkDraft, kind: str, label: str, direction: str) -> None:
     links = c.metadata.setdefault("links", [])
-    if target.id == c.id or any(l["id"] == target.id for l in links) or len(links) >= MAX_LINKS:
+    own = [l for l in links if l.get("kind") != "doc"]          # links to other documents have their own limit (doclinks.py)
+    if target.id == c.id or any(l["id"] == target.id for l in links) or len(own) >= MAX_LINKS:
         return
     links.append({"id": target.id, "kind": kind, "label": label, "dir": direction,
                   "page": target.page_start, "type": target.chunk_type})
 
 
-def link_all(chunks: list[ChunkDraft]) -> int:
-    """Rebuild the reference and identifier links among one document's passages. Returns how many were made.
-    Key links made by legend.py are kept."""
-    for c in chunks:
-        c.metadata["links"] = [l for l in c.metadata.get("links", []) if l.get("kind") == "key"]
-    # targets: the first passage carrying each anchor (a section's head, a table's first part)
+def anchor_targets(chunks: list[ChunkDraft]) -> dict[tuple[str, str], ChunkDraft]:
+    """Where each anchor of a document starts: ("section", "5.1"), ("table", "7"), ("annex", "A") and so on."""
     targets: dict[tuple[str, str], ChunkDraft] = {}
     for c in chunks:
         if c.chunk_type == "table_row" or _is_toc(c):
@@ -129,6 +126,15 @@ def link_all(chunks: list[ChunkDraft]) -> int:
             key = ("section", ".".join(parts[:n]))
             if key not in targets or order[t.id] < order[targets[key].id]:
                 targets[key] = t
+    return targets
+
+
+def link_all(chunks: list[ChunkDraft]) -> int:
+    """Rebuild the reference and identifier links among one document's passages. Returns how many were made.
+    Key links made by legend.py and links to other documents (doclinks.py) are kept."""
+    for c in chunks:
+        c.metadata["links"] = [l for l in c.metadata.get("links", []) if l.get("kind") in ("key", "doc")]
+    targets = anchor_targets(chunks)
     made = 0
     for c in chunks:
         if c.chunk_type == "table_row" or _is_toc(c):

@@ -20,6 +20,7 @@ import pymupdf
 
 from . import db, storage
 from .chunk.contextual import chunk_contextual
+from .chunk.doclinks import Doc, key, link_library, mentions, same_document
 from .chunk.model import ChunkDraft
 from .chunk.structural import chunk_structural
 from .config import settings
@@ -82,6 +83,7 @@ def ingest(document_id: str) -> None:
             "by_type": dict(Counter(c.chunk_type for c in chunks)),
             "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
         }
+        _link_documents(document_id, row["name"], str(row.get("created_at") or ""), chunks)
         db.delete_chunks(document_id, STRATEGY)   # only this mode's passages: the other mode's stay, for comparison
         db.insert_chunks([c.to_row(document_id, STRATEGY) for c in chunks])
         stats["llm"] = llm_usage
@@ -95,6 +97,30 @@ def ingest(document_id: str) -> None:
     except Exception as e:  # noqa: BLE001
         log.exception("ingest failed for %s", document_id)
         db.update_document(document_id, status="error", progress={"stage": "error", "message": str(e)[:500]})
+
+
+def _link_documents(document_id: str, name: str, created: str, chunks: list[ChunkDraft]) -> None:
+    """Links to and from the other documents of the library (chunk/doclinks.py), made before this one's passages
+    are stored. Only the documents it cites, the ones citing it, and its own copies are read and updated."""
+    try:
+        new = Doc(document_id, name, chunks, created)
+        heads = [Doc(d["id"], d["name"], [], d["created_at"]) for d in db.ready_documents() if d["id"] != document_id]
+        involved = mentions(heads, chunks) | {h.id for h in heads if same_document(h, new)}
+        if key(new):
+            involved |= set(db.documents_containing(key(new), STRATEGY)) - {document_id}
+        others = []
+        for h in heads:
+            if h.id in involved:
+                rows = db.chunk_rows(h.id, STRATEGY)
+                others.append(Doc(h.id, h.name, [ChunkDraft.from_row(r) for r in rows], h.created))
+        if not others:
+            return
+        before = {c.id: list(c.metadata.get("links", [])) for d in others for c in d.chunks}
+        made = link_library([new, *others])
+        db.update_chunk_metadata([(c.id, c.metadata) for d in others for c in d.chunks if c.metadata.get("links", []) != before[c.id]])
+        log.info("linked %s to %d other documents: %d links", name, len(others), made)
+    except Exception:  # noqa: BLE001
+        log.exception("links to other documents failed for %s; the document is stored without them", document_id)
 
 
 def _spread(chunks: list[ChunkDraft], n: int = 12) -> list[ChunkDraft]:

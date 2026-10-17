@@ -62,6 +62,36 @@ def delete_chunks(document_id: str, strategy: str | None = None) -> None:
             c.execute("delete from chunks where document_id = %s", (document_id,))
 
 
+CHUNK_COLS = "id::text as id, document_id::text as document_id, chunk_type, raw_text, context, metadata, page_start, page_end, parent_id::text as parent_id, ordinal"
+
+
+def ready_documents() -> list[dict[str, Any]]:
+    with conn() as c:
+        return c.execute("select id::text as id, name, created_at::text as created_at from documents where status = 'ready'").fetchall()
+
+
+def chunk_rows(document_id: str, strategy: str) -> list[dict[str, Any]]:
+    with conn() as c:
+        return c.execute(f"select {CHUNK_COLS} from chunks where document_id = %s and strategy = %s order by ordinal",
+                         (document_id, strategy)).fetchall()
+
+
+def documents_containing(text: str, strategy: str) -> list[str]:
+    """Documents with a passage containing this exact text (a code such as SOP-QA-040, or a title)."""
+    pattern = "%" + text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_") + "%"
+    with conn() as c:
+        return [r["document_id"] for r in c.execute(
+            "select distinct document_id::text as document_id from chunks where strategy = %s and raw_text like %s",
+            (strategy, pattern)).fetchall()]
+
+
+def update_chunk_metadata(pairs: list[tuple[str, dict]]) -> None:
+    if not pairs:
+        return
+    with conn() as c:
+        c.cursor().executemany("update chunks set metadata = %s::jsonb where id = %s::uuid", [(json.dumps(m), i) for i, m in pairs])
+
+
 def insert_chunks(rows: list[dict[str, Any]]) -> None:
     """rows carry an `embedding` list[float] or None; cast happens in SQL."""
     if not rows:
