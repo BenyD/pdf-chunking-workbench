@@ -57,8 +57,12 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
     last_was_heading_only = False
     all_text_blocks = [b for lay in layouts for b in lay.blocks if isinstance(b, TextBlock)]
 
-    def flush() -> None:
+    def flush(final: bool = False) -> None:
         nonlocal buffer
+        # A stray "5" or "A" (a number or letter cut off from its heading) is no passage on its own, and a short
+        # vector like that sits close to every question. It joins the text that comes next.
+        if buffer and not final and sum(ch.isalnum() for b in buffer for ch in (b.text or "")) < 3:
+            return
         if buffer:
             chunks.extend(_pack_text(buffer, crumbs.text(), max_tokens, dims))
             buffer = []
@@ -89,7 +93,7 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
                 flush()
                 last_was_heading_only = False
                 chunks.append(_figure_chunk(block, crumbs.text(), dims, all_text_blocks))
-    flush()
+    flush(final=True)
     bind_all(chunks)          # a figure's bare labels (A, B, 1, 2) tied to the key that explains them, wherever it is
     link_sequence(chunks)
     link_all(chunks)          # "see Table 2", "(5.1)", "unit 117": links to where the rest of the answer is
