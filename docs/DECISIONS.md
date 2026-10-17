@@ -1130,7 +1130,8 @@ failing. The re-ranker helped bge-small by a point and cost arctic three,
 so it is left out.
 
 **Measured in the app's own search** (`compare_chunking.py`, HNSW index):
-92% recall@5, MRR 0.78, 1,371 tokens in the top five. That is above every
+92% recall@5, MRR 0.78, 1,371 tokens in the top five; 93% once labels drawn
+into figure images are read (section 27). That is above every
 Bedrock-style method (fixed-size 84%, semantic 82%, hierarchical 88 to
 90%) and between keywords alone (85%) and the full generative setup (98%).
 The gap to 98% is figures and lone table rows, sections 22 and 23.
@@ -1140,3 +1141,50 @@ minutes on a laptop CPU; on the half-CPU container a 100-page document takes
 a few minutes. A question's vector takes a few milliseconds once the model
 is loaded; the first question after the container wakes waits a few
 seconds.
+
+## 27. Callout labels drawn into an image, read without a model
+
+**Why.** Section 23 bound a figure's labels to their key, but only labels
+printed as PDF text; a "2" drawn into a photo or a scanned drawing is
+pixels, and only the vision model could read it. With generative AI off,
+those figures lost their key.
+
+**What others do.** Auto-ballooning tools for engineering drawings (High
+QA, DISCUS) and the published work on circular callouts in drawings
+(Maity et al., 2018) and on OCR of engineering drawings (eDOCr, 2023) all
+find candidate markers with image processing first and then run OCR on
+each crop. Tesseract's own guidance: single-character mode (--psm 10), a
+small white border, and enough pixels per character. Contour shape filters
+with a tight size range hold up better on photos than Hough circles.
+
+**Decision.** `worker/app/parse/callouts.py`, OpenCV and Tesseract only:
+- Markers: closed shapes 20 to 130 px wide, circular or square (4 pi area
+  / perimeter^2 of at least 0.70), with some ink inside but not full of it.
+  A filled badge touches its arrow, so disc and line merge; a morphological
+  opening with a disc wider than a line erases the line and keeps the disc.
+- Free labels: a coloured glyph counts only if it stands alone (no letter
+  beside it, so not part of a word like "STEP 1") and a leader line of the
+  same colour starts right next to it.
+- Reading: the inside is cropped past the ring, binarised, enlarged to 64 px,
+  bordered, and read as one character or word restricted to A-Z and 0-9, at
+  confidence 60 or more. A figure with a single reading has none: callouts
+  come in sets, and a key needs two labels to bind.
+- `legend.bind_all` reads the image only when the printed labels found no
+  key.
+
+**Measured.** `scripts/callout_testset.py` draws ten figures (circled
+digits on a photo, black balloons, boxed letters, two-digit numbers, small
+markers, plain red letters, filled badges, a serif font, and two figures
+with no labels); `scripts/test_callouts.py` reads 28 of 28 labels with none
+wrong. On real figures it reads nothing in the inspection report (its
+labels are text already) and nothing in the Humira label's 49 illustrations,
+which have no callouts; the first version read stray letters out of "STEP
+1" and "2.1 mm" there, which is what the stand-alone and leader-line tests
+fixed. The manual's numbered photo now binds with no AI: pure mode goes
+from 67% to 100% on that document and from 92% to 93% overall. The whole
+manual is chunked in 0.4 seconds.
+
+**Not covered.** A bare arrow with no label and no caption still says
+nothing without a model looking at the picture. No real manual with drawn
+callouts has been tested yet; the interviewers' own files are the next
+test.

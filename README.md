@@ -16,7 +16,8 @@ Pages:
 How a document is processed: pages are rendered; the layout is parsed so
 headings, tables (whole and row by row) and figures are known; passages are cut
 along those boundaries with their breadcrumb (chapter, section) in front, and a
-figure's bare labels (A, B, 1, 2) are tied to the key that explains them;
+figure's bare labels (A, B, 1, 2), printed or drawn into the image and read
+with OCR, are tied to the key that explains them;
 every passage is embedded by a small open-source model running in our own
 worker and stored. Search is hybrid (keyword and meaning, fused) and returns
 the passages, each on its page.
@@ -24,7 +25,7 @@ the passages, each on its page.
 **No generative AI by default, and no outside API.** Nothing in the pipeline
 writes text: the passages are exactly what the rules cut, and the embedding
 model (snowflake-arctic-embed-s, run on the CPU through ONNX) only turns text
-into numbers. It scores 92% on the benchmark below, above every Bedrock-style
+into numbers. It scores 93% on the benchmark below, above every Bedrock-style
 method. Setting `NEXT_PUBLIC_AI=1` on the web app and `PURE=false` on the
 worker turns on the optional extras: a model-written context line per
 passage, figure descriptions, and a written answer (98%).
@@ -228,9 +229,10 @@ five, 129 questions:
 | Fixed-size 300 tokens (Bedrock default) | 84% |
 | Semantic chunking | 82% |
 | Hierarchical 1,500 / 300 | 88 to 90%, reading twice the tokens |
-| Our structure, no AI at all | 85% |
-| Our structure + embeddings, nothing generated | 95% |
-| The app | 98% |
+| Our structure, keywords only | 86% |
+| Our structure + local open-source model (the app, no API) | 93% |
+| Our structure + embeddings API, nothing generated | 95% |
+| With generative AI switched on | 98% |
 
 The full table, per document, is on the Compare page and in
 docs/DECISIONS.md section 22.
