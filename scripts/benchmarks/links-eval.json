@@ -51,7 +51,7 @@
     "recall": 0.778,
     "questions": 36,
     "passages": 8.1,
-    "tokens": 2442
+    "tokens": 2435
   },
   {
     "set": "main",
@@ -87,7 +87,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 5.0,
-    "tokens": 1361
+    "tokens": 1403
   },
   {
     "set": "crossref",
@@ -96,7 +96,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 2676
+    "tokens": 2766
   },
   {
     "set": "crossref",
@@ -105,25 +105,25 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 8.3,
-    "tokens": 2260
+    "tokens": 2302
   },
   {
     "set": "crossref-hard",
     "setup": "The app (local model)",
     "way": "top 5",
-    "recall": 0.75,
+    "recall": 0.722,
     "questions": 36,
     "passages": 5.0,
-    "tokens": 1307
+    "tokens": 1331
   },
   {
     "set": "crossref-hard",
     "setup": "The app (local model)",
     "way": "top 10",
-    "recall": 0.806,
+    "recall": 0.778,
     "questions": 36,
     "passages": 10.0,
-    "tokens": 2550
+    "tokens": 2687
   },
   {
     "set": "crossref-hard",
@@ -132,7 +132,7 @@
     "recall": 0.861,
     "questions": 36,
     "passages": 7.6,
-    "tokens": 2110
+    "tokens": 2134
   },
   {
     "set": "main",
@@ -141,7 +141,7 @@
     "recall": 0.93,
     "questions": 129,
     "passages": 5.0,
-    "tokens": 1393
+    "tokens": 1502
   },
   {
     "set": "main",
@@ -150,7 +150,7 @@
     "recall": 0.946,
     "questions": 129,
     "passages": 9.6,
-    "tokens": 2610
+    "tokens": 2854
   },
   {
     "set": "main",
@@ -158,8 +158,8 @@
     "way": "top 5 + links",
     "recall": 0.93,
     "questions": 129,
-    "passages": 6.4,
-    "tokens": 1777
+    "passages": 6.5,
+    "tokens": 1911
   },
   {
     "set": "crossref",
@@ -177,7 +177,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 3392
+    "tokens": 3396
   },
   {
     "set": "crossref",
@@ -231,7 +231,7 @@
     "recall": 0.992,
     "questions": 129,
     "passages": 9.7,
-    "tokens": 3456
+    "tokens": 3453
   },
   {
     "set": "main",
@@ -240,6 +240,6 @@
     "recall": 0.977,
     "questions": 129,
     "passages": 6.3,
-    "tokens": 2294
+    "tokens": 2291
   }
 ]
