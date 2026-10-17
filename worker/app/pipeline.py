@@ -82,7 +82,7 @@ def ingest(document_id: str) -> None:
             "by_type": dict(Counter(c.chunk_type for c in chunks)),
             "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
         }
-        db.delete_chunks(document_id)
+        db.delete_chunks(document_id, STRATEGY)   # only this mode's passages: the other mode's stay, for comparison
         db.insert_chunks([c.to_row(document_id, STRATEGY) for c in chunks])
         stats["llm"] = llm_usage
         stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)])

@@ -1,0 +1,48 @@
+{
+  "red_circled_digits": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "black_balloons_letters": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "boxed_letters": [
+    "P",
+    "Q",
+    "R"
+  ],
+  "two_digit": [
+    "10",
+    "11",
+    "12",
+    "13"
+  ],
+  "small_markers": [
+    "1",
+    "2",
+    "3"
+  ],
+  "red_plain_letters": [
+    "A",
+    "B",
+    "C"
+  ],
+  "filled_badges": [
+    "1",
+    "2",
+    "3"
+  ],
+  "times_letters": [
+    "F",
+    "G",
+    "H"
+  ],
+  "negative_photo": [],
+  "negative_drawing": []
+}

@@ -16,9 +16,9 @@ The key is found by what it shares with the figure, not by where it sits:
 
 Once found, the key is written into the figure's passage ("Key, from Table 6 on page 3: A = upper
 punch guide ..."), so a question naming the part finds the figure, and the figure's description
-can say what each arrow points at. It runs twice: on the labels printed as text inside the figure
-(deterministic, no model), and again on the labels the vision model reads from a photo, where the
-letters are part of the image.
+can say what each arrow points at. The labels come from three places, tried in order: the text
+printed on the figure, the labels drawn into its image and read with OCR (parse/callouts.py), both
+without a model, and, only when generative AI is on, what the vision model reads from the picture.
 """
 from __future__ import annotations
 
@@ -154,9 +154,24 @@ def bind(figure: ChunkDraft, labels: list[str], chunks: list[ChunkDraft]) -> Key
 
 
 def bind_all(chunks: list[ChunkDraft]) -> int:
-    """Deterministic pass: every figure whose printed labels look like callouts. Returns how many were bound."""
+    """Deterministic pass, no model. A figure's labels printed as PDF text are tried first; when they find no
+    key, the labels drawn into the figure's image (a circled 2, a boxed B) are read with OCR
+    (parse/callouts.py) and tried the same way. Returns how many figures were bound."""
     n = 0
     for c in chunks:
-        if c.chunk_type == "figure" and bind(c, callouts(c.metadata.get("labels") or []), chunks):
+        if c.chunk_type != "figure":
+            continue
+        if bind(c, callouts(c.metadata.get("labels") or []), chunks):
+            n += 1
+            continue
+        if not c.image_png:
+            continue
+        from ..parse.callouts import read_callouts
+        read = sorted((r.label for r in read_callouts(c.image_png)), key=lambda x: (not x.isdigit(), int(x) if x.isdigit() else 0, x))
+        if not read:
+            continue
+        c.metadata["image_labels"] = read
+        if bind(c, read, chunks):
+            c.metadata["key"]["labels_from"] = "image"
             n += 1
     return n

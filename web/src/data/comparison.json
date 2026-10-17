@@ -483,9 +483,9 @@
       "label": "Structure-aware, keywords only (no AI at all)",
       "strategy": "structural",
       "questions": 129,
-      "recall": 0.853,
-      "mrr": 0.698,
-      "tokens_read": 1596,
+      "recall": 0.86,
+      "mrr": 0.702,
+      "tokens_read": 1597,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
@@ -531,9 +531,9 @@
         },
         "Tablet press maintenance manual (synthetic).pdf": {
           "questions": 3,
-          "recall": 0.667,
-          "mrr": 0.667,
-          "tokens_read": 390
+          "recall": 1.0,
+          "mrr": 0.833,
+          "tokens_read": 418
         },
         "cdsco-new-drugs-2024.pdf": {
           "questions": 4,
@@ -578,9 +578,9 @@
       "label": "Structure-aware + embeddings API (no generative AI)",
       "strategy": "structural",
       "questions": 129,
-      "recall": 0.946,
-      "mrr": 0.838,
-      "tokens_read": 1328,
+      "recall": 0.953,
+      "mrr": 0.841,
+      "tokens_read": 1329,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
           "questions": 18,
@@ -626,9 +626,9 @@
         },
         "Tablet press maintenance manual (synthetic).pdf": {
           "questions": 3,
-          "recall": 0.667,
-          "mrr": 0.667,
-          "tokens_read": 407
+          "recall": 1.0,
+          "mrr": 0.833,
+          "tokens_read": 435
         },
         "cdsco-new-drugs-2024.pdf": {
           "questions": 4,
@@ -670,11 +670,11 @@
     },
     {
       "key": "struct_local",
-      "label": "Structure-aware + local open-source model (no API, nothing generated)",
+      "label": "Structure-aware + local open-source model (the app: no API, nothing generated)",
       "strategy": "structural",
       "questions": 129,
-      "recall": 0.922,
-      "mrr": 0.776,
+      "recall": 0.93,
+      "mrr": 0.778,
       "tokens_read": 1371,
       "by_document": {
         "Bharatiya Nagarik Suraksha Sanhita 2023.pdf": {
@@ -721,9 +721,9 @@
         },
         "Tablet press maintenance manual (synthetic).pdf": {
           "questions": 3,
-          "recall": 0.667,
-          "mrr": 0.667,
-          "tokens_read": 407
+          "recall": 1.0,
+          "mrr": 0.778,
+          "tokens_read": 435
         },
         "cdsco-new-drugs-2024.pdf": {
           "questions": 4,
@@ -860,7 +860,7 @@
     },
     {
       "key": "ctx_hyb",
-      "label": "Structure-aware + AI context + embeddings (the app)",
+      "label": "Structure-aware + AI context + embeddings API (optional generative AI)",
       "strategy": "contextual",
       "questions": 129,
       "recall": 0.984,
@@ -969,7 +969,7 @@
       "dollars": 0.0398
     },
     "structural": {
-      "embedding_tokens": 965128,
+      "embedding_tokens": 965212,
       "dollars": 0.0579
     },
     "semantic": {
@@ -2843,9 +2843,9 @@
         "semantic_vec": null,
         "hier_vec": null,
         "hier_hyb": null,
-        "struct_kw": null,
-        "struct_hyb": null,
-        "struct_local": null,
+        "struct_kw": 2,
+        "struct_hyb": 2,
+        "struct_local": 3,
         "ctx_kw": null,
         "ctx_hyb": 3
       }
