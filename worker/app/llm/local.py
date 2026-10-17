@@ -13,8 +13,12 @@ from ..config import settings
 
 @lru_cache(maxsize=1)
 def _model():
+    from pathlib import Path
+
     from fastembed import TextEmbedding
-    return TextEmbedding(settings.local_embedding_model, cache_dir=settings.local_model_cache)
+    # fastembed's own default is the system temp folder, which macOS clears; keep the model somewhere that lasts.
+    cache = settings.local_model_cache or str(Path.home() / ".cache" / "fastembed")
+    return TextEmbedding(settings.local_embedding_model, cache_dir=cache)
 
 
 def embed_passages(texts: list[str]) -> list[list[float]]:
