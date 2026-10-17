@@ -72,12 +72,24 @@ def _anchors(c: ChunkDraft) -> list[tuple[str, str]]:
     return out
 
 
-# a table of contents: several "4. Title ... 12" entries in one passage. It names sections but is not them.
-_TOC_ENTRY = re.compile(r"(?:^|\s)\d{1,3}(?:\.\d{1,3})*\.?\s+[A-Z][^.\n]{2,70}?\s\.{0,40}\s?\d{1,3}(?=\s|$)")
+# a table of contents names sections but is not them. Its entries: a title starting with a capital, with no digit or
+# full stop, then the page it starts on ("Complaints 92"), the rule own_text_length() uses in search (migration
+# 20261019000000); or, in an FDA label, a section number then its title ("5.1 Serious Infections 5.2 Malignancies").
+_TOC_PAGED = re.compile(r"[A-Z][^\n.0-9]{1,120}?\s[0-9]{1,3}(?=\s+[A-Z0-9]|\s*$)")
+_TOC_NUMBERED = re.compile(r"(?<![\w.])\d{1,2}(?:\.\d{1,2})?\s+[A-Z][^\n.0-9]{1,80}?(?=\s+\d{1,2}(?:\.\d{1,2})?\s+[A-Z]|\s*$)")
 
 
 def _is_toc(c: ChunkDraft) -> bool:
-    return len(_TOC_ENTRY.findall(c.raw_text)) >= 3 or c.raw_text.lower().lstrip().startswith(("contents", "table of contents"))
+    """A text passage at most half of which is left once its contents entries are taken out. The chunker cuts a
+    contents page at its numbered headings, so one entry ("2. Good manufacturing practices for pharmaceutical
+    products 90") is often a passage of its own and looks like the start of its section."""
+    if getattr(c, "chunk_type", "text") != "text":      # scripts/eval_hubs.py passes the text alone
+        return False
+    text = c.raw_text
+    if text.lower().lstrip().startswith(("contents", "table of contents")):
+        return True
+    length = len(" ".join(text.split()))
+    return bool(length) and any(len(" ".join(p.sub(" ", text).split())) <= length / 2 for p in (_TOC_PAGED, _TOC_NUMBERED))
 
 
 def _identifiers(text: str) -> set[str]:

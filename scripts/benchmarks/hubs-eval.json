@@ -4264,5 +4264,1072 @@
         }
       }
     ]
+  },
+  "relinked": {
+    "date": "2026-10-18",
+    "k": 5,
+    "source": "local database",
+    "totals": {
+      "document": {
+        "questions": 129,
+        "hits": 122,
+        "contents": 3,
+        "is_toc": 4,
+        "short": 0,
+        "q_contents": 2,
+        "q_short": 0,
+        "first_contents": 0,
+        "first_short": 0,
+        "recall": 0.946,
+        "mrr": 0.795
+      },
+      "all": {
+        "questions": 129,
+        "hits": 117,
+        "contents": 3,
+        "is_toc": 4,
+        "short": 0,
+        "q_contents": 2,
+        "q_short": 0,
+        "first_contents": 0,
+        "first_short": 0,
+        "recall": 0.907,
+        "mrr": 0.751
+      }
+    },
+    "per_question": [
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Which court tries dowry death?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "What are the classes of criminal courts?",
+        "ranks": {
+          "document": 3,
+          "all": 3
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "What is a bailable offence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "How long can an arrested person be detained without a magistrate's order?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "When may police arrest without a warrant?",
+        "ranks": {
+          "document": 3,
+          "all": 3
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Is murder bailable and which court tries it?",
+        "ranks": {
+          "document": 4,
+          "all": 3
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Is theft a cognizable offence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Which clause of the Bharatiya Nagarik Suraksha Sanhita 2023 Bill deals with the Directorate of Prosecution, and under which chapter does it fall?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "How long after the Official Gazette publication of a forfeiture declaration under Section 98 can an interested person apply to the High Court to set it aside?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Under section 195 of the BNSS, what is the age limit above which a male person cannot be required to attend anywhere other than where he resides when summoned by police during a section 194 investigation?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Under Section 310 of the BNSS, in what form is a witness's evidence ordinarily taken down in a warrant-case before a Magistrate?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Under the BNSS 2023, if an accused pleaded guilty and was convicted by a Court of Session or a Magistrate, what can still be appealed?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Under which section of the Bharatiya Nagarik Suraksha Sanhita 2023 must a High Court supervise subordinate Sessions Courts and Judicial Magistrates so that cases are disposed of expeditiously?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "In the First Schedule classification table of the BNSS 2023, what is the punishment for abetment where the abettor or the person abetted is a public servant whose duty is to prevent the offence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "What is the punishment, and is the offence bailable, when a public servant or police officer is involved in trafficking of a child under section 141 in the BNSS First Schedule?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "What is the punishment for wrongfully confining a person for 10 or more days under section 125(4) in the First Schedule of the BNSS, and is it bailable?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Who is allowed to compound the offence of wrongfully confining a person in secret under the BNSS table of compoundable offences, and what is the corresponding BNS section?",
+        "ranks": {
+          "document": 5,
+          "all": 5
+        }
+      },
+      {
+        "doc": "Bharatiya Nagarik Suraksha Sanhita 2023.pdf",
+        "question": "Under Section 311 BNSS 2023, in what form is a witness's evidence ordinarily taken down in a Court of Session trial, and when can question and answer form be used?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "Can a child under seven commit an offence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is defamation?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "How is cheating defined?",
+        "ranks": {
+          "document": 2,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the punishment for criminal intimidation?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What counts as organised crime?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the punishment for causing death by negligence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is dowry death?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "How is theft defined?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the punishment for murder?",
+        "ranks": {
+          "document": 3,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What does the law say about snatching?",
+        "ranks": {
+          "document": 1,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the minimum sentence for rape?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the punishment when a group of five or more people commit murder on grounds of caste?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What Gazette of India issue number and date was the Bharatiya Nyaya Sanhita 2023 published under in Part II, Section 1?",
+        "ranks": {
+          "document": 2,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "Under Section 58 of the Bharatiya Nyaya Sanhita, what is the maximum imprisonment for concealing a design to commit an offence punishable with death or life imprisonment when the offence is not actually committed?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the maximum imprisonment under Section 120(2) of the Bharatiya Nyaya Sanhita for voluntarily causing grievous hurt to extort a confession or compel restoration of property?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "For postal stamp offences in the Bharatiya Nyaya Sanhita, how is the word \"Government\" extended to cover authorities in India or abroad, regardless of the general definition in section 2?",
+        "ranks": {
+          "document": 3,
+          "all": null
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "Under Section 248 of the Bharatiya Nyaya Sanhita, what is the maximum fine for instituting a false criminal proceeding with intent to injure someone, where the charge is not for a death, life or ten-year offence?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "Under Section 309 of the Bharatiya Nyaya Sanhita, what is the maximum prison term for robbery committed on the highway between sunset and sunrise?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "On what date did the Bharatiya Nyaya Sanhita 2023 receive the President's assent according to the Gazette notice from the Legislative Department?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the minimum and maximum imprisonment under Section 121(2) of the BNS 2023 for voluntarily causing grievous hurt to a public servant on duty?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the maximum imprisonment under the Bharatiya Nyaya Sanhita for a mint employee who deliberately causes coins to differ in weight or composition from what the law fixes?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "Under Section 249 of the Bharatiya Nyaya Sanhita 2023, what is the maximum imprisonment for harbouring an offender whose offence is punishable with death?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Bharatiya Nyaya Sanhita 2023.pdf",
+        "question": "What is the minimum term of rigorous imprisonment under Section 310 of the Bharatiya Nyaya Sanhita when one member of a dacoity gang commits murder during the dacoity?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "cdsco-new-drugs-2024.pdf",
+        "question": "On what date did CDSCO issue the 2024 new drug approval for Vonoprazan fumarate bulk drug and Vonoprazan 10mg/20mg tablets?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "cdsco-new-drugs-2024.pdf",
+        "question": "On what date did CDSCO issue the 2024 new drug approval for Etifoxine Hydrochloride 50 mg capsules for anxiety?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "cdsco-new-drugs-2024.pdf",
+        "question": "On what date did CDSCO issue the 2024 new drug approval for Tirzepatide prefilled pen injection for type 2 diabetes?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "cdsco-new-drugs-2024.pdf",
+        "question": "On what date did CDSCO issue the 2024 new drug approval for Plazomicin injection 500mg/10ml for complicated urinary tract infections?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the 2017 HUMIRA highlights, what year is given as the initial U.S. approval for adalimumab?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the HUMIRA label's serious infections section, what should be considered for a patient with a serious systemic illness who lives in or travels to an area where mycoses are endemic, and what can be done while the workup is ongoing?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In HUMIRA Study JIA-I, what percentage of polyarticular JIA patients in the MTX stratum were Pediatric ACR 30 responders at the end of the 16-week OL-LI phase?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "What is the NDC number for the HUMIRA Pen 80 mg/0.8 mL starter package for Crohn's disease, ulcerative colitis or hidradenitis suppurativa?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "When using the HUMIRA Pen, is it normal to see bubbles in the medicine window, and when should the plum-colored activator button be pressed?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the pooled RA placebo-controlled studies (RA-I to RA-IV), what percentage of patients on HUMIRA 40 mg every other week reported nausea compared with placebo?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the HUMIRA ankylosing spondylitis study, what was the Week 24 value for Patient's Global Assessment of Disease Activity in the HUMIRA group?",
+        "ranks": {
+          "document": 4,
+          "all": 4
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the HUMIRA psoriatic arthritis ACR response table for Study PsA-I, what p-value footnote applies to the comparisons between HUMIRA and placebo?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "What HUMIRA dose and presentation is used every other week for a polyarticular JIA patient aged 2 or older weighing between 15 kg and under 30 kg?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the Humira 2017 label's Study RA-III ACR 20 time-course figure, about what percent of patients on 40 mg every other week were ACR20 responders at week 24?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "humira-label-2017.pdf",
+        "question": "In the Humira pen instructions figure, what supplies are laid out in Step 2 along with the prefilled pen?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "On what date was the NPPA notification issued from New Delhi by the Department of Pharmaceuticals under the Ministry of Chemicals and Fertilizers?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "Under the note to the Mesalazine 400mg ceiling-price entry, which form must a manufacturer use to issue its price list to NPPA through IPDMS from the notification date?",
+        "ranks": {
+          "document": 4,
+          "all": 5
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "In the NPPA order of 5 May 2024, which column of the price table gives the maximum price fixed for each scheduled formulation, and is GST included in it?",
+        "ranks": {
+          "document": 3,
+          "all": null
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "उपर्युक्त सारणी के किस स्तंभ में वर्णित अधिकतम कीमत से अधिक कीमत वाली अनुसूचित विनिर्मितियों का दाम विनिर्माताओं को घटाना होगा?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "औषध (मूल्य नियंत्रण) आदेश के किस पैरा के अनुसार फुटकर विक्रेता और वितरक को अपने कारोबार परिसर में कीमत सूची और पूरक सूची प्रदर्शित करनी होती है?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "अनुसूचित विनिर्मितियों का उत्पादन या आयात बन्द करने के इच्छुक निर्माता को एनपीपीए को कितने समय पहले और किस फॉर्म में सूचना देनी होती है?",
+        "ranks": {
+          "document": 3,
+          "all": 3
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "What is the NPPA ceiling price for Oxaliplatin injection 5 mg/mL in a 20 ml vial, excluding GST?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "What is the NPPA ceiling price per capsule for Cloxacillin 250mg capsules, exclusive of GST?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "What is the NPPA ceiling price, excluding GST, for one vial of Ampicillin powder for injection 1000 mg?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "What is the ceiling price per vial for Oxaliplatin injection 5 mg/mL in a 20 ml vial in the NPPA price notification?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "Which earlier NPPA order from March 2024 does S.O. 1992(E) supersede for the formulation packs listed in its table?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-apollo.pdf",
+        "question": "यदि किसी मौजूदा निर्माता की अनुसूचित विनिर्मिति का अधिकतम खुदरा मूल्य सारणी के स्तंभ (5) में दी गई अधिकतम कीमत से कम है, तो औषध (मूल्य नियंत्रण) आदेश के किस पैराग्राफ के अनुसार उसे अपना मौजूदा MRP बनाए रखना होगा?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "On what date was the NPPA ceiling price notification S.O. 4886(E) issued from New Delhi under the Department of Pharmaceuticals?",
+        "ranks": {
+          "document": 2,
+          "all": null
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "Which earlier NPPA order dated 31 March 2023 is superseded by S.O. 4886(E) for the formulation packs listed in its table?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "Under the NPPA ceiling price notification, what form must an existing manufacturer use to apply for prior price approval when launching a new drug in a scheduled formulation's strength?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "How far ahead must a manufacturer notify NPPA in Form-IV of Schedule-II before discontinuing a scheduled formulation under the 2024 ceiling price notification?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "What is the NPPA ceiling price per tablet, excluding GST, for Co-trimoxazole 800mg + 160mg tablets?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "What is the NPPA ceiling price, exclusive of GST, for one 20mg Zinc Sulphate dispersible tablet?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "What is the NPPA ceiling price per tablet, excluding GST, for Tramadol 50mg tablets?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "nppa-ceiling-2024.pdf",
+        "question": "What is the NPPA ceiling price per tablet, excluding GST, for Temozolomide 250 mg tablets under S.O. 4886(E)?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "What is the ceiling price of F-11000 and its schedule category?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "Price of F-14321",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "Which manufacturer is listed for code F-12345?",
+        "ranks": {
+          "document": 3,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "What is the ceiling price of formulation F-10001?",
+        "ranks": {
+          "document": 2,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "Which columns does each row of the ceiling prices table for scheduled formulations contain, and do the column headings repeat on later pages?",
+        "ranks": {
+          "document": 1,
+          "all": 5
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "What is the ceiling price in INR for product code F-13555, the Omeprazole 250 mg ointment from Cadence Pharma?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "Which manufacturer makes the aspirin 10 mg ointment listed under code F-10858 in the price schedule?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "What is the ceiling price in INR for the Losartan 100 mcg inhaler under product code F-11880 from Suryodaya Remedies?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharma Price Schedule (synthetic).pdf",
+        "question": "What is the ceiling price in INR for the Montelukast 5 mg/5 ml tablet in the price schedule?",
+        "ranks": {
+          "document": 5,
+          "all": 3
+        }
+      },
+      {
+        "doc": "Pharmacy bill 1 (synthetic).pdf",
+        "question": "What GSTIN is printed on the Sunrise Pharmacy & Clinic tax invoice SP/2026/04417 issued in Chennai?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharmacy bill 1 (synthetic).pdf",
+        "question": "What batch number was the Pantoprazole 40 mg tablet dispensed from on Sunrise Pharmacy invoice SP/2026/04417?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Pharmacy bill 1 (synthetic).pdf",
+        "question": "What batch number was dispensed for the Pantoprazole 40 mg tablets on Sunrise Pharmacy invoice SP/2026/04417?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Pharmacy bill 2 (synthetic).pdf",
+        "question": "What is the GSTIN printed on the Sunrise Pharmacy & Clinic tax invoice for the Chennai Lake View Road branch?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Pharmacy bill 2 (synthetic).pdf",
+        "question": "What batch number was the ORS sachet 21 g dispensed from on Rahul Verma's Sunrise Pharmacy invoice SP/2026/04452?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Pharmacy bill 2 (synthetic).pdf",
+        "question": "What batch number was dispensed for the Azithromycin 500 mg tablets on Sunrise Pharmacy invoice SP/2026/04452?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "Pharmacy bill 3 scanned (synthetic).pdf",
+        "question": "What is the grand total on the Sunrise Pharmacy & Clinic invoice for Meera Pillai that includes 12% GST on the medicines?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "Which unit had a dent on the rim and how deep was it?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "What defect was found on the ladle weld?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "Which units were rejected and scrapped?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "What does the red arrow in Figure 1 point to?",
+        "ranks": {
+          "document": 2,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "What is the acceptance limit for rim deformation?",
+        "ranks": {
+          "document": 1,
+          "all": 3
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "What share of welded joints gets a dye-penetrant check under the QP-07 inspection of the B-220 and L-410 batch received 12 October 2026?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In the acceptance criteria for the B-220 mixing bowls and L-410 ladles, what grade applies to a scratch longer than 15 mm on a food-contact surface?",
+        "ranks": {
+          "document": 3,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "How far from the seam weld is the deepest rim dent on the worst SKU B-220 bowl in the inspection findings?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "How long was the hairline crack found at the handle-to-bowl weld on ladle SKU L-410 during dye-penetrant testing?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In the QC inspection report's disposition section, how many days does the supplier have to submit a corrective action report on the handle weld?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In the defect register for batch QC-2026-114, what size was the rim deformation recorded on SKU B-220 unit 088?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In the batch QC-2026-114 defect register, what disposition was given to the L-410 unit 067 with weld porosity at the weld root?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In batch QC-2026-114, what was the disposition of the L-410 unit with a hairline crack at the handle-to-bowl weld toe?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In batch QC-2026-114, what was the defect type, location and size on the L-410 unit 022, and how was it dispositioned?",
+        "ranks": {
+          "document": 2,
+          "all": 2
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "In the QC inspection of mixing bowl SKU B-220 unit 117, how far from the seam weld is the rim dent located?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "QC Inspection Report (synthetic).pdf",
+        "question": "What length was the hairline crack found at the weld toe on serving ladle SKU L-410, unit 22, after dye-penetrant testing, and what was the disposition?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "Who should receive a copy of comments on the draft Rifaximin Tablets monograph, in addition to the general IPC laboratory email address?",
+        "ranks": {
+          "document": 1,
+          "all": 2
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "When was the first draft of the Rifaximin Tablets monograph posted on the IPC website for public comments?",
+        "ranks": {
+          "document": 2,
+          "all": 1
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "How much sodium lauryl sulphate is added to the dissolution medium for Rifaximin Tablets of 400 mg and above?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "What column temperature and detection wavelength are specified for the related substances LC test in the draft IP monograph for Rifaximin Tablets?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "In the related substances test for Rifaximin Tablets, what is the minimum resolution required between the impurity D+H peaks and rifaximin for the test to be valid?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "rifaximin-tablets.pdf",
+        "question": "What is the concentration of the rifaximin IPRS reference solution used in the assay of Rifaximin Tablets in the draft IP monograph?",
+        "ranks": {
+          "document": 5,
+          "all": 5
+        }
+      },
+      {
+        "doc": "Tablet press maintenance manual (synthetic).pdf",
+        "question": "On the turret drawing, which lettered part is checked for pitting on the punch tips?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "Tablet press maintenance manual (synthetic).pdf",
+        "question": "What does the arrow marked D point to in the turret figure?",
+        "ranks": {
+          "document": 1,
+          "all": 3
+        }
+      },
+      {
+        "doc": "Tablet press maintenance manual (synthetic).pdf",
+        "question": "Which numbered part in the cleaning photo is the paddle wheel, and what is it cleaned with?",
+        "ranks": {
+          "document": 3,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Which earlier WHO Technical Report Series annex does the revised GMP main principles document in Annex 2 of TRS 986 replace?",
+        "ranks": {
+          "document": 2,
+          "all": 5
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "In the WHO GMP glossary (TRS 986 Annex 2), what is a starting material and what does it exclude?",
+        "ranks": {
+          "document": null,
+          "all": null
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under the WHO GMP guidance on product recalls, where should recalled products be kept while a decision is made on what to do with them?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "What kind of additional medical check does WHO GMP guidance require for personnel who carry out visual inspections of products?",
+        "ranks": {
+          "document": 5,
+          "all": 5
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "In the WHO TRS 986 Annex 2 GMP documentation section, how should an alteration to an entry on a document be made so the original information stays readable?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under WHO TRS 986 Annex 2 good production practices, which kinds of products are named as needing dedicated and self-contained production areas to avoid cross-contamination?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "On which page of WHO TRS 986 Annex 2 does the subsection on reference standards under Materials begin?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "In WHO TRS 986 Annex 2, what term is used for the totality of systematic actions that give adequate confidence a product will meet quality requirements?",
+        "ranks": {
+          "document": 5,
+          "all": 5
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under the WHO TRS 986 Annex 2 guidance on contract production, who must give final release approval when the outsourced work is analysis?",
+        "ranks": {
+          "document": 3,
+          "all": 3
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under the WHO TRS 986 Annex 2 premises requirements, what must be in place regarding pests and rodents in a manufacturing facility?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under WHO TRS 986 Annex 2 GMP documentation rules, how long must manufacturing records be kept relative to the finished product's expiry date?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      },
+      {
+        "doc": "who-trs986-annex2.pdf",
+        "question": "Under WHO TRS 986 Annex 2 good production practices, what information must be shown on the label attached to a measuring or control instrument?",
+        "ranks": {
+          "document": 1,
+          "all": 1
+        }
+      }
+    ]
   }
 }

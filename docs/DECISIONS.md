@@ -1355,17 +1355,47 @@ The reference links still pay as before: with links, 97% on the first
 cross-reference set and 86% on the hard set, both unchanged. On the hard
 set the plain top five went from 75% to 72%: one question's labelled
 answer is the WHO contents line "Good manufacturing practices for
-pharmaceutical products 90", which the "Section 2" link points at (below);
-it is still found through that link.
+pharmaceutical products 90", which the "Section 2" link points at; it is
+still found through that link. Both are fixed since (next).
+
+**The links use the same rule (2026-10-18).** `_is_toc` in
+`references.py`, which keeps contents out of the reference links, now
+takes a text passage for contents when at most half of it is left once
+`own_text_length`'s entries are taken out, or when it opens with
+"Contents". A second entry pattern, a section number then its title with
+no page ("5.1 Serious Infections 5.2 Malignancies"), covers the Humira
+label's contents. Of the 7,087 local passages it flags 20: the 18 WHO
+entries and the two Humira ones. None of the old rule's five false
+positives are flagged: two Humira results tables, the BNSS clause notes
+on pages 288 and 292, and a Humira paragraph on page 27. The WHO passage
+with the footnote keeps 197 of its 449 characters, so it is contents
+here. It is no link's source or target, and search still finds it,
+because search does not read this flag. `scripts/relink.py`, run locally
+and with `--rest` on production, changed the same links on both:
+- "Section 2" in the introduction (page 3) now leads to section 2's first
+  passage (page 14), not to its contents line (page 1). "Section 11"
+  (page 15) leads to page 27, not page 2.
+- The BNSS clause notes now link to the sections they name, and the two
+  Humira tables are targets for "Table 4" and "Table 7". No link was
+  dropped.
+- The hard question on Section 2's title is relabelled with section 2's
+  first passage ("GMP is that part of quality management which ensures
+  ...", page 14). The heading itself sits in that passage's breadcrumb,
+  which the benchmark does not read.
+
+With links, the app scores 97% on the first set, 86% on the hard set and
+93% on the 129 questions, all unchanged. The plain top five on the hard
+set changes through the relabelled question alone. The app now finds
+section 2's start directly (72% to 75%). The generative setup found the
+contents line by its words and now reaches section 2 only through the
+link (78% to 75%; still 100% with links). `eval_hubs.py` (run "relinked")
+gives the same in-document recall@5 (94.6%) and MRR as "after".
 
 **Not covered.**
-- `_is_toc` still misses single contents entries, so "Section 2" in the
-  WHO guide links to its contents line rather than to section 2. Using
-  `own_text_length`'s rule there and running `scripts/relink.py` is the
-  next step; the hard question above would then need its label fixed.
 - Contents without page numbers (the BNSS "Arrangement of clauses", the
-  Humira label's numbered contents) are not caught. They did not show up
-  as hubs on the benchmark.
+  Humira label's numbered contents) are not caught by the search prior.
+  The links catch the Humira one (above). Neither showed up as a hub on
+  the benchmark.
 - The Hindi passages of the NPPA notices are the next hubs: the model reads
   English only, so their vectors sit near everything. Across all documents
   they take 19 top-five slots in 8 questions, before and after.

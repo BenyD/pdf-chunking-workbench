@@ -276,8 +276,8 @@
     {
       "doc": "who-trs986-annex2.pdf",
       "question": "What is the full title of the section on good manufacturing practices for pharmaceutical products that the revision list refers to as Section 2?",
-      "must_contain": "Good manufacturing practices for pharmaceutical products 90",
-      "expected_page": 1,
+      "must_contain": "GMP is that part of quality management which ensures that products are consistently produced and controlled",
+      "expected_page": 14,
       "link": "Section 2",
       "link_kind": "ref",
       "from_page": 3
