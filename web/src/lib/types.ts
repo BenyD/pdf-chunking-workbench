@@ -52,11 +52,34 @@ export interface Chunk {
   token_count: number;
 }
 
+/** A passage that a search result links to: a figure's key, the table or section it cites, or one sharing a unit number. */
+export interface LinkedPassage {
+  id: string;
+  document_id: string;
+  chunk_type: ChunkType;
+  raw_text: string;
+  context: string | null;
+  page_start: number;
+  page_end: number;
+  bboxes: BBox[];
+  page_image_url?: string;
+  /** How the result points at it: "Table 7", "Section 5.1", "Unit 117", "Key: Table 6 ..." */
+  label: string;
+  kind: "ref" | "key" | "shared";
+  /** "out": the result cites it; "in": it cites the result; "shared": both name the same unit or code. */
+  dir: "out" | "in" | "shared";
+}
+
+/** One link stored on a passage (metadata.links), made when the document was processed. */
+export interface PassageLink { id: string; kind: "ref" | "key" | "shared"; label: string; dir: "out" | "in" | "shared"; page: number; type: ChunkType }
+
 export interface SearchResult extends Chunk {
   rrf_score: number;
   fts_rank: number | null;
   vec_rank: number | null;
   document_name?: string;
+  /** The passages this result points at, ranked against the question; most results have none. */
+  linked?: LinkedPassage[];
 }
 
 export interface OcrField {

@@ -40,6 +40,32 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: "Search is unavailable right now." }, { status: 502 });
   const results = (data ?? []) as Record<string, unknown>[];
 
+  // Where the answer is somewhere else: the passages the top results link to (the table or section they cite,
+  // a figure's key, a passage sharing a unit number), ranked against the question by the same vectors, or by
+  // keywords when there are none. Each is attached to the first result that points at it.
+  const top = results.slice(0, 5);
+  const shown = new Set(results.map((r) => r.id as string));
+  type Link = { id: string; kind: "ref" | "key" | "shared"; label: string; dir: string };
+  const linkIds = [...new Set(top.flatMap((r) => ((r.metadata as { links?: Link[] })?.links ?? []).map((l) => l.id)).filter((id) => !shown.has(id)))];
+  if (linkIds.length) {
+    const { data: linked } = await sb.rpc("rank_linked", {
+      p_ids: linkIds, query_text: query,
+      q_local: vectors === "local" ? embedding : null, q_api: vectors === "api" ? embedding : null, p_limit: 5,
+    });
+    for (const t of (linked ?? []) as Record<string, unknown>[]) {
+      const owner = top.find((r) => ((r.metadata as { links?: Link[] })?.links ?? []).some((l) => l.id === t.id));
+      const link = ((owner?.metadata as { links?: Link[] })?.links ?? []).find((l) => l.id === t.id);
+      if (!owner || !link) continue;
+      const list = ((owner.linked as unknown[]) ?? []);
+      list.push({
+        id: t.id, document_id: t.document_id, chunk_type: t.chunk_type, raw_text: t.raw_text, context: t.context,
+        page_start: t.page_start, page_end: t.page_end, bboxes: t.bboxes, label: link.label, kind: link.kind, dir: link.dir,
+        page_image_url: publicUrl(`documents/${t.document_id}/pages/${t.page_start}.png`),
+      });
+      owner.linked = list;
+    }
+  }
+
   const docIds = [...new Set(results.map((r) => r.document_id as string))];
   const { data: docs } = docIds.length ? await sb.from("documents").select("id,name").in("id", docIds) : { data: [] };
   const names = new Map((docs ?? []).map((d) => [d.id, d.name]));

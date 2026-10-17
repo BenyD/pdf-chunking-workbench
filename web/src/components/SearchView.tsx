@@ -109,13 +109,16 @@ export function SearchView() {
   const status = busy ? "submitted" : answerBusy ? "streaming" : "ready";
   const tags = useMemo(() => citations((n) => setSelected(hits?.[n - 1]?.id ?? null)), [hits]);
   // The page on the right: the selected source's page, with every source on that page drawn and the selected one filled.
-  const current = hits?.find((h) => h.id === selected) ?? hits?.[0] ?? null;
+  // A linked passage (the table a result cites, a figure's key) can be shown on the right too.
+  const linkedAll = useMemo(() => (hits ?? []).flatMap((h) => (h.linked ?? []).map((l): Hit & { label: string } => ({ ...h, ...l, linked: undefined, page_image_url: l.page_image_url ?? h.page_image_url }))), [hits]);
+  const current = hits?.find((h) => h.id === selected) ?? linkedAll.find((l) => l.id === selected) ?? hits?.[0] ?? null;
   const pageOverlays = useMemo(() => {
     if (!current || !hits) return [];
-    return hits.flatMap((h, i) => (h.document_id !== current.document_id ? [] : h.bboxes.filter((b) => b.page === current.page_start).map((b, j) => ({
-      id: `${h.id}:${j}`, type: h.chunk_type, box: b, selected: h.id === current.id, label: `Source ${i + 1}, ${typeLabel[h.chunk_type]} passage`,
+    const all = [...hits.map((h, i) => ({ h, label: `Source ${i + 1}` })), ...linkedAll.map((l) => ({ h: l, label: `Linked: ${l.label}` }))];
+    return all.flatMap(({ h, label }) => (h.document_id !== current.document_id ? [] : h.bboxes.filter((b) => b.page === current.page_start).map((b, j) => ({
+      id: `${h.id}:${j}`, type: h.chunk_type, box: b, selected: h.id === current.id, label: `${label}, ${typeLabel[h.chunk_type]} passage`,
     }))));
-  }, [hits, current]);
+  }, [hits, linkedAll, current]);
   // Suggestions grouped by the document they were written for, in the order they arrive.
   const groups = (suggestions ?? []).reduce<{ id: string; name: string; items: Suggestion[] }[]>((acc, s) => {
     const g = acc.find((x) => x.id === s.document_id);
@@ -228,7 +231,7 @@ export function SearchView() {
                   <h3 id="sources-title" className="type-label text-text-2">{aiEnabled ? "Sources" : "Passages"}</h3>
                   <ItemGroup>
                     <ul>
-                      {hits.map((r, i) => <SourceRow key={r.id} r={r} n={i + 1} selected={current?.id === r.id} onSelect={() => setSelected(r.id)} />)}
+                      {hits.map((r, i) => <SourceRow key={r.id} r={r} n={i + 1} selected={current?.id === r.id} onSelect={() => setSelected(r.id)} onSelectLinked={setSelected} selectedId={current?.id ?? null} />)}
                     </ul>
                   </ItemGroup>
                 </section>
@@ -281,7 +284,7 @@ export function SearchView() {
 }
 
 /** One passage the answer rests on: where it is, what it says, and its surroundings on request. */
-function SourceRow({ r, n, selected, onSelect }: { r: Hit; n: number; selected: boolean; onSelect: () => void }) {
+function SourceRow({ r, n, selected, onSelect, onSelectLinked, selectedId }: { r: Hit; n: number; selected: boolean; onSelect: () => void; onSelectLinked: (id: string) => void; selectedId: string | null }) {
   type Ctx = { parent: Chunk | null; prev: Chunk | null; next: Chunk | null; children: Chunk[] };
   const [open, setOpen] = useState(false);
   const [ctx, setCtx] = useState<Ctx | null>(null);
@@ -299,6 +302,22 @@ function SourceRow({ r, n, selected, onSelect }: { r: Hit; n: number; selected: 
             </ItemTitle>
             {r.context && <ItemDescription>{r.context}</ItemDescription>}
             <ItemDescription>{r.raw_text}</ItemDescription>
+            {/* Where the rest of the answer is: what this passage points at (the table or section it cites, a figure's
+                key, a passage sharing its unit number), found by rules when the document was read. */}
+            {r.linked && r.linked.length > 0 && (
+              <div className="relative z-(--z-raised) flex flex-col gap-1.5">
+                {r.linked.map((l) => (
+                  <div key={l.id} className="well flex flex-col gap-0.5 rounded-soft p-2">
+                    <p className="type-label-sm text-text-2">
+                      {l.kind === "key" ? "Its key" : l.kind === "shared" ? `Also about ${l.label}` : l.dir === "in" ? `Refers to ${l.label}` : `Points to ${l.label}`}, page {l.page_start}{" "}
+                      <a href="#passage" aria-current={selectedId === l.id ? "true" : undefined} className="text-text-1 underline decoration-1 underline-offset-4"
+                        onClick={(e) => { e.preventDefault(); onSelectLinked(l.id); }}>{selectedId === l.id ? "Shown" : "Show it"}</a>
+                    </p>
+                    <p className="line-clamp-3 type-body-sm whitespace-pre-wrap">{l.raw_text.trim()}</p>
+                  </div>
+                ))}
+              </div>
+            )}
             {/* Under the text rather than beside it; raised over the row's stretched link so it takes the click. */}
             <div className="relative z-(--z-raised) w-fit">
               <CollapsibleTrigger render={<Button variant="ghost" size="xs" />}>{open ? "Hide context" : "Show context"}</CollapsibleTrigger>
