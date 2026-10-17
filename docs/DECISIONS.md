@@ -1371,3 +1371,189 @@ it is still found through that link.
   they take 19 top-five slots in 8 questions, before and after.
 - README and the Compare page still quote 93% for the app; both were
   measured before this prior.
+
+## 30. The SOP check with no AI, measured
+
+**Why.** The SOP check (sections 24 and 25) was the last feature that still
+needed AI: voyage-4 embeddings, through an API, chose each SOP's sections
+and its evidence, and Claude Haiku judged every line. The interviewers want
+no AI and the lowest cost. Two questions: what does pure mode cost in
+accuracy, and how many lines still need a person?
+
+**Decision.** `gap_check.py --local`, and `--judge` to pick who decides.
+- The SOP's passages are the ones pure mode stores (strategy 'structural',
+  exactly as the rules cut them). An SOP ingested with AI on gets them built
+  from its PDF by the worker's own chunker, with no model.
+- Vectors come from snowflake-arctic-embed-s on this machine's CPU: the
+  stored `embedding_local` for scope, and the passages' own words for
+  evidence, as in section 24.
+- `--judge rules`, the default with `--local`, calls no model. `--judge
+  cascade` keeps the rules' sure verdicts and sends only the lines they leave
+  unsure to Haiku (through the Batch API with `--batch`). `--judge model` is
+  Haiku on every line, the default without `--local`, as before.
+- `scripts/gap_modes.py` runs every mode on the same 14 SOPs and prints what
+  each decides, gets right, leaves for a person and costs.
+
+**Choosing sections with the local model.** Its cosines are squeezed: every
+section of Part 211 scores 0.67 to 0.84 against every SOP, so no line
+separates an SOP's topic from GMP vocabulary in general. Two changes fixed
+it, neither calling a model:
+- A words score: the cosine of the SOP's tf-idf vector with each section's
+  (the section's title counted three times plus all its sentences, cut to
+  six-letter stems, idf over the 59 sections).
+- A background: each section's usual score over every other stored
+  document, leaving out copies and revisions of the same SOP number, is
+  subtracted.
+
+The score is words + 2 × meaning − usual, in scope at 0.275 for one SOP and
+0.20 for a library. The line was set on the seven SOPs of section 24, then
+checked on the four of section 25, on three SOPs written after this
+section's rules (below), and on nine documents that are not SOPs:
+
+| Scope rule | 7 SOPs: 13 core sections | extras | 4 later SOPs | 3 held out | not SOPs | WHO GMP guide |
+|---|---|---|---|---|---|---|
+| voyage-4, cosine 0.65 (before) | 12 | 1 neighbour | 4 of 4, 3 extras | 6 of 6, 3 extras | 0 | 33 |
+| Local cosine alone, at its best line (0.80) | 13 | 26 | 4 of 4, 23 extras | not run | 24 | 51 |
+| Words alone, minus usual | 12 | 5 | 4 of 4, 3 extras | not run | 5 | 8 |
+| Words + 2 × local cosine, minus usual (now) | 12 | 2 neighbours | 4 of 4, none | 6 of 6, none | 0 | 28 |
+
+- The local miss is 211.188 Batch production and control records on the
+  batch record review SOP (0.19; it takes 211.192). voyage-4's miss was
+  211.82. The two extras are 211.122 on the label SOP and 211.208 on the
+  returned goods and salvage SOP, both neighbours a reviewer accepts.
+- Revision B and the Pune copy get the sample's three sections.
+- Scoring every stored document for the background takes about a second
+  per run.
+
+**Evidence.** The passages are the same text in both modes; only the
+vectors that pick the three closest differ. On the seven SOPs the local
+picks agree with voyage-4's on 81% of the evidence slots, at the same 0.3
+keyword weight. More keyword weight gained a few points and was not kept.
+
+**A stronger rules judge.** In order:
+1. Not applicable: a sentence that only grants an exemption or a waiver
+   (it asks nothing of an SOP that does not claim it); a requirement, or
+   the lead-in above it, about a product class the SOP's scope excludes,
+   or one that is never a tablet or capsule (sterile, radioactive,
+   allergenic, reconstituted) when the SOP covers only those; a requirement
+   only for products exempt from expiry dating, when the SOP dates every
+   product.
+2. Not met: the requirement needs something the SOP never mentions under
+   any usual name. A small thesaurus of some 20 GMP words covers this: an
+   active ingredient (API, drug substance), a visual examination, an
+   investigation, a yearly frequency, deterioration, a calculation and the
+   like. A word offered as one of alternatives ("tests, or examinations")
+   is needed only when the SOP has none of the others.
+3. Numbers: a retention period shorter in the SOP than in the rule ("six
+   months after the expiry date" against "1 year"), for the same event and
+   the same subject, is partly met. So is "whichever is longer" with only
+   one of its events. A period at least as long counts toward met.
+4. Words: met when one passage holds 70% of the requirement's terms.
+   Forms of a word and synonyms count. The regulation's filler ("to
+   assure", "drug"), purpose clauses, exceptions and cross-references are
+   left out. It is never met when a listed item ("date, time, product, and
+   lot number") is missing from that passage, or when the passage's
+   sentence says the thing is not done.
+5. Lead-ins ending in ":" and items of "one of the following" are left
+   unsure, as is everything else.
+
+| Rules judge | sample: decided, right | 324 lines of the 11 SOPs with a cached Haiku verdict: decided, agreeing with Haiku | 3 held-out SOPs: decided, right |
+|---|---|---|---|
+| Before | 15, 13 | 154, 104 (68%) | not run |
+| New, when first frozen | 34, 34 | 106, 98 (92%) | 6, 3 |
+| After three fixes the held-out SOPs showed were needed | 34, 34 | 100, 92 (92%) | 2, 2 |
+
+Agreement counts "partly met" and "not met" as the same call, since both
+show a gap. Haiku is itself wrong on some of these lines (35 of 41 on the
+sample), so 92% is agreement, not accuracy.
+
+**Held out.** The rules were tuned on the sample and checked against
+Haiku's verdicts on the others, and the disagreements were read, so
+neither number above is clean. Three more synthetic SOPs were written
+after the rules were first frozen, each with known gaps, and the verdict
+of every line was written down before any of them was ingested
+(`scripts/benchmarks/gap-heldout.json`;
+`samples/generate/make_gap_heldout.py` makes the PDFs):
+- in-process controls and yield (211.110, 211.103),
+- personnel training and hygiene (211.25, 211.28),
+- production procedures, deviations and reprocessing (211.100, 211.115).
+
+The first run decided 6 of 33 lines and got 3 right. All three misses were
+general flaws: "tests, or examinations" read as needing an examination,
+"Bioburden is not tested in process" read as met, and a locked reject cage
+not seen as quarantine. With those fixed (alternatives, negation, and
+segregation and cages counted as quarantine), the rules decide 2 of 33,
+both right. That second number is no longer held out.
+
+So the rules are accurate but narrow. They settle what Part 211 says
+mechanically: exemptions, excluded products, a missing act, a shorter
+period. The sample's three sections are full of those (18 of its 41 lines
+are not applicable). Personnel, in-process and procedure sections are not.
+
+**Four ways, measured** (`gap_modes.py`, 14 SOPs, Haiku through the Batch
+API and every verdict priced at batch price). Right means the exact status.
+Graded on the sample and the three held-out SOPs: 74 lines, 19 known gaps.
+
+| Mode | right | known gaps shown | missed | false gaps | left for a person | per SOP | 5,000 SOPs |
+|---|---|---|---|---|---|---|---|
+| Rules only, local: no AI, no API | 36 of 74 | 8 of 19 | 0 | 0 | 145 of 220 lines | $0 | $0 |
+| Rules first, Haiku on the rest, local | 60 | 17 | 2 | 9 | 0 | $0.0009 | $4.50 |
+| Haiku on every line, local evidence | 55 | 16 | 3 | 9 | 0 | $0.0014 | $6.84 |
+| Haiku on every line, voyage-4 (current) | 56 | 16 | 3 | 8 | 0 | $0.0017 | $8.23 |
+
+Missed is a known gap shown as met or not applicable; a false gap is a met
+or not applicable line shown as a gap. The current mode's cost includes
+voyage-4 for the SOP's passages, $0.00006 per SOP.
+
+| Mode | sample, 41 lines | 3 held out, 33 lines | 10 other SOPs, 146 lines |
+|---|---|---|---|
+| Rules only | 34 decided, all right, 7 left | 2 decided, both right, 31 left | 39 decided, 107 left |
+| Rules first, then Haiku | 40 right | 20 right | 107 sent to Haiku |
+| Haiku, local evidence | 36 right | 19 right | |
+| Haiku, voyage-4 | 35 right | 21 right (52 lines asked: 3 extra sections) | |
+
+- On the sample the cascade is right on 40 of 41. The rules take the lines
+  Haiku gets wrong (three active-ingredient lines it calls met or partly
+  met, a radioactive-product line it calls met), and Haiku takes the 7 the
+  rules cannot decide.
+- On the held-out SOPs every mode with Haiku gets about 20 of 33. Haiku
+  calls 7 of their 21 met lines partly met, the safe side: a reviewer
+  dismisses them. It shows 2 gaps as met, one of them planted: a batch
+  record completed at the end of the shift, not as each step is done.
+- Local evidence costs Haiku nothing measurable: 55 against 56 of 74.
+
+**At 5,000 SOPs**, for SOPs like these (15.7 lines each on average):
+- Rules only: no bill. The local model needs 0.07 s of CPU per SOP to embed
+  its passages (about 6 minutes for 5,000 on this laptop), and the scoring
+  and the rules take milliseconds. But a person reads about 10 lines per
+  SOP, some 52,000 lines in all, each shown with its three passages and the
+  words the rules could not find.
+- Rules first, then Haiku: about $4.50, half the current $8.23, and the
+  best of the four on these SOPs. It still sends 2 of every 3 lines to a
+  generative model.
+- The sample, the longest SOP here (41 lines): $3.35 for 5,000 through the
+  cascade, $19.36 with Haiku on every line.
+
+**The SOP check page.** Its scores card showed the old rules (sure about 15
+of 41) and its cost card assumed the model on every line. Both now read
+`web/src/data/gap-modes.json`, written by `gap_modes.py --publish`: rules
+only, the cascade and Haiku on the sample and the three held-out SOPs, and
+the three costs at 5,000 SOPs. The rows are still the sample's Haiku
+verdicts.
+
+**Spent:** $0.014 on 163 Haiku verdicts through the Batch API, and about
+$0.002 on the held-out SOPs' context lines at ingest.
+
+**Not covered.**
+- `read_part` drops the items under a section whose opening paragraph has
+  no marker ("Written procedures ... They shall include:", then (a) and
+  (b)). 26 sentences in 25 paragraphs of 211.130, 211.142, 211.150, 211.184
+  and 211.188 are never checked, in any mode. Found here and not fixed, because fixing it changes
+  every mode's line count.
+- The background for the local scope is whatever else is stored. A
+  database of nothing but stability SOPs would raise 211.166's usual score
+  and push stability SOPs out of scope; a fixed reference set would make
+  it reproducible.
+- All 14 SOPs are synthetic, one page each, and one person wrote the SOPs,
+  the rules and the expected verdicts.
+- The library mode runs with `--local`, but was not measured again.
