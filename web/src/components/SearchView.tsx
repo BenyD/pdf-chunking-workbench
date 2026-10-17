@@ -20,7 +20,7 @@ import { Status } from "@/components/quartz/ui/status";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
 import { aiEnabled } from "@/lib/flags";
 import { SAMPLES } from "@/lib/samples";
-import type { Chunk, Document, SearchResult } from "@/lib/types";
+import type { Chunk, Document, LinkedPassage, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
 import { chunkKind, PageViewer, typeLabel } from "./PageViewer";
 
@@ -284,6 +284,14 @@ export function SearchView() {
 }
 
 /** One passage the answer rests on: where it is, what it says, and its surroundings on request. */
+/** How a result leads to a linked passage, in the words a reader would use. */
+function linkLabel(l: LinkedPassage): string {
+  if (l.kind === "key") return "Its key";
+  if (l.kind === "shared") return `Also about ${l.label}`;
+  if (l.kind === "doc") return l.via === "search" ? `Looked up in ${l.label}` : l.dir === "in" ? `Cited by ${l.label}` : `Cites ${l.label}`;
+  return l.dir === "in" ? `Refers to ${l.label}` : `Points to ${l.label}`;
+}
+
 function SourceRow({ r, n, selected, onSelect, onSelectLinked, selectedId }: { r: Hit; n: number; selected: boolean; onSelect: () => void; onSelectLinked: (id: string) => void; selectedId: string | null }) {
   type Ctx = { parent: Chunk | null; prev: Chunk | null; next: Chunk | null; children: Chunk[] };
   const [open, setOpen] = useState(false);
@@ -309,7 +317,7 @@ function SourceRow({ r, n, selected, onSelect, onSelectLinked, selectedId }: { r
                 {r.linked.map((l) => (
                   <div key={l.id} className="well flex flex-col gap-0.5 rounded-soft p-2">
                     <p className="type-label-sm text-text-2">
-                      {l.kind === "key" ? "Its key" : l.kind === "shared" ? `Also about ${l.label}` : l.dir === "in" ? `Refers to ${l.label}` : `Points to ${l.label}`}, page {l.page_start}{" "}
+                      {linkLabel(l)}, page {l.page_start}{" "}
                       <a href="#passage" aria-current={selectedId === l.id ? "true" : undefined} className="text-text-1 underline decoration-1 underline-offset-4"
                         onClick={(e) => { e.preventDefault(); onSelectLinked(l.id); }}>{selectedId === l.id ? "Shown" : "Show it"}</a>
                     </p>

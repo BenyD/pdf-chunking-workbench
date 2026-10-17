@@ -65,13 +65,17 @@ export interface LinkedPassage {
   page_image_url?: string;
   /** How the result points at it: "Table 7", "Section 5.1", "Unit 117", "Key: Table 6 ..." */
   label: string;
-  kind: "ref" | "key" | "shared";
+  /** "doc": in another document, cited by the result or citing it. */
+  kind: "ref" | "key" | "shared" | "doc";
   /** "out": the result cites it; "in": it cites the result; "shared": both name the same unit or code. */
   dir: "out" | "in" | "shared";
+  /** "search": the result names a document with no place in it, so that document was searched with the question. */
+  via?: "search";
+  document_name?: string;
 }
 
 /** One link stored on a passage (metadata.links), made when the document was processed. */
-export interface PassageLink { id: string; kind: "ref" | "key" | "shared"; label: string; dir: "out" | "in" | "shared"; page: number; type: ChunkType }
+export interface PassageLink { id: string | null; doc_id?: string; kind: "ref" | "key" | "shared" | "doc"; label: string; dir: "out" | "in" | "shared"; page: number | null; type: ChunkType | null }
 
 export interface SearchResult extends Chunk {
   rrf_score: number;

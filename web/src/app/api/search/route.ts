@@ -45,16 +45,17 @@ export async function POST(req: Request) {
   // keywords when there are none. Each is attached to the first result that points at it.
   const top = results.slice(0, 5);
   const shown = new Set(results.map((r) => r.id as string));
-  type Link = { id: string; kind: "ref" | "key" | "shared"; label: string; dir: string };
-  const linkIds = [...new Set(top.flatMap((r) => ((r.metadata as { links?: Link[] })?.links ?? []).map((l) => l.id)).filter((id) => !shown.has(id)))];
+  type Link = { id: string | null; doc_id?: string; kind: "ref" | "key" | "shared" | "doc"; label: string; dir: string };
+  const linksOf = (r: Record<string, unknown>) => (r.metadata as { links?: Link[] })?.links ?? [];
+  const linkIds = [...new Set(top.flatMap((r) => linksOf(r).map((l) => l.id)).filter((id): id is string => !!id && !shown.has(id)))];
   if (linkIds.length) {
     const { data: linked } = await sb.rpc("rank_linked", {
       p_ids: linkIds, query_text: query,
       q_local: vectors === "local" ? embedding : null, q_api: vectors === "api" ? embedding : null, p_limit: 5,
     });
     for (const t of (linked ?? []) as Record<string, unknown>[]) {
-      const owner = top.find((r) => ((r.metadata as { links?: Link[] })?.links ?? []).some((l) => l.id === t.id));
-      const link = ((owner?.metadata as { links?: Link[] })?.links ?? []).find((l) => l.id === t.id);
+      const owner = top.find((r) => linksOf(r).some((l) => l.id === t.id));
+      const link = owner && linksOf(owner).find((l) => l.id === t.id);
       if (!owner || !link) continue;
       const list = ((owner.linked as unknown[]) ?? []);
       list.push({
@@ -66,12 +67,33 @@ export async function POST(req: Request) {
     }
   }
 
-  const docIds = [...new Set(results.map((r) => r.document_id as string))];
+  // A result that cites another document with no section to point at ("as per SOP-QA-040"): that document is
+  // searched with the same question and its best passage shown under the result. Two documents at most.
+  const docLinks = top.flatMap((r) => linksOf(r).filter((l) => l.kind === "doc" && !l.id && l.doc_id).map((l) => ({ owner: r, link: l })))
+    .filter((x, i, all) => all.findIndex((y) => y.link.doc_id === x.link.doc_id) === i).slice(0, 2);
+  await Promise.all(docLinks.map(async ({ owner, link }) => {
+    const { data: found } = await sb.rpc(vectors === "local" ? "hybrid_search_local" : "hybrid_search", {
+      query_text: query, query_embedding: embedding, p_strategy: strategy,
+      p_document_id: link.doc_id, match_count: 3, full_text_weight: 1.0, semantic_weight: embedding ? 1.0 : 0,
+    });
+    const t = ((found ?? []) as Record<string, unknown>[]).find((x) => !shown.has(x.id as string));
+    if (!t) return;
+    shown.add(t.id as string);
+    owner.linked = [...((owner.linked as unknown[]) ?? []), {
+      id: t.id, document_id: t.document_id, chunk_type: t.chunk_type, raw_text: t.raw_text, context: t.context,
+      page_start: t.page_start, page_end: t.page_end, bboxes: t.bboxes, label: link.label, kind: "doc", dir: "out", via: "search",
+      page_image_url: publicUrl(`documents/${t.document_id}/pages/${t.page_start}.png`),
+    }];
+  }));
+
+  const linkedAll = results.flatMap((r) => (r.linked as Record<string, unknown>[] | undefined) ?? []);
+  const docIds = [...new Set([...results, ...linkedAll].map((r) => r.document_id as string))];
   const { data: docs } = docIds.length ? await sb.from("documents").select("id,name").in("id", docIds) : { data: [] };
   const names = new Map((docs ?? []).map((d) => [d.id, d.name]));
   for (const r of results) {
     r.document_name = names.get(r.document_id as string) ?? "";
     r.page_image_url = publicUrl(`documents/${r.document_id}/pages/${r.page_start}.png`);
   }
+  for (const l of linkedAll) l.document_name = names.get(l.document_id as string) ?? "";
   return NextResponse.json({ query, mode, embedded: embedding !== null, results });
 }
