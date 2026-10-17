@@ -217,7 +217,7 @@ export function CompareView() {
       <section className="flex flex-col gap-4" aria-labelledby="bench-heading">
         <div className="flex flex-col gap-1">
           <h2 id="bench-heading" className="type-heading-sm">Every method on the same questions</h2>
-          <p className="type-body-sm text-text-2">{data.questions} questions with a known answer across {docsInReport.length} documents, measured on {data.date}. A question counts when one of the top {data.k} passages holds the expected words, in the document&apos;s own text, on the right page. The first five rows are the chunking choices Amazon Bedrock offers, rebuilt from its documented settings and searched with the same engine. The app is the row with the local open-source model: no API call and no generated text.</p>
+          <p className="type-body-sm text-text-2">{data.questions} questions with a known answer across {docsInReport.length} documents, measured on {data.date}. A question counts when one of the top {data.k} passages holds the expected words, in the document&apos;s own text, on the right page. The first five rows are the standard ways to cut documents (fixed-size pieces, cuts where the topic shifts, and big pieces with small ones inside), the same ones LangChain, LlamaIndex and AWS Bedrock offer, built with their usual settings and searched with the same engine. The app is the row with the local open-source model: no API call and no generated text.</p>
         </div>
         <Table aria-label="Recall by method">
           <TableHeader>

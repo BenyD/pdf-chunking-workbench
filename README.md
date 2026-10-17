@@ -9,7 +9,7 @@ Pages:
 
 - **Documents**: upload a PDF or load the samples; each one is read, split into passages and indexed within minutes.
 - **Search**: a question across all documents or one of them; the passages that answer it, each highlighted on its page. With generative AI switched on, also a short written answer with citations.
-- **Compare**: one question asked three ways (keywords only, the app, the app with generative AI) side by side, and every chunking method Amazon Bedrock offers scored on the same 129 questions.
+- **Compare**: one question asked three ways (keywords only, the app, the app with generative AI) side by side, and the standard chunking methods (the ones LangChain, LlamaIndex and AWS Bedrock offer) scored on the same 129 questions.
 - **SOP check**: a company SOP checked sentence by sentence against 21 CFR Part 211, each gap with the SOP's words and the reason.
 - **Forms** (hidden unless `NEXT_PUBLIC_FORMS=1` in `web/.env.local`): teach it a form once, then read every scan of that form into a table.
 
@@ -25,7 +25,7 @@ the passages, each on its page.
 **No generative AI by default, and no outside API.** Nothing in the pipeline
 writes text: the passages are exactly what the rules cut, and the embedding
 model (snowflake-arctic-embed-s, run on the CPU through ONNX) only turns text
-into numbers. It scores 93% on the benchmark below, above every Bedrock-style
+into numbers. It scores 93% on the benchmark below, above every standard chunking
 method. Setting `NEXT_PUBLIC_AI=1` on the web app and `PURE=false` on the
 worker turns on the optional extras: a model-written context line per
 passage, figure descriptions, and a written answer (98%).
@@ -221,14 +221,14 @@ Retrieval itself is a single Postgres function (full text + vector, reciprocal r
 ## Measured
 
 **Against the alternatives.** `scripts/compare_chunking.py` rebuilds every
-benchmark document the ways Amazon Bedrock chunks (fixed-size, semantic,
+benchmark document the standard ways, with the settings AWS Bedrock documents (fixed-size, semantic,
 hierarchical) and with our chunker and no AI, embeds all of them with the
 same model and scores them with the same search. Right passage in the top
 five, 129 questions:
 
 | Setup | recall@5 |
 |---|---|
-| Fixed-size 300 tokens (Bedrock default) | 84% |
+| Fixed-size 300 tokens (the usual default) | 84% |
 | Semantic chunking | 82% |
 | Hierarchical 1,500 / 300 | 87 to 89%, reading about three times the tokens |
 | Our structure, keywords only | 86% |
