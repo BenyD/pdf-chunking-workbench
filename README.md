@@ -246,7 +246,10 @@ a unit number recorded twice. These links are built by rules at ingest and
 shown under each result. On 36 questions whose answer sits only in the
 passage pointed at, the app finds 75% in the top five, 86% with links
 (81% if it simply showed ten), and 100% with generative AI switched on.
-Details in docs/DECISIONS.md section 28.
+Documents citing each other are linked the same way ("section 230 of the
+Bharatiya Nyaya Sanhita", "kept under SOP-QA-040"): on 21 questions asked
+of the BNSS whose answer is in the BNS, search inside the BNSS finds none
+and links find 71%. Details in docs/DECISIONS.md sections 28 and 32.
 
 `scripts/make_questions.py` writes a labelled question set for every document
 with Claude: passages are sampled across each document's pages and kinds (text,
