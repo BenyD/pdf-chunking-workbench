@@ -1793,3 +1793,70 @@ moved a place either way as the meaning ranks closed up.
 vectors, so its meaning search is no better than chance; keyword search
 carries it. A multilingual model would fix that, at about three times the
 size of the current one.
+
+## 32. Links to other documents
+
+**Why.** Section 28 follows references inside one document. Documents also
+cite each other: the BNSS cites the BNS 114 times ("an offence under
+section 230 of the Bharatiya Nyaya Sanhita, 2023"), and SOPs point at each
+other ("kept under SOP-QA-040"). Asked of the first, the answer is in the
+second, which search inside the first can never return.
+
+**Decision.** `worker/app/chunk/doclinks.py`, rules only.
+- A document is cited by its code, taken from its file name (SOP-QA-040),
+  or, when it has no code, by a title of three words or more with the year
+  dropped (Bharatiya Nyaya Sanhita). Copies and revisions of an SOP share
+  its code: they are never linked to each other, and only the newest is
+  cited.
+- Sections named right before the citation ("section 230 of the ...",
+  "sections 64, 70 or 71 of the ...") link to each section's first passage
+  in the cited document, both ways ("Cites ..., section 64" and "Cited by
+  ..."). A citation without a section names the document, and search looks
+  inside it with the same question ("Looked up in SOP-QA-040").
+- At upload only the documents the new one cites, the ones citing it and
+  its own copies are read. `scripts/relink.py` rebuilds them all.
+- The same work found a mistake in section 28: "section 64 of the Bharatiya
+  Nyaya Sanhita" inside the BNSS was also linked to the BNSS's own section
+  64. A section reference followed by "of (the) <a name>" is now left to
+  this step; "of this Sanhita" and "of section 351" stay inside. 138 BNSS
+  passages lost a wrong link; the hard set of section 28 is unchanged (86%).
+
+**Measured.** `make_crossref_questions.py --hard --docs`: 21 questions a
+reader of the BNSS would ask whose answer is only in the BNS
+(`crossref-docs.json`; two drafts that called the reader's passage "R"
+dropped). `eval_links.py`, answer found among the passages shown:
+
+| Setup | searching the BNSS: top 5 / top 10 / top 5 + links | searching every document: top 5 / top 10 / top 5 + links |
+|---|---|---|
+| Keywords only | 0% / 0% / 14% | 38% / 57% / 43% |
+| The app (local model) | 0% / 0% / 71% | 52% / 67% / 67% |
+| With generative AI | 0% / 0% / 71% | 52% / 71% / 76% |
+
+- Inside the document being read, links are the only way to the answer:
+  0% to 71%.
+- Across every document, search can find the BNS section itself; links
+  then match showing ten results (67%).
+- Of the app's six misses inside the BNSS, three have the link but other
+  links are ranked above it (the five-link limit), and three are questions
+  where the citing passage is not in the top five, so there is nothing to
+  follow. Preferring a link whose section the question names ("section
+  67") would recover the first three; not done yet.
+
+## 33. Uploads on the demo server
+
+**Why.** The container embedded about 50 passages a minute, so the
+100-page Humira label took about nine minutes and the 297-page BNSS
+twenty-five. One laptop thread does 760 a minute.
+
+**Decision.**
+- The model's threads match the CPUs the container may use (its cgroup
+  quota), not the cores it can see. `/health` reports both.
+- A batch of vectors is written in one statement (`unnest`), not one per
+  passage.
+- `standard-3` (2 vCPU, 8 GiB) instead of `standard-1` (1/2 vCPU, 4 GiB).
+  Cloudflare bills CPU only while it works and memory by size: about $0.04
+  an hour more while the container is awake, nothing while it sleeps.
+
+**Measured** on production, the Humira label (100 pages, 425 passages)
+uploaded again: 129 seconds from start to ready, of which embedding 93
+seconds, about 275 passages a minute against about 50 before.

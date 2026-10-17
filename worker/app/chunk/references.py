@@ -42,6 +42,10 @@ _REFS = [
     ("step", re.compile(r"\bsteps?\s+(\d{1,2})\b", re.I)),
     ("note", re.compile(r"\bnotes?\s+(\d{1,2})\b", re.I)),
 ]
+# "section 64 of the Bharatiya Nyaya Sanhita", "sections 68 and 69 of the Indian Evidence Act": a section of another
+# document (doclinks.py follows those), never this one's. "of this Sanhita" and "of section 351" stay here.
+_ELSEWHERE = re.compile(r"(?:\s*(?:,|\bor\b|\band\b|\bto\b)\s*(?:sections?\s+)?\d{1,3}[A-Z]?(?:\s*\(\w{1,4}\))*)*"
+                        r"\s*,?\s+of\s+(?:the\s+)?(?!this\b|that\b|these\b|said\b|such\b)[A-Z]")
 _LABEL = {"figure": "Figure", "table": "Table", "section": "Section", "annex": "Annex", "schedule": "Schedule", "step": "Step", "note": "Note"}
 
 # rare identifiers: a code mixing letters and digits, or a number named as a unit, batch, lot ...
@@ -143,6 +147,8 @@ def link_all(chunks: list[ChunkDraft]) -> int:
         seen: set[tuple[str, str]] = set()
         for kind, pat in _REFS:
             for m in pat.finditer(c.raw_text):
+                if kind == "section" and _ELSEWHERE.match(c.raw_text, m.end()):
+                    continue                            # a section of another document
                 val = m.group(1)
                 key = (kind, val.lower() if kind == "schedule" else val.upper())
                 if key in seen or key in own:

@@ -24,7 +24,7 @@
     "recall": 0.862,
     "questions": 29,
     "passages": 8.2,
-    "tokens": 2515
+    "tokens": 2528
   },
   {
     "set": "crossref-hard",
@@ -51,7 +51,7 @@
     "recall": 0.806,
     "questions": 36,
     "passages": 8.2,
-    "tokens": 2522
+    "tokens": 2513
   },
   {
     "set": "crossref-docs",
@@ -75,10 +75,10 @@
     "set": "crossref-docs",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.048,
+    "recall": 0.143,
     "questions": 21,
-    "passages": 10.0,
-    "tokens": 3292
+    "passages": 9.8,
+    "tokens": 3152
   },
   {
     "set": "crossref-docs, all documents",
@@ -102,10 +102,10 @@
     "set": "crossref-docs, all documents",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.381,
+    "recall": 0.429,
     "questions": 21,
-    "passages": 10.0,
-    "tokens": 3133
+    "passages": 9.7,
+    "tokens": 3078
   },
   {
     "set": "main",
@@ -129,10 +129,10 @@
     "set": "main",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.868,
+    "recall": 0.86,
     "questions": 129,
-    "passages": 6.8,
-    "tokens": 2076
+    "passages": 6.7,
+    "tokens": 2080
   },
   {
     "set": "crossref",
@@ -141,7 +141,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 5.0,
-    "tokens": 1414
+    "tokens": 1408
   },
   {
     "set": "crossref",
@@ -150,7 +150,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 2838
+    "tokens": 2830
   },
   {
     "set": "crossref",
@@ -159,7 +159,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 8.4,
-    "tokens": 2335
+    "tokens": 2310
   },
   {
     "set": "crossref-hard",
@@ -168,7 +168,7 @@
     "recall": 0.75,
     "questions": 36,
     "passages": 5.0,
-    "tokens": 1344
+    "tokens": 1353
   },
   {
     "set": "crossref-hard",
@@ -177,7 +177,7 @@
     "recall": 0.806,
     "questions": 36,
     "passages": 10.0,
-    "tokens": 2708
+    "tokens": 2730
   },
   {
     "set": "crossref-hard",
@@ -185,8 +185,8 @@
     "way": "top 5 + links",
     "recall": 0.861,
     "questions": 36,
-    "passages": 7.8,
-    "tokens": 2206
+    "passages": 7.5,
+    "tokens": 2120
   },
   {
     "set": "crossref-docs",
@@ -195,7 +195,7 @@
     "recall": 0.0,
     "questions": 21,
     "passages": 5.0,
-    "tokens": 1811
+    "tokens": 1972
   },
   {
     "set": "crossref-docs",
@@ -204,16 +204,16 @@
     "recall": 0.0,
     "questions": 21,
     "passages": 10.0,
-    "tokens": 3517
+    "tokens": 3768
   },
   {
     "set": "crossref-docs",
     "setup": "The app (local model)",
     "way": "top 5 + links",
-    "recall": 0.762,
+    "recall": 0.714,
     "questions": 21,
-    "passages": 10.0,
-    "tokens": 3053
+    "passages": 9.9,
+    "tokens": 3209
   },
   {
     "set": "crossref-docs, all documents",
@@ -231,7 +231,7 @@
     "recall": 0.667,
     "questions": 21,
     "passages": 10.0,
-    "tokens": 3395
+    "tokens": 3358
   },
   {
     "set": "crossref-docs, all documents",
@@ -240,7 +240,7 @@
     "recall": 0.667,
     "questions": 21,
     "passages": 9.9,
-    "tokens": 3201
+    "tokens": 3202
   },
   {
     "set": "main",
@@ -249,7 +249,7 @@
     "recall": 0.938,
     "questions": 129,
     "passages": 5.0,
-    "tokens": 1501
+    "tokens": 1493
   },
   {
     "set": "main",
@@ -258,7 +258,7 @@
     "recall": 0.953,
     "questions": 129,
     "passages": 9.6,
-    "tokens": 2842
+    "tokens": 2800
   },
   {
     "set": "main",
@@ -267,7 +267,7 @@
     "recall": 0.938,
     "questions": 129,
     "passages": 6.7,
-    "tokens": 2011
+    "tokens": 1986
   },
   {
     "set": "crossref",
@@ -285,7 +285,7 @@
     "recall": 1.0,
     "questions": 29,
     "passages": 10.0,
-    "tokens": 3391
+    "tokens": 3396
   },
   {
     "set": "crossref",
@@ -294,7 +294,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 8.4,
-    "tokens": 3220
+    "tokens": 3200
   },
   {
     "set": "crossref-hard",
@@ -312,7 +312,7 @@
     "recall": 0.833,
     "questions": 36,
     "passages": 10.0,
-    "tokens": 3453
+    "tokens": 3463
   },
   {
     "set": "crossref-hard",
@@ -320,8 +320,8 @@
     "way": "top 5 + links",
     "recall": 1.0,
     "questions": 36,
-    "passages": 7.8,
-    "tokens": 2930
+    "passages": 7.6,
+    "tokens": 2834
   },
   {
     "set": "crossref-docs",
@@ -330,7 +330,7 @@
     "recall": 0.0,
     "questions": 21,
     "passages": 5.0,
-    "tokens": 2389
+    "tokens": 2401
   },
   {
     "set": "crossref-docs",
@@ -339,16 +339,16 @@
     "recall": 0.0,
     "questions": 21,
     "passages": 10.0,
-    "tokens": 4275
+    "tokens": 4278
   },
   {
     "set": "crossref-docs",
     "setup": "Generative AI",
     "way": "top 5 + links",
-    "recall": 0.762,
+    "recall": 0.714,
     "questions": 21,
-    "passages": 9.3,
-    "tokens": 4050
+    "passages": 9.2,
+    "tokens": 4061
   },
   {
     "set": "crossref-docs, all documents",
@@ -357,7 +357,7 @@
     "recall": 0.524,
     "questions": 21,
     "passages": 5.0,
-    "tokens": 2240
+    "tokens": 2231
   },
   {
     "set": "crossref-docs, all documents",
@@ -366,7 +366,7 @@
     "recall": 0.714,
     "questions": 21,
     "passages": 10.0,
-    "tokens": 4299
+    "tokens": 4307
   },
   {
     "set": "crossref-docs, all documents",
@@ -374,8 +374,8 @@
     "way": "top 5 + links",
     "recall": 0.762,
     "questions": 21,
-    "passages": 9.4,
-    "tokens": 4075
+    "passages": 9.3,
+    "tokens": 4023
   },
   {
     "set": "main",
@@ -384,7 +384,7 @@
     "recall": 0.977,
     "questions": 129,
     "passages": 5.0,
-    "tokens": 1806
+    "tokens": 1809
   },
   {
     "set": "main",
@@ -393,7 +393,7 @@
     "recall": 0.992,
     "questions": 129,
     "passages": 9.7,
-    "tokens": 3454
+    "tokens": 3450
   },
   {
     "set": "main",
@@ -401,7 +401,7 @@
     "way": "top 5 + links",
     "recall": 0.977,
     "questions": 129,
-    "passages": 6.6,
-    "tokens": 2463
+    "passages": 6.5,
+    "tokens": 2435
   }
 ]
