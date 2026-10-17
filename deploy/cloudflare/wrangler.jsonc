@@ -8,7 +8,7 @@
   "observability": { "enabled": true },
   // A running container keeps the env it started with; bump GENERATION after changing a secret so a fresh one starts.
   // PURE: no generative model at any step (see worker/app/config.py). GENERATION 4 starts a container with it.
-  "vars": { "GENERATION": "5", "PURE": "true" },
+  "vars": { "GENERATION": "6", "PURE": "true" },
   "containers": [
     {
       "class_name": "ChunklabWorker",
