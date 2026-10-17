@@ -19,7 +19,7 @@
         "right": 2,
         "gaps": 10,
         "gaps_shown": 1,
-        "unsure": 44,
+        "unsure": 45,
         "sops": 3,
         "lines": 50
       },
@@ -29,7 +29,7 @@
         "right": 36,
         "gaps": 19,
         "gaps_shown": 8,
-        "unsure": 189,
+        "unsure": 194,
         "sops": 14,
         "lines": 278
       },
@@ -66,7 +66,7 @@
         "sops": 14,
         "lines": 278
       },
-      "dollars_per_sop": 0.001169
+      "dollars_per_sop": 0.001201
     },
     "local+model": {
       "sample": {

@@ -45,9 +45,9 @@
         "held out": {
           "sops": 3,
           "lines": 50,
-          "by_rules": 6,
+          "by_rules": 5,
           "by_model": 0,
-          "unsure": 44,
+          "unsure": 45,
           "dollars": 0.0,
           "dollars_per_sop": 0.0,
           "graded": 33,
@@ -64,9 +64,9 @@
         "others": {
           "sops": 10,
           "lines": 187,
-          "by_rules": 49,
+          "by_rules": 45,
           "by_model": 0,
-          "unsure": 138,
+          "unsure": 142,
           "dollars": 0.0,
           "dollars_per_sop": 0.0,
           "dollars_per_sop_with_embeddings": 0.0
@@ -74,9 +74,9 @@
         "all": {
           "sops": 14,
           "lines": 278,
-          "by_rules": 89,
+          "by_rules": 84,
           "by_model": 0,
-          "unsure": 189,
+          "unsure": 194,
           "dollars": 0.0,
           "dollars_per_sop": 0.0,
           "graded": 74,
@@ -1119,9 +1119,9 @@
         {
           "sop": "SOP-QA-031 Product complaints (synthetic)",
           "cite": "211.198(b)(2), sentence 1",
-          "status": "met",
+          "status": "unsure",
           "by": "rules",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0
         },
         {
@@ -1135,9 +1135,9 @@
         {
           "sop": "SOP-QA-031 Product complaints (synthetic)",
           "cite": "211.198(b)(3)",
-          "status": "met",
+          "status": "unsure",
           "by": "rules",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0
         },
         {
@@ -1815,9 +1815,9 @@
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
           "cite": "211.188(b)(1)",
-          "status": "met",
+          "status": "unsure",
           "by": "rules",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0
         },
         {
@@ -1887,9 +1887,9 @@
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
           "cite": "211.188(b)(10)",
-          "status": "met",
+          "status": "unsure",
           "by": "rules",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0
         },
         {
@@ -2143,9 +2143,9 @@
         {
           "sop": "SOP-PR-015 In-process controls and yield (synthetic)",
           "cite": "211.188(b)(10)",
-          "status": "met",
+          "status": "unsure",
           "by": "rules",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0
         },
         {
@@ -2345,11 +2345,11 @@
         "held out": {
           "sops": 3,
           "lines": 50,
-          "by_rules": 6,
-          "by_model": 44,
+          "by_rules": 5,
+          "by_model": 45,
           "unsure": 0,
-          "dollars": 0.00366,
-          "dollars_per_sop": 0.00122,
+          "dollars": 0.00376,
+          "dollars_per_sop": 0.001253,
           "graded": 33,
           "decided": 33,
           "right": 20,
@@ -2359,26 +2359,26 @@
           "gaps_shown": 8,
           "gaps_missed": 2,
           "false_gaps": 9,
-          "dollars_per_sop_with_embeddings": 0.00122
+          "dollars_per_sop_with_embeddings": 0.001253
         },
         "others": {
           "sops": 10,
           "lines": 187,
-          "by_rules": 49,
-          "by_model": 138,
+          "by_rules": 45,
+          "by_model": 142,
           "unsure": 0,
-          "dollars": 0.01204,
-          "dollars_per_sop": 0.001204,
-          "dollars_per_sop_with_embeddings": 0.001204
+          "dollars": 0.0124,
+          "dollars_per_sop": 0.00124,
+          "dollars_per_sop_with_embeddings": 0.00124
         },
         "all": {
           "sops": 14,
           "lines": 278,
-          "by_rules": 89,
-          "by_model": 189,
+          "by_rules": 84,
+          "by_model": 194,
           "unsure": 0,
-          "dollars": 0.01637,
-          "dollars_per_sop": 0.001169,
+          "dollars": 0.01682,
+          "dollars_per_sop": 0.001201,
           "graded": 74,
           "decided": 74,
           "right": 60,
@@ -2388,7 +2388,7 @@
           "gaps_shown": 17,
           "gaps_missed": 2,
           "false_gaps": 9,
-          "dollars_per_sop_with_embeddings": 0.001169
+          "dollars_per_sop_with_embeddings": 0.001201
         }
       },
       "rows": [
@@ -3419,10 +3419,10 @@
         {
           "sop": "SOP-QA-031 Product complaints (synthetic)",
           "cite": "211.198(b)(2), sentence 1",
-          "status": "met",
-          "by": "rules",
-          "rules": "met",
-          "dollars": 0.0
+          "status": "partly_met",
+          "by": "model",
+          "rules": "unsure",
+          "dollars": 8.585e-05
         },
         {
           "sop": "SOP-QA-031 Product complaints (synthetic)",
@@ -3436,9 +3436,9 @@
           "sop": "SOP-QA-031 Product complaints (synthetic)",
           "cite": "211.198(b)(3)",
           "status": "met",
-          "by": "rules",
-          "rules": "met",
-          "dollars": 0.0
+          "by": "model",
+          "rules": "unsure",
+          "dollars": 7.620000000000001e-05
         },
         {
           "sop": "SOP-WH-004 Receipt and sampling of incoming materials (synthetic)",
@@ -4115,10 +4115,10 @@
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
           "cite": "211.188(b)(1)",
-          "status": "met",
-          "by": "rules",
-          "rules": "met",
-          "dollars": 0.0
+          "status": "partly_met",
+          "by": "model",
+          "rules": "unsure",
+          "dollars": 9.45e-05
         },
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
@@ -4187,10 +4187,10 @@
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
           "cite": "211.188(b)(10)",
-          "status": "met",
-          "by": "rules",
-          "rules": "met",
-          "dollars": 0.0
+          "status": "partly_met",
+          "by": "model",
+          "rules": "unsure",
+          "dollars": 9.570000000000001e-05
         },
         {
           "sop": "SOP-PR-030 Master production and control records (synthetic)",
@@ -4444,9 +4444,9 @@
           "sop": "SOP-PR-015 In-process controls and yield (synthetic)",
           "cite": "211.188(b)(10)",
           "status": "met",
-          "by": "rules",
-          "rules": "met",
-          "dollars": 0.0
+          "by": "model",
+          "rules": "unsure",
+          "dollars": 0.0001
         },
         {
           "sop": "SOP-PR-015 In-process controls and yield (synthetic)",
@@ -5721,7 +5721,7 @@
           "cite": "211.198(b)(2), sentence 1",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 8.585e-05
         },
         {
@@ -5737,7 +5737,7 @@
           "cite": "211.198(b)(3)",
           "status": "met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 7.620000000000001e-05
         },
         {
@@ -6417,7 +6417,7 @@
           "cite": "211.188(b)(1)",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 9.45e-05
         },
         {
@@ -6489,7 +6489,7 @@
           "cite": "211.188(b)(10)",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 9.570000000000001e-05
         },
         {
@@ -6745,7 +6745,7 @@
           "cite": "211.188(b)(10)",
           "status": "met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.0001
         },
         {
@@ -7973,7 +7973,7 @@
           "cite": "211.198(b)(2), sentence 1",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 8.895000000000001e-05
         },
         {
@@ -7989,7 +7989,7 @@
           "cite": "211.198(b)(3)",
           "status": "met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 7.620000000000001e-05
         },
         {
@@ -8717,7 +8717,7 @@
           "cite": "211.188(b)(1)",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 7.64e-05
         },
         {
@@ -8789,7 +8789,7 @@
           "cite": "211.188(b)(10)",
           "status": "partly_met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 9.570000000000001e-05
         },
         {
@@ -9077,7 +9077,7 @@
           "cite": "211.188(b)(10)",
           "status": "met",
           "by": "model",
-          "rules": "met",
+          "rules": "unsure",
           "dollars": 0.00010155000000000002
         },
         {
@@ -9523,6 +9523,6 @@
       ]
     }
   },
-  "local_seconds_per_sop": 0.073,
+  "local_seconds_per_sop": 0.074,
   "voyage_dollars_per_sop": 6.19e-05
 }

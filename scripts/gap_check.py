@@ -656,6 +656,7 @@ def periods(text: str) -> list[tuple[int, str, str, str]]:
 
 
 MET_COVER = 0.7                 # share of a requirement's terms one passage must hold for the rules to call it met
+SHORT_ITEM = 3                  # an item under a lead-in with fewer terms of its own is never met by words alone
 _LIST = re.compile(r"((?:[a-z\-]+ ){0,2}[a-z\-]+(?:, (?:[a-z\-]+ ){0,2}[a-z\-]+)+),? and ((?:[a-z\-]+ ){0,2}[a-z\-]+)")
 
 
@@ -687,7 +688,10 @@ def rules_judge(req: Requirement, passages: list[dict], sop: dict) -> dict:
     3. numbers: a retention period that is shorter in the SOP than in the rule ("six months after the expiry date"
        against "1 year") is partly met; one at least as long counts toward met.
     4. words: the passage closest to holding all of the requirement's terms (forms of a word and the SOP's usual
-       names for it count) holds 70% or more: met. Anything else is left unsure, for the model or a person."""
+       names for it count) holds 70% or more: met. Not for an item under a lead-in with one or two terms of its own
+       ("Dates;", "Any sampling performed;"): a passage with a date in it shows the SOP mentions dates, not that
+       they go where the lead-in asks (each batch's record, not the master record). Anything else is left unsure,
+       for the model or a person."""
     body = req.text.lower()
     whole = " ".join(p["text"] for p in sop["passages"]).lower()
     exclusions = sop["exclusions"]
@@ -746,6 +750,9 @@ def rules_judge(req: Requirement, passages: list[dict], sop: dict) -> dict:
     if longer and best >= 0.5:
         return _v("met", f"The SOP keeps them {longer[0]} after the same event, at least what the rule asks.", longer[1])
     if best >= MET_COVER:
+        if len(terms) < SHORT_ITEM and " > " in req.context:
+            return _v("unsure", f"A short item ({', '.join(terms)}): the words alone do not show the SOP does what its lead-in asks.",
+                      best_text[:300])
         lacking = [w for w in listed(core) if not _found(w, best_text.lower())]
         if lacking:
             return _v("unsure", "The closest passage has most of it but not: " + ", ".join(lacking) + ".")

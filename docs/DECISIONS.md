@@ -1516,7 +1516,8 @@ keyword weight. More keyword weight gained a few points and was not kept.
    assure", "drug"), purpose clauses, exceptions and cross-references are
    left out. It is never met when a listed item ("date, time, product, and
    lot number") is missing from that passage, or when the passage's
-   sentence says the thing is not done.
+   sentence says the thing is not done. Nor for an item under a lead-in
+   with one or two terms of its own ("Dates;"; below, "Short items").
 5. Lead-ins ending in ":" and items of "one of the following" are left
    unsure, as is everything else.
 
@@ -1559,8 +1560,8 @@ Graded on the sample and the three held-out SOPs: 74 lines, 19 known gaps.
 
 | Mode | right | known gaps shown | missed | false gaps | left for a person | per SOP | 5,000 SOPs |
 |---|---|---|---|---|---|---|---|
-| Rules only, local: no AI, no API | 36 of 74 | 8 of 19 | 0 | 0 | 189 of 278 lines | $0 | $0 |
-| Rules first, Haiku on the rest, local | 60 | 17 | 2 | 9 | 0 | $0.0012 | $5.84 |
+| Rules only, local: no AI, no API | 36 of 74 | 8 of 19 | 0 | 0 | 194 of 278 lines | $0 | $0 |
+| Rules first, Haiku on the rest, local | 60 | 17 | 2 | 9 | 0 | $0.0012 | $6.00 |
 | Haiku on every line, local evidence | 55 | 16 | 3 | 9 | 0 | $0.0017 | $8.65 |
 | Haiku on every line, voyage-4 (current) | 56 | 16 | 3 | 8 | 0 | $0.0020 | $10.17 |
 
@@ -1570,8 +1571,8 @@ voyage-4 for the SOP's passages, $0.00006 per SOP.
 
 | Mode | sample, 41 lines | 3 held out, 50 lines, 33 graded | 10 other SOPs, 187 lines |
 |---|---|---|---|
-| Rules only | 34 decided, all right, 7 left | 6 decided (2 graded, both right), 44 left | 49 decided, 138 left |
-| Rules first, then Haiku | 40 right | 20 right | 138 sent to Haiku |
+| Rules only | 34 decided, all right, 7 left | 5 decided (2 graded, both right), 45 left | 45 decided, 142 left |
+| Rules first, then Haiku | 40 right | 20 right | 142 sent to Haiku |
 | Haiku, local evidence | 36 right | 19 right | |
 | Haiku, voyage-4 | 35 right | 21 right (84 lines asked: 4 extra sections) | |
 
@@ -1588,11 +1589,11 @@ voyage-4 for the SOP's passages, $0.00006 per SOP.
 **At 5,000 SOPs**, for SOPs like these (19.9 lines each on average):
 - Rules only: no bill. The local model needs 0.07 s of CPU per SOP to embed
   its passages (about 6 minutes for 5,000 on this laptop), and the scoring
-  and the rules take milliseconds. But a person reads about 13.5 lines per
-  SOP, some 67,500 lines in all, each shown with its three passages and the
+  and the rules take milliseconds. But a person reads about 13.9 lines per
+  SOP, some 69,300 lines in all, each shown with its three passages and the
   words the rules could not find.
-- Rules first, then Haiku: about $5.84, 57% of the current $10.17, and the
-  best of the four on these SOPs. It still sends 2 of every 3 lines to a
+- Rules first, then Haiku: about $6.00, 59% of the current $10.17, and the
+  best of the four on these SOPs. It still sends 7 of every 10 lines to a
   generative model.
 - The sample, the longest SOP here with the local scope (41 lines): $3.35
   for 5,000 through the cascade, $19.36 with Haiku on every line.
@@ -1608,7 +1609,8 @@ out. It was found while the held-out SOPs were written, and fixed after the
 measurements above were first taken so that one change would not move
 both. The opening paragraph is now the lead-in of every item after it. The
 scope table's first and last rows and the two tables under "Four ways" are
-measured with the fix; the rules judge's table is from before it.
+measured with the fix, and with the rule for short items after it; the
+rules judge's table is from before both.
 - 26 sentences in 25 paragraphs of 211.130, 211.142, 211.150, 211.184 and
   211.188 are now checked (Part 211: 394 to 420), 15 of them the items of
   211.188, the batch record. 23 lines of 211.101, 211.130 and 211.184 that
@@ -1635,7 +1637,38 @@ measured with the fix; the rules judge's table is from before it.
   ("Dates;" is all of 211.188(b)(1)); Haiku calls them partly or not met,
   as the SOP covers the master record and never each batch's record. The
   other two are not met where Haiku says not applicable, on a section
-  outside the SOP's scope.
+  outside the SOP's scope. Two of the five are now left unsure (next).
+
+**Short items.** The words rule called a list item met when one passage
+held 70% of its terms, and almost any passage holds an item of one or two
+terms: 211.188(b)(1) is "Dates;", (b)(10) "Any sampling performed;". An
+item under a lead-in with fewer than three terms of its own, after stop
+words and the regulation's filler are left out, is now left unsure even
+when one passage holds all of them. A sentence with its own subject is not
+touched: 211.100(a)'s "Such procedures shall include all requirements in
+this subpart" is still met on "subpart", and right.
+- Asking for the lead-in's terms as well was tried first, and does not
+  separate the cases. 211.188(b)'s lead-in is "Documentation that each
+  significant step in the manufacture, processing, packing, or holding of
+  the batch was accomplished". The master record SOP's closest passage
+  holds 5 of its 9 terms, since a master record talks about manufacture,
+  packing and batches too. The in-process SOP's holds 3 of 9, and there
+  Haiku says met. A share of the lead-in high enough to stop the first
+  stops the second, so words cannot tell which record an item goes in. The
+  line goes to Haiku, which reads the SOP's scope.
+- 5 lines move from met to unsure, none of them graded: 211.188(b)(1) and
+  (b)(10) on the master record SOP, (b)(10) on the in-process SOP, and
+  211.198(b)(2) and (b)(3) on the complaints SOP. Haiku calls 3 of them
+  partly met and 2 met, so the rules give up 3 calls Haiku disagreed with
+  and 2 it agreed with.
+- Graded lines are unchanged in every mode: rules 36 of 74, the cascade 60.
+  Rules alone leave 194 of 278 lines for a person (was 189), and 5,000 SOPs
+  cost $6.00 through the cascade (was $5.84). The five lines' Haiku
+  verdicts were in the cache already, so nothing was spent.
+- Two of the five are short by accident: `obligation()` drops the words
+  after a cross-reference, so 211.198(b)(2) "Where an investigation under
+  § 211.192 is conducted, the written record shall include the findings..."
+  keeps only "investigation" (Not covered, below).
 
 **The SOP check page.** Its scores card showed the old rules (sure about 15
 of 41) and its cost card assumed the model on every line. Both now read
@@ -1649,9 +1682,18 @@ $0.002 on the held-out SOPs' context lines at ingest, and $0.0086 on 103
 more verdicts after the fix for unmarked opening paragraphs.
 
 **Not covered.**
-- The words rule calls a one-word list item met wherever the word appears
-  (211.188(b)(1) "Dates;" above). A short item needs its lead-in's terms
-  too, or should be left unsure.
+- The words rule cannot tell which record a longer item belongs in either.
+  On the master record SOP it still calls three 211.188 lines met
+  (sentence 1, (b)(3) "Specific identification of each batch of component
+  or in-process material used" and (b)(8) "Complete labeling control
+  records"), with 6 to 10 terms each, where Haiku says partly or not met:
+  the master record names the same things as each batch's record.
+- `obligation()` drops a cross-reference with every lower-case word after
+  it: the pattern for "under § 211.192" also takes "is conducted, the
+  written record shall include the findings of the investigation and
+  followup". 19 lines lose words this way, among them the 3-year periods
+  for OTC products exempt from expiry dating (211.170(a)(3), 211.180(a)
+  and (b), 211.198(b)), which the numbers step then never sees.
 - 211.132 puts its (1) on the same line as the paragraph's heading
   ("Labeling. (1) In order to alert consumers..."), so (b)(1) and (c)(1)
   are cited as (b) and (c), and (c)(1)(i) to (iii) are read as letters and
