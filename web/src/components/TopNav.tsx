@@ -7,8 +7,6 @@ import { formsEnabled } from "@/lib/flags";
 const NAV = [
   { href: "/", label: "Documents" },
   { href: "/search", label: "Search" },
-  { href: "/compare", label: "Compare" },
-  { href: "/sop-check", label: "SOP check" },
   ...(formsEnabled ? [{ href: "/forms", label: "Forms" }] : []),
 ];
 

@@ -56,7 +56,6 @@ from app.parse.model import PageLayout, TableBlock, TextBlock  # noqa: E402
 
 METHODS = ["fixed", "semantic", "hierarchical", "structural"]
 OUT = ROOT / "scripts" / "benchmarks" / "comparison.json"
-WEB_OUT = ROOT / "web" / "src" / "data" / "comparison.json"   # what the Compare page shows
 
 # Prices read on 2026-10-15 (README, "Models and cost"): dollars per million tokens.
 PRICE = {"voyage": 0.06, "haiku_in": 0.10, "haiku_out": 0.50, "opus_in": 4.0, "opus_out": 20.0}
@@ -349,8 +348,6 @@ def evaluate(k: int = 5) -> None:
     report["per_question"] = [{"doc": r["doc"].rsplit(".", 1)[0], "question": r["question"],
                                "ranks": {s[0]: results[s[0]][i]["rank"] for s in setups}} for i, r in enumerate(first)]
     OUT.write_text(json.dumps(report, indent=2) + "\n")
-    WEB_OUT.parent.mkdir(parents=True, exist_ok=True)
-    WEB_OUT.write_text(json.dumps(report, indent=2) + "\n")
 
     print(f"\n{'Setup':52} {'recall@5':>9} {'MRR':>6} {'tokens read':>12}")
     for s in report["setups"]:

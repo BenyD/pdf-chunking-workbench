@@ -9,8 +9,11 @@ const nextConfig: NextConfig = {
     return [{ source: "/storage/:path*", destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/:path*` }];
   },
   async redirects() {
-    if (process.env.NEXT_PUBLIC_FORMS === "1") return [];
-    return [{ source: "/forms/:path*", destination: "/", permanent: false }];
+    // The app is about how documents are cut and searched: Compare and SOP check were taken out (2026-10-18); their
+    // old addresses go to Documents. The benchmark and the SOP check live on as scripts and in docs/DECISIONS.md.
+    const gone = [{ source: "/compare", destination: "/", permanent: false }, { source: "/sop-check", destination: "/", permanent: false }];
+    if (process.env.NEXT_PUBLIC_FORMS === "1") return gone;
+    return [...gone, { source: "/forms/:path*", destination: "/", permanent: false }];
   },
   cacheComponents: true,
   partialPrefetching: true,
