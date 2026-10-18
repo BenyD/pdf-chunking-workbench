@@ -23,5 +23,7 @@ export async function POST(req: Request) {
   await sb.from("documents").update({ storage_path: path }).eq("id", doc.id);
   const { data: signed, error: sErr } = await sb.storage.from(BUCKET).createSignedUploadUrl(path, { upsert: true });
   if (sErr || !signed) return NextResponse.json({ error: sErr?.message ?? "sign failed" }, { status: 500 });
-  return NextResponse.json({ id: doc.id, path, signedUrl: signed.signedUrl, token: signed.token });
+  // the browser uploads through this site (next.config.ts rewrites), never to supabase.co directly
+  const via = signed.signedUrl.replace(/^https?:\/\/[^/]+\/storage\/v1\//, "/storage/");
+  return NextResponse.json({ id: doc.id, path, signedUrl: via, token: signed.token });
 }

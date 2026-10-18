@@ -16,5 +16,5 @@ export function supabaseAdmin(): SupabaseClient {
 }
 
 export function publicUrl(path: string): string {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${path}`;
+  return `/storage/object/public/${BUCKET}/${path}`;      // proxied by next.config.ts rewrites
 }

@@ -33,5 +33,5 @@ export async function api<T>(url: string, init?: RequestInit): Promise<T> {
 }
 
 export function publicAsset(path: string): string {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/chunklab/${path}`;
+  return `/storage/object/public/chunklab/${path}`;      // proxied by next.config.ts rewrites
 }
