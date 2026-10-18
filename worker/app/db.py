@@ -67,7 +67,8 @@ CHUNK_COLS = "id::text as id, document_id::text as document_id, chunk_type, raw_
 
 def ready_documents() -> list[dict[str, Any]]:
     with conn() as c:
-        return c.execute("select id::text as id, name, created_at::text as created_at from documents where status = 'ready'").fetchall()
+        return c.execute("""select id::text as id, name, created_at::text as created_at, stats->>'code' as code
+                              from documents where status = 'ready'""").fetchall()
 
 
 def chunk_rows(document_id: str, strategy: str) -> list[dict[str, Any]]:

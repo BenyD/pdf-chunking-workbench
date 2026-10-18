@@ -4,7 +4,8 @@ The BNSS cites the BNS 114 times ("an offence under section 230 of the Bharatiya
 SOPs point at each other ("records are kept as per SOP-QA-040"). The answer to a question asked of the first
 document is then in the second. As within a document (references.py), these links are found by rules, no model.
 
-A document is named in two ways: its code (SOP-QA-040, from its file name) and, for a long title, the title
+A document is named in two ways: its code (SOP-QA-040 from its file name, or ORA-LAB.5.5.1 from a "Document
+Number:" line on its first page) and, for a long title, the title
 itself (Bharatiya Nyaya Sanhita, the year dropped). A copy or revision of the same SOP shares its code: it is
 never linked to its own copies, and a citation goes to the newest of them only.
 
@@ -29,6 +30,19 @@ MAX_OUT = 6          # links to other documents per passage
 MAX_IN = 4           # passages of other documents citing one passage
 
 _CODE = re.compile(r"\b[A-Z]{2,4}-[A-Z]{2,4}-\d{2,4}\b")                      # SOP-QA-040
+# "Document Number: ORA-LAB.5.5.1", "SOP No.: QC/SOP/014", "Doc ID: WI-PR-021" on a document's first page
+_CODE_LINE = re.compile(r"\b(?:Document|Doc\.?|SOP|Procedure)\s*(?:No\.?|Number|#|ID)\s*[:.]?\s*([A-Z][A-Z0-9]*(?:[-./][A-Z0-9]+)+)")
+
+
+def code_in(text: str) -> str | None:
+    """A code a document gives itself ("Document Number: ORA-LAB.5.5.1"). Read from the first page's every line
+    at upload, header box included, since the box is dropped as boilerplate before passages are cut."""
+    m = _CODE_LINE.search(text)
+    return m.group(1).rstrip(".") if m else None
+
+
+def doc_code(chunks: list[ChunkDraft]) -> str | None:
+    return next((c for c in (code_in(x.raw_text) for x in chunks[:4]) if c), None)
 _NUM = r"\d{1,3}[A-Z]?(?:\s*\(\d{1,3}\))*"
 # the sections named right before "of the <document>": "section 230", "sections 64, 66 and 68",
 # "section 63, section 64 or section 71", "sub-section (1) of section 351"
@@ -41,11 +55,12 @@ class Doc:
     name: str
     chunks: list[ChunkDraft]
     created: str = ""                                       # ISO time; the newest copy of an SOP is the one cited
+    stored_code: str | None = None                          # the code found at upload, for a document read by name only
 
     @property
     def code(self) -> str | None:
         m = _CODE.search(self.name)
-        return m.group(0) if m else None
+        return m.group(0) if m else self.stored_code or doc_code(self.chunks)
 
     @property
     def title(self) -> str | None:
@@ -61,8 +76,8 @@ class Doc:
         return self.code or self.title or self.name.rsplit(".", 1)[0]
 
     def mention(self) -> re.Pattern | None:
-        if self.code:
-            return re.compile(rf"\b{re.escape(self.code)}\b")
+        if self.code:          # not a prefix of a longer code: ORA-LAB.5.5 is not cited by "ORA-LAB.5.5.1"
+            return re.compile(rf"\b{re.escape(self.code)}(?![.\-/]?\w)")
         if self.title:
             return re.compile(r"\b" + r"\s+".join(map(re.escape, self.title.split())) + r"\b")     # case as printed
         return None

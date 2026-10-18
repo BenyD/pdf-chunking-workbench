@@ -20,7 +20,7 @@ import pymupdf
 
 from . import db, storage
 from .chunk.contextual import chunk_contextual
-from .chunk.doclinks import Doc, key, link_library, mentions, same_document
+from .chunk.doclinks import Doc, code_in, key, link_library, mentions, same_document
 from .chunk.model import ChunkDraft
 from .chunk.structural import chunk_structural
 from .config import settings
@@ -83,10 +83,13 @@ def ingest(document_id: str) -> None:
             "by_type": dict(Counter(c.chunk_type for c in chunks)),
             "avg_tokens": round(sum(c.token_count for c in chunks) / max(1, len(chunks))),
         }
-        _link_documents(document_id, row["name"], str(row.get("created_at") or ""), chunks)
+        code = code_in(" ".join(l.text for l in layouts[0].lines)) if layouts else None
+        _link_documents(document_id, row["name"], str(row.get("created_at") or ""), chunks, code)
         db.delete_chunks(document_id, STRATEGY)   # only this mode's passages: the other mode's stay, for comparison
         db.insert_chunks([c.to_row(document_id, STRATEGY) for c in chunks])
         stats["llm"] = llm_usage
+        if code:
+            stats["code"] = code                          # how other documents cite this one (chunk/doclinks.py)
         stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)])
         stats["embedding_model"] = (settings.local_embedding_model + " (local)" if settings.pure
                                     else settings.embedding_model if not settings.fake_embeddings else "fake (dev)")
@@ -99,12 +102,12 @@ def ingest(document_id: str) -> None:
         db.update_document(document_id, status="error", progress={"stage": "error", "message": str(e)[:500]})
 
 
-def _link_documents(document_id: str, name: str, created: str, chunks: list[ChunkDraft]) -> None:
+def _link_documents(document_id: str, name: str, created: str, chunks: list[ChunkDraft], code: str | None = None) -> None:
     """Links to and from the other documents of the library (chunk/doclinks.py), made before this one's passages
     are stored. Only the documents it cites, the ones citing it, and its own copies are read and updated."""
     try:
-        new = Doc(document_id, name, chunks, created)
-        heads = [Doc(d["id"], d["name"], [], d["created_at"]) for d in db.ready_documents() if d["id"] != document_id]
+        new = Doc(document_id, name, chunks, created, code)
+        heads = [Doc(d["id"], d["name"], [], d["created_at"], d.get("code")) for d in db.ready_documents() if d["id"] != document_id]
         involved = mentions(heads, chunks) | {h.id for h in heads if same_document(h, new)}
         if key(new):
             involved |= set(db.documents_containing(key(new), STRATEGY)) - {document_id}
@@ -112,7 +115,7 @@ def _link_documents(document_id: str, name: str, created: str, chunks: list[Chun
         for h in heads:
             if h.id in involved:
                 rows = db.chunk_rows(h.id, STRATEGY)
-                others.append(Doc(h.id, h.name, [ChunkDraft.from_row(r) for r in rows], h.created))
+                others.append(Doc(h.id, h.name, [ChunkDraft.from_row(r) for r in rows], h.created, h.stored_code))
         if not others:
             return
         before = {c.id: list(c.metadata.get("links", [])) for d in others for c in d.chunks}

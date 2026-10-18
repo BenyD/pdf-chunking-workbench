@@ -31,3 +31,6 @@ scripts/benchmarks/gap-cache.sqlite
 
 # wrangler run from the repo root leaves a cache here
 .wrangler/
+
+# public PDFs downloaded for testing (FDA, WHO, EP, manufacturers): not ours to redistribute
+samples/real-test/

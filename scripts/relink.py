@@ -38,7 +38,7 @@ def relink(library: list[tuple[dict, list[dict]]]) -> list[tuple[dict, list[Chun
             x.metadata["links"] = [l for l in x.metadata.get("links", []) if l.get("kind") != "key"]
         key_links_from_metadata(ds)
         link_all(ds)
-        docs.append(Doc(d["id"], d["name"], ds, str(d.get("created_at") or "")))
+        docs.append(Doc(d["id"], d["name"], ds, str(d.get("created_at") or ""), d.get("code") or (d.get("stats") or {}).get("code")))
     link_library(docs)
     return [(d, [x for x in doc.chunks if json.dumps(x.metadata.get("links", []), sort_keys=True) != before[x.id]], len(doc.chunks))
             for (d, _), doc in zip(library, docs)]
@@ -48,7 +48,8 @@ def run_db(strategies: list[str]) -> None:
     import psycopg
     from psycopg.rows import dict_row
     with psycopg.connect(settings.database_url, autocommit=True, row_factory=dict_row) as c:
-        docs = c.execute("select id::text as id, name, created_at::text as created_at from documents where status = 'ready' order by name").fetchall()
+        docs = c.execute("""select id::text as id, name, created_at::text as created_at, stats->>'code' as code
+                              from documents where status = 'ready' order by name""").fetchall()
         for s in strategies:
             library = [(d, c.execute(f"select {', '.join(COLS)} from chunks where document_id = %s and strategy = %s", (d["id"], s)).fetchall())
                        for d in docs]
@@ -65,7 +66,7 @@ def run_rest(strategies: list[str]) -> None:
     h = {"apikey": settings.supabase_service_role_key, "Authorization": f"Bearer {settings.supabase_service_role_key}",
          "Content-Type": "application/json", "Prefer": "return=minimal"}
     with httpx.Client(timeout=120, headers=h) as client:
-        docs = client.get(f"{base}/documents", params={"select": "id,name,created_at", "status": "eq.ready", "order": "name"}).json()
+        docs = client.get(f"{base}/documents", params={"select": "id,name,created_at,stats", "status": "eq.ready", "order": "name"}).json()
         for s in strategies:
             library = []
             for d in docs:

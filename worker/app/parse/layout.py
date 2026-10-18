@@ -84,6 +84,21 @@ class DocStats:
             zone.update(seen)
         self.repeated = {t for t, c in zone.items() if c >= max(3, 0.3 * n)}
         self.page_count = n
+        # the same over a wider band, for the boxed headers SOPs print on every page (document number, revision,
+        # title, "Page 3 of 15"), which can reach a quarter of the way down
+        wide: Counter = Counter()
+        for lines, w, h in pages:
+            wide.update({_norm(l.text) for l in lines if l.bbox[1] < 0.25 * h or l.bbox[3] > 0.85 * h})
+        self.repeated_wide = {t for t, c in wide.items() if c >= max(3, 0.3 * n)}
+
+    def is_running_box(self, bbox: BBox, lines: list[Line], h: float) -> bool:
+        """A ruled box repeated at the top or bottom of most pages: a document-control header, not a table.
+        At least 60% of the lines inside it recur on 30% of the pages or more."""
+        if self.page_count < 3 or not (bbox[3] < 0.30 * h or bbox[1] > 0.80 * h):
+            return False
+        inside = [l for l in lines if l.bbox[0] >= bbox[0] - 2 and l.bbox[2] <= bbox[2] + 2
+                  and l.bbox[1] >= bbox[1] - 2 and l.bbox[3] <= bbox[3] + 2]
+        return bool(inside) and sum(_norm(l.text) in self.repeated_wide for l in inside) >= 0.6 * len(inside)
 
     def is_boilerplate(self, l: Line, h: float, edge: bool = False, mates: list[Line] = ()) -> bool:
         """Running headers, footers and page numbers. `edge` marks the top-most
@@ -155,7 +170,9 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
         # ruled-table and figure detection read the PDF's own text and drawings, which
         # an OCR'd page does not trust; the whitespace table detector runs on the OCR lines
         tables = find_ruled_tables(page) if not ocr_applied else []
-        excl = [t.bbox for t in tables]
+        running = [t for t in tables if stats.is_running_box(t.bbox, lines, H)]
+        tables = [t for t in tables if t not in running]
+        excl = [t.bbox for t in tables] + [t.bbox for t in running]      # a running header box is left out, text and all
         figures = detect_figures(page, content, excl) if not ocr_applied else []
         excl += [f.bbox for f in figures]
         if not tables and not is_toc:

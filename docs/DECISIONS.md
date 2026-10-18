@@ -1860,3 +1860,50 @@ twenty-five. One laptop thread does 760 a minute.
 **Measured** on production, the Humira label (100 pages, 425 passages)
 uploaded again: 129 seconds from start to ready, of which embedding 93
 seconds, about 275 passages a minute against about 50 before.
+
+## 34. Real pharma documents, tested
+
+**Why.** Everything above was measured on public acts and labels and on
+SOPs written for the purpose. Seven public documents were downloaded into
+`samples/real-test/` (not committed): two FDA laboratory SOPs (ORA-LAB.5.5
+Equipment and ORA-LAB.5.5.1 Equipment Records), the WHO guideline for QC
+laboratories (TRS 957 Annex 1), the European Pharmacopoeia's dissolution
+chapter with its apparatus drawings, the Aimovig label with its injector
+instructions, the Enbrel AutoTouch device manual, and a rotary tablet press
+patent. `scripts/ingest_pure.py` runs them through the real pipeline in
+pure mode; `scripts/test_real_docs.py` asks 15 questions written by hand
+from their text before any was searched (`real-docs.json`).
+
+**What broke, and the fixes.**
+- The FDA SOPs print a ruled document-control box at the top of every page
+  (agency, manual, document number, revision, title, "Page 3 of 15"). The
+  table finder read it as a table on each page: 18 tables and 65 rows of
+  boilerplate in one SOP, and they came first for questions about records.
+  A ruled box in the top 30% or bottom 20% of a page whose lines mostly
+  recur on 30% of the pages or more is now dropped with its text
+  (`DocStats.is_running_box`). Of 18 sample PDFs only these two change:
+  18 to 3 tables and 8 to 2.
+- The SOPs cite each other as "See ORA-LAB.5.5.1", a code that is in no
+  file name. A document's code is now also read from its first page
+  ("Document Number:", "SOP No.:", "Doc ID:"), before the header box is
+  dropped, and kept in its stats; a code is not cited by a longer one
+  (ORA-LAB.5.5 is not "ORA-LAB.5.5.1"). The two SOPs now link both ways.
+
+**Result.** 12 of 15 in the top five, before and after. The three misses:
+- "What colour is the safety guard on the AIMOVIG SureClick?" and "Can I
+  inject AIMOVIG into my upper arm myself?": the answer is in short
+  passages (a parts figure, a bullet list) repeated for both strengths, and
+  the small model ranks other injector passages above them.
+- "Where must the calibration and verification records be kept?", asked of
+  ORA-LAB.5.5: the link to ORA-LAB.5.5.1 is followed now, but even
+  searching that SOP alone, the passage with the answer is not in its top
+  five for this wording.
+
+**Not covered.**
+- The patent's drawing sheets are scanned pages, read by OCR as text, so
+  its numbered drawings ("turret 12") give no figures and no callouts.
+- The WHO guideline's equipment lists at the back are found as figures,
+  not tables; their text is still searched (one test question found it).
+- These documents' figures with labels (the Enbrel parts guide, the
+  Aimovig injector) keep the labels as text on the figure; none needed the
+  callout reader of section 27.
