@@ -2,20 +2,108 @@
   "written": "2026-10-18, by hand from each document's own text, before any of them was searched",
   "note": "Public documents in samples/real-test: two FDA ORA lab SOPs, the WHO QC-laboratory guideline (TRS 957 Annex 1), a European Pharmacopoeia chapter with apparatus drawings, the Aimovig label with its injector instructions, the Enbrel AutoTouch device manual, and a rotary tablet press patent.",
   "questions": [
-    {"doc": "enbrel-autotouch-manual.pdf", "kind": "parts label", "question": "Which button powers on the AutoTouch autoinjector and opens its door?", "must_contain": "Door/Power on button"},
-    {"doc": "enbrel-autotouch-manual.pdf", "kind": "parts label", "question": "How should I hold the autoinjector while injecting?", "must_contain": "fingers wrapped around the gray finger grip"},
-    {"doc": "enbrel-autotouch-manual.pdf", "kind": "parts label", "question": "What can I see through the viewing window during an injection?", "must_contain": "plunger lowering"},
-    {"doc": "aimovig-label-ifu.pdf", "kind": "parts label", "question": "What colour is the safety guard on the AIMOVIG SureClick autoinjector?", "must_contain": "Green safety guard"},
-    {"doc": "aimovig-label-ifu.pdf", "kind": "instructions", "question": "What should the medicine in the autoinjector window look like before use?", "must_contain": "clear and colorless to slightly yellow"},
-    {"doc": "aimovig-label-ifu.pdf", "kind": "instructions", "question": "Can I inject AIMOVIG into my upper arm myself?", "must_contain": "only if someone else is giving you the injection"},
-    {"doc": "fda-ora-lab-5.5-equipment-sop.pdf", "kind": "SOP", "question": "How is laboratory equipment identified in the FDA inventory system?", "must_contain": "unique identification number"},
-    {"doc": "fda-ora-lab-5.5-equipment-sop.pdf", "kind": "SOP", "question": "Who prepares the calibration or verification procedure for critical laboratory equipment?", "must_contain": "prepared by the testing laboratory"},
-    {"doc": "fda-ora-lab-5.5-equipment-sop.pdf", "kind": "answer in the other SOP", "answer_doc": "fda-ora-lab-5.5.1-equipment-records-sop.pdf", "question": "Where must the calibration and verification records for equipment be kept?", "must_contain": "kept in a secure, accessible place in the laboratory"},
-    {"doc": "fda-ora-lab-5.5.1-equipment-records-sop.pdf", "kind": "SOP", "question": "Can records for several balances be kept in one place?", "must_contain": "records for multiple balances may share a single location"},
-    {"doc": "who-trs957-annex1-qc-labs.pdf", "kind": "guideline", "question": "If the laboratory does in vivo biological testing, where should the animal houses be?", "must_contain": "isolated from the other laboratory areas"},
-    {"doc": "who-trs957-annex1-qc-labs.pdf", "kind": "equipment list", "question": "How many baskets does the disintegration test equipment in a first-stage laboratory need?", "must_contain": "1 basket for 6 tablets"},
-    {"doc": "ep-2.9.3-dissolution.pdf", "kind": "drawing", "question": "What tolerance applies to the paddle stirring element's dimensions?", "must_contain": "Tolerances are ± 1.0 mm"},
-    {"doc": "ep-2.9.3-dissolution.pdf", "kind": "drawing key", "question": "In the apparatus for disintegration of suppositories, what is part A?", "must_contain": "glass plate"},
-    {"doc": "patent-us7364420-rotary-tablet-press.pdf", "kind": "patent", "question": "What does the rotor of a rotary tablet press consist of?", "must_contain": "die plate and guides for the upper and lower punches"}
+    {
+      "doc": "enbrel-autotouch-manual.pdf",
+      "kind": "parts label",
+      "question": "Which button powers on the AutoTouch autoinjector and opens its door?",
+      "must_contain": "Door/Power on button"
+    },
+    {
+      "doc": "enbrel-autotouch-manual.pdf",
+      "kind": "parts label",
+      "question": "How should I hold the autoinjector while injecting?",
+      "must_contain": "fingers wrapped around the gray finger grip"
+    },
+    {
+      "doc": "enbrel-autotouch-manual.pdf",
+      "kind": "parts label",
+      "question": "What can I see through the viewing window during an injection?",
+      "must_contain": "plunger lowering"
+    },
+    {
+      "doc": "aimovig-label-ifu.pdf",
+      "kind": "parts label",
+      "question": "What colour is the safety guard on the AIMOVIG SureClick autoinjector?",
+      "must_contain": "Green safety guard"
+    },
+    {
+      "doc": "aimovig-label-ifu.pdf",
+      "kind": "instructions",
+      "question": "What should the medicine in the autoinjector window look like before use?",
+      "must_contain": "clear and colorless to slightly yellow"
+    },
+    {
+      "doc": "aimovig-label-ifu.pdf",
+      "kind": "instructions",
+      "question": "Can I inject AIMOVIG into my upper arm myself?",
+      "must_contain": "only if someone else is giving you the injection"
+    },
+    {
+      "doc": "fda-ora-lab-5.5-equipment-sop.pdf",
+      "kind": "SOP",
+      "question": "How is laboratory equipment identified in the FDA inventory system?",
+      "must_contain": "unique identification number"
+    },
+    {
+      "doc": "fda-ora-lab-5.5-equipment-sop.pdf",
+      "kind": "SOP",
+      "question": "Who prepares the calibration or verification procedure for critical laboratory equipment?",
+      "must_contain": "prepared by the testing laboratory"
+    },
+    {
+      "doc": "fda-ora-lab-5.5-equipment-sop.pdf",
+      "kind": "answer in the other SOP",
+      "answer_doc": "fda-ora-lab-5.5.1-equipment-records-sop.pdf",
+      "question": "Where must the calibration and verification records for equipment be kept?",
+      "must_contain": "kept in a secure, accessible place in the laboratory"
+    },
+    {
+      "doc": "fda-ora-lab-5.5.1-equipment-records-sop.pdf",
+      "kind": "SOP",
+      "question": "Can records for several balances be kept in one place?",
+      "must_contain": "records for multiple balances may share a single location"
+    },
+    {
+      "doc": "who-trs957-annex1-qc-labs.pdf",
+      "kind": "guideline",
+      "question": "If the laboratory does in vivo biological testing, where should the animal houses be?",
+      "must_contain": "isolated from the other laboratory areas"
+    },
+    {
+      "doc": "who-trs957-annex1-qc-labs.pdf",
+      "kind": "equipment list",
+      "question": "How many baskets does the disintegration test equipment in a first-stage laboratory need?",
+      "must_contain": "1 basket for 6 tablets"
+    },
+    {
+      "doc": "ep-2.9.3-dissolution.pdf",
+      "kind": "drawing",
+      "question": "What tolerance applies to the paddle stirring element's dimensions?",
+      "must_contain": "Tolerances are ± 1.0 mm"
+    },
+    {
+      "doc": "ep-2.9.3-dissolution.pdf",
+      "kind": "drawing key",
+      "question": "In the apparatus for disintegration of suppositories, what is part A?",
+      "must_contain": "glass plate"
+    },
+    {
+      "doc": "patent-us7364420-rotary-tablet-press.pdf",
+      "kind": "patent",
+      "question": "What does the rotor of a rotary tablet press consist of?",
+      "must_contain": "die plate and guides for the upper and lower punches"
+    },
+    {
+      "doc": "patent-us7364420-rotary-tablet-press.pdf",
+      "kind": "drawing number (added after the drawing reader)",
+      "question": "Which part is numbered 42 in the drawing of the rotary press?",
+      "must_contain": "42 rotor shaft"
+    },
+    {
+      "doc": "patent-us7364420-rotary-tablet-press.pdf",
+      "kind": "drawing number (added after the drawing reader)",
+      "question": "Where is the upper pressure roller in FIG. 1?",
+      "must_contain": "28 upper pressure roller"
+    }
   ]
 }

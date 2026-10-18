@@ -23,6 +23,7 @@ without a model, and, only when generative AI is on, what the vision model reads
 from __future__ import annotations
 
 import re
+from collections import Counter
 from dataclasses import dataclass, field
 
 from .model import ChunkDraft
@@ -183,6 +184,65 @@ def bind_all(chunks: list[ChunkDraft]) -> int:
             c.metadata["key"]["labels_from"] = "image"
             n += 1
     return n
+
+
+_PART = re.compile(r"\b((?:[a-z][a-z\-]*\s+){0,2}[a-z][a-z\-]{2,})\s+(\d{2,3})\b")
+_NOT_PART = {"claim", "claims", "page", "pages", "section", "figure", "fig", "line", "lines", "column", "step", "table",
+             "note", "item", "about", "than", "least", "most", "only", "and", "or", "of", "to", "from", "between"}
+_LEAD = {"the", "a", "an", "said", "this", "that", "each", "both", "its", "their", "which", "with", "by", "and", "of",
+         "to", "in", "on", "for", "at", "is", "are", "be", "as", "into", "onto", "via", "from", "or", "nor"}
+
+
+def part_names(chunks: list[ChunkDraft]) -> dict[str, str]:
+    """What the text calls each reference number: "the upper pressure roller 28" gives 28 = upper pressure roller.
+    The most frequent wording wins."""
+    seen: dict[str, Counter] = {}
+    for c in chunks:
+        if c.chunk_type == "figure":
+            continue
+        for m in _PART.finditer(c.raw_text):
+            words = m.group(1).split()
+            for i in range(len(words) - 1, -1, -1):          # "exhibits a rotor 12": the name starts after an article
+                if words[i] in ("a", "an", "the", "said"):
+                    words = words[i + 1:]
+                    break
+            while words and words[0] in _LEAD:
+                words = words[1:]
+            if not words or words[-1] in _NOT_PART or words[-1] in _LEAD:
+                continue
+            seen.setdefault(m.group(2), Counter())[" ".join(words)] += 1
+    return {n: names.most_common(1)[0][0] for n, names in seen.items()}
+
+
+def name_drawings(chunks: list[ChunkDraft]) -> int:
+    """Drawing-sheet figures (parse/figures.py): their loose numbers are read (parse/callouts.read_numerals), and
+    each one the text names becomes "12 rotor" on the figure; a number the text never uses is a misreading and is
+    dropped. Drawings with no printed caption are numbered from the text's own list ("FIG. 1", "FIG. 2", ...) when
+    the counts agree. Returns how many figures were named."""
+    drawings = [c for c in chunks if c.chunk_type == "figure" and c.metadata.get("drawing")]
+    if not drawings:
+        return 0
+    text = "\n".join(c.raw_text for c in chunks if c.chunk_type != "figure")
+    figs = sorted({m for m in re.findall(r"\bFIG(?:URE)?S?\.?\s*(\d{1,2})\b", text)}, key=int)
+    unnumbered = [c for c in drawings if not c.metadata.get("figure_number")]
+    if figs and len(figs) == len(unnumbered):
+        for c, n in zip(unnumbered, figs):
+            c.metadata["figure_number"] = n
+            c.raw_text = c.raw_text.replace(f"Figure on page {c.page_start}.", f"FIG. {n}, page {c.page_start}.", 1)
+    names = part_names(chunks)
+    from ..parse.callouts import read_numerals
+    made = 0
+    for c in drawings:
+        if not c.image_png:
+            continue
+        nums = [n for n in read_numerals(c.image_png) if n in names]
+        if len(nums) < 3:
+            continue
+        c.metadata["image_labels"] = nums
+        c.metadata["parts"] = {n: names[n] for n in nums}
+        c.raw_text += "\nNumbered parts: " + "; ".join(f"{n} {names[n]}" for n in nums)
+        made += 1
+    return made
 
 
 def key_links_from_metadata(chunks: list[ChunkDraft]) -> None:

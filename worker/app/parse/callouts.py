@@ -193,3 +193,80 @@ def read_callouts(png: bytes, max_markers: int = 60) -> list[Callout]:
     if len(best) < 2:
         return []
     return sorted(best.values(), key=lambda c: (c.box[1], c.box[0]))
+
+
+# ---------------------------------------------------------------------------
+# loose numbers on a drawing
+# ---------------------------------------------------------------------------
+# A patent's or an old manual's drawing names its parts with hand-lettered numbers at the end of leader lines
+# ("12" pointing at the rotor), with no circle around them. Tesseract is trained on print and reads few of them.
+# A handwritten-digit classifier does better: the MNIST model from the ONNX model zoo (models/mnist-8.onnx, 26 KB,
+# MIT licence), run through onnxruntime, which the local embedding model already brings. No API, no generated text.
+# Long straight strokes are erased first, the digit-sized pieces left are grouped into numbers left to right, and
+# each digit is classified. What is read here is only a candidate: legend.py keeps a number only if the
+# document's own text names a part with it ("the rotor 12").
+
+_MNIST = None
+
+
+def _digit(glyph: np.ndarray) -> tuple[int, float]:
+    global _MNIST
+    if _MNIST is None:
+        import onnxruntime as ort
+        from pathlib import Path
+        _MNIST = ort.InferenceSession(str(Path(__file__).with_name("models") / "mnist-8.onnx"))
+    h, w = glyph.shape
+    s = 20 / max(h, w)
+    g = cv2.resize(glyph, (max(1, int(w * s)), max(1, int(h * s))), interpolation=cv2.INTER_AREA).astype(np.float32)
+    canvas = np.zeros((28, 28), np.float32)                  # the MNIST layout: white digit, 20 px box, centred by mass
+    y0, x0 = (28 - g.shape[0]) // 2, (28 - g.shape[1]) // 2
+    canvas[y0:y0 + g.shape[0], x0:x0 + g.shape[1]] = g
+    m = cv2.moments(canvas)
+    if m["m00"]:
+        canvas = cv2.warpAffine(canvas, np.float32([[1, 0, 14 - m["m10"] / m["m00"]], [0, 1, 14 - m["m01"] / m["m00"]]]), (28, 28))
+    out = _MNIST.run(None, {"Input3": canvas[None, None]})[0][0]
+    p = np.exp(out - out.max())
+    p /= p.sum()
+    return int(p.argmax()), float(p.max())
+
+
+def read_numerals(png: bytes, dpi: int = 150, min_conf: float = 0.9) -> list[str]:
+    """Candidate part numbers (two or three digits) lettered loose on a drawing."""
+    img = cv2.imdecode(np.frombuffer(png, np.uint8), cv2.IMREAD_GRAYSCALE)
+    if img is None:
+        return []
+    k = dpi / 150                                            # sizes below are for 150 dpi
+    bw = ((img < 150) * 255).astype(np.uint8)
+    long_ = int(35 * k)
+    strokes = cv2.morphologyEx(bw, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT, (long_, 1))) | \
+        cv2.morphologyEx(bw, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT, (1, long_)))
+    rest = cv2.subtract(bw, strokes)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(rest, 8)
+    glyphs = sorted((i, *map(int, st[i][:4])) for i in range(1, n)
+                    if 11 * k <= st[i][3] <= 40 * k and 2 * k <= st[i][2] <= 30 * k and st[i][4] >= 15 * k * k)
+    glyphs.sort(key=lambda b: b[1])
+    used: set[int] = set()
+    found: list[str] = []
+    for a in glyphs:
+        if a[0] in used:
+            continue
+        group = [a]
+        used.add(a[0])
+        for b in glyphs:                                     # the next digit: just to the right, on the same line
+            last = group[-1]
+            if b[0] in used or b[1] <= last[1]:
+                continue
+            if b[1] - (last[1] + last[3]) < 0.5 * last[4] and \
+                    min(last[2] + last[4], b[2] + b[4]) - max(last[2], b[2]) > 0.5 * min(last[4], b[4]):
+                group.append(b)
+                used.add(b[0])
+        if not 2 <= len(group) <= 3:
+            continue
+        digits, conf = "", 1.0
+        for i, x, y, w, h in group:
+            d, c = _digit(((lab[y:y + h, x:x + w] == i) * 255).astype(np.uint8))
+            digits += str(d)
+            conf = min(conf, c)
+        if conf >= min_conf and digits[0] != "0":
+            found.append(digits)
+    return sorted(set(found), key=int)

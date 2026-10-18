@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from ..config import settings
 from ..parse.model import FigureBlock, PageLayout, TableBlock, TextBlock, frac, union
 from ..parse.tables import resolve_ditto, row_to_text, to_markdown
-from .legend import bind_all
+from .legend import bind_all, name_drawings
 from .references import link_all
 from .model import ChunkDraft, link_sequence
 from .tokens import count
@@ -95,6 +95,7 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
                 chunks.append(_figure_chunk(block, crumbs.text(), dims, all_text_blocks))
     flush(final=True)
     bind_all(chunks)          # a figure's bare labels (A, B, 1, 2) tied to the key that explains them, wherever it is
+    name_drawings(chunks)     # a drawing sheet's hand-lettered numbers, named from the text ("28 upper pressure roller")
     link_sequence(chunks)
     link_all(chunks)          # "see Table 2", "(5.1)", "unit 117": links to where the rest of the answer is
     return chunks
@@ -308,7 +309,7 @@ def _figure_chunk(fig: FigureBlock, breadcrumb: str, dims: dict, all_text_blocks
         page_end=fig.page,
         bboxes=[{"page": fig.page, **frac(fig.bbox, w, h)}],
         metadata={"breadcrumb": breadcrumb, "caption": fig.caption, "labels": fig.labels,
-                  "figure_number": fig.figure_number, "references": refs},
+                  "figure_number": fig.figure_number, "references": refs, **({"drawing": True} if fig.drawing else {})},
         image_png=fig.image_png,
     )
 

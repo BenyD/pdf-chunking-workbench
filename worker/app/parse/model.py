@@ -58,6 +58,7 @@ class FigureBlock:
     figure_number: str | None = None
     image_path: str | None = None
     kind: str = "figure"
+    drawing: bool = False           # cut from a drawing sheet (one page-sized image): its numbers are read from the ink
 
 
 Block = TextBlock | TableBlock | FigureBlock

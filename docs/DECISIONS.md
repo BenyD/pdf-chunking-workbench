@@ -1907,3 +1907,42 @@ from their text before any was searched (`real-docs.json`).
 - These documents' figures with labels (the Enbrel parts guide, the
   Aimovig injector) keep the labels as text on the figure; none needed the
   callout reader of section 27.
+
+## 35. Drawing sheets: hand-lettered part numbers, named from the text
+
+**Why.** Section 34's patent has three drawing sheets, each one page-sized
+image with "Sheet 1 of 3" as its only text. The figure finder skips an
+image that fills the page (a scan or a background), so the drawings, and
+the numbers at the ends of their leader lines ("28" pointing at a roller),
+were lost. Tesseract, built for print, read 3 of about 25 hand-lettered
+numbers on sheet 1.
+
+**Decision.**
+- `parse/figures.py`: a page that is one image with under 300 characters of
+  text is a drawing sheet; each block of ink on it (found at 100 dpi, 3% of
+  the page or more) becomes a figure marked as a drawing.
+- `parse/callouts.read_numerals`: long straight strokes are erased, the
+  digit-sized pieces left are grouped left to right into two- or
+  three-digit numbers, and each digit is classified by the MNIST
+  handwritten-digit model from the ONNX model zoo (26 KB, in
+  `parse/models/`, run by the onnxruntime the embedding model already
+  brings). No API and nothing generated; about 0.1 s a sheet.
+- `chunk/legend.name_drawings`: a number read is kept only if the
+  document's text names a part with it ("the upper pressure roller 28");
+  anything else is a misreading. Kept numbers go on the figure as
+  "Numbered parts: 28 upper pressure roller; 42 rotor shaft; ...". Drawings
+  without a printed caption take the figure numbers the text lists
+  ("FIG. 1", "FIG. 2", ...) in order when the counts agree, so "FIG. 1" in
+  the text links to the drawing.
+
+**Measured.** On the patent: 3 drawings found, numbered FIG. 1 to 3; 15,
+10 and 10 parts named. On sheet 1 every kept number is right, about 15 of
+its 25. Two questions added after seeing this (so not blind): "Which part
+is numbered 42 in the drawing?" and "Where is the upper pressure roller in
+FIG. 1?" both come first. Of 18 sample PDFs only the patent changes; the
+callout test set is still 28 of 28. Real-document set: 14 of 17.
+
+**Not covered.** A scanned page with no text layer at all still goes to
+OCR as text, so a scanned drawing without the PDF text layer is not yet
+found. Part names come from "<words> <number>" in the text: a list such as
+"upper and lower punches 20, 22" names only the last.

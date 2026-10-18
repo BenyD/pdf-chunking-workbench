@@ -74,6 +74,10 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
             solid_rects.append(r)      # a shape, not a hairline
     if not rects:
         return []
+    if not any(c.get_area() <= 0.85 * area for c in _cluster(rects, margin=14)):
+        sheet = _drawing_sheet(page, lines)
+        if sheet:
+            return sheet
 
     figs: list[FigureBlock] = []
     for c in _cluster(rects, margin=14):
@@ -113,6 +117,37 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
             figure_number=number,
         )
         fb.consumed_lines = set(id(l) for l in labels) | set(id(l) for l in cap_lines)  # type: ignore[attr-defined]
+        figs.append(fb)
+    return figs
+
+
+def _drawing_sheet(page: pymupdf.Page, lines: list[Line]) -> list[FigureBlock]:
+    """A drawing sheet: the whole page is one image (a patent's drawings, a scanned diagram) with almost no text of
+    its own ("Sheet 1 of 3"). Each separate drawing on it, found as a block of ink, becomes a figure."""
+    import cv2
+    import numpy as np
+    W, H = page.rect.width, page.rect.height
+    if sum(len(l.text) for l in lines) > 300 or not any((pymupdf.Rect(i["bbox"]) & page.rect).get_area() > 0.85 * W * H
+                                                       for i in page.get_image_info()):
+        return []
+    pix = page.get_pixmap(dpi=100, colorspace=pymupdf.csGRAY)
+    g = np.frombuffer(pix.samples, np.uint8).reshape(pix.height, pix.width)
+    ink = cv2.dilate(((g < 160) * 255).astype(np.uint8), cv2.getStructuringElement(cv2.MORPH_RECT, (25, 25)))
+    n, _, st, _ = cv2.connectedComponentsWithStats(ink)
+    s = 72 / 100
+    figs = []
+    for x, y, w, h, a in sorted((tuple(st[i]) for i in range(1, n)), key=lambda b: (b[1], b[0])):
+        if a < 0.03 * pix.width * pix.height:
+            continue
+        r = pymupdf.Rect(x * s, y * s, (x + w) * s, (y + h) * s) & page.rect
+        inside = [l for l in lines if r.contains(pymupdf.Rect(l.bbox))]
+        if sum(len(l.text) for l in inside) > 0.5 * sum(len(l.text) for l in lines) and len(inside) == len(lines) and r.height < 0.1 * H:
+            continue                                     # the sheet's own header line, not a drawing
+        caption, number, cap_lines = _find_caption(lines, r)
+        fb = FigureBlock(page=page.number + 1, bbox=(r.x0, r.y0, r.x1, r.y1),
+                         image_png=page.get_pixmap(clip=r, dpi=settings.figure_dpi, alpha=False).tobytes("png"),
+                         caption=caption, labels=[l.text for l in inside], figure_number=number, drawing=True)
+        fb.consumed_lines = set(id(l) for l in inside) | set(id(l) for l in cap_lines)  # type: ignore[attr-defined]
         figs.append(fb)
     return figs
 
