@@ -19,6 +19,16 @@ const MODES = {
 } as const;
 type Mode = keyof typeof MODES;
 
+/** The sections, tables and figures a question names ("section 67", "Table 7", "Figure B"), as patterns that match a
+ * link's label ("Bharatiya Nyaya Sanhita, section 67", "Table 7"). */
+function namedTargets(query: string): RegExp[] {
+  const words: Record<string, string> = { fig: "figure", "fig.": "figure", appendix: "annex" };
+  return [...query.matchAll(/\b(section|table|figure|fig\.?|annex|appendix|step|note)s?\s+(\d{1,3}(?:\.\d{1,3})*[A-Z]?|[A-Z])\b/gi)].map((m) => {
+    const word = words[m[1].toLowerCase()] ?? m[1].toLowerCase();
+    return new RegExp(`\\b${word}\\s+${m[2].replaceAll(".", "\\.")}(?![\\w.])`, "i");
+  });
+}
+
 /** Hybrid search: keyword match and meaning match over the same index, fused. */
 export async function POST(req: Request) {
   const limited = rateLimit(req, "search", 30, 60_000);
@@ -49,11 +59,18 @@ export async function POST(req: Request) {
   const linksOf = (r: Record<string, unknown>) => (r.metadata as { links?: Link[] })?.links ?? [];
   const linkIds = [...new Set(top.flatMap((r) => linksOf(r).map((l) => l.id)).filter((id): id is string => !!id && !shown.has(id)))];
   if (linkIds.length) {
-    const { data: linked } = await sb.rpc("rank_linked", {
+    const { data: ranked } = await sb.rpc("rank_linked", {
       p_ids: linkIds, query_text: query,
-      q_local: vectors === "local" ? embedding : null, q_api: vectors === "api" ? embedding : null, p_limit: 5,
+      q_local: vectors === "local" ? embedding : null, q_api: vectors === "api" ? embedding : null, p_limit: linkIds.length,
     });
-    for (const t of (linked ?? []) as Record<string, unknown>[]) {
+    // A question that names a section, table or figure ("what does section 67 say") wants that one: links whose
+    // label names it come first, the rest in the order the vectors gave. Five at most.
+    const named = namedTargets(query);
+    const labelOf = (id: unknown) => top.flatMap(linksOf).find((l) => l.id === id)?.label ?? "";
+    const linked = ((ranked ?? []) as Record<string, unknown>[])
+      .map((t, i) => ({ t, i, named: named.some((n) => n.test(labelOf(t.id))) }))
+      .sort((a, b) => Number(b.named) - Number(a.named) || a.i - b.i).slice(0, 5).map((x) => x.t);
+    for (const t of linked) {
       const owner = top.find((r) => linksOf(r).some((l) => l.id === t.id));
       const link = owner && linksOf(owner).find((l) => l.id === t.id);
       if (!owner || !link) continue;

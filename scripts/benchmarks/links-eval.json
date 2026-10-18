@@ -24,7 +24,7 @@
     "recall": 0.862,
     "questions": 29,
     "passages": 8.2,
-    "tokens": 2528
+    "tokens": 2517
   },
   {
     "set": "crossref-hard",
@@ -75,10 +75,10 @@
     "set": "crossref-docs",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.143,
+    "recall": 0.667,
     "questions": 21,
     "passages": 9.8,
-    "tokens": 3152
+    "tokens": 3150
   },
   {
     "set": "crossref-docs, all documents",
@@ -102,10 +102,10 @@
     "set": "crossref-docs, all documents",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.429,
+    "recall": 0.857,
     "questions": 21,
     "passages": 9.7,
-    "tokens": 3078
+    "tokens": 3038
   },
   {
     "set": "main",
@@ -129,10 +129,10 @@
     "set": "main",
     "setup": "Keywords only",
     "way": "top 5 + links",
-    "recall": 0.86,
+    "recall": 0.868,
     "questions": 129,
     "passages": 6.7,
-    "tokens": 2080
+    "tokens": 2077
   },
   {
     "set": "crossref",
@@ -159,7 +159,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 8.4,
-    "tokens": 2310
+    "tokens": 2313
   },
   {
     "set": "crossref-hard",
@@ -186,7 +186,7 @@
     "recall": 0.861,
     "questions": 36,
     "passages": 7.5,
-    "tokens": 2120
+    "tokens": 2114
   },
   {
     "set": "crossref-docs",
@@ -210,10 +210,10 @@
     "set": "crossref-docs",
     "setup": "The app (local model)",
     "way": "top 5 + links",
-    "recall": 0.714,
+    "recall": 0.81,
     "questions": 21,
     "passages": 9.9,
-    "tokens": 3209
+    "tokens": 3196
   },
   {
     "set": "crossref-docs, all documents",
@@ -237,10 +237,10 @@
     "set": "crossref-docs, all documents",
     "setup": "The app (local model)",
     "way": "top 5 + links",
-    "recall": 0.667,
+    "recall": 0.714,
     "questions": 21,
     "passages": 9.9,
-    "tokens": 3202
+    "tokens": 3179
   },
   {
     "set": "main",
@@ -267,7 +267,7 @@
     "recall": 0.938,
     "questions": 129,
     "passages": 6.7,
-    "tokens": 1986
+    "tokens": 1984
   },
   {
     "set": "crossref",
@@ -294,7 +294,7 @@
     "recall": 0.966,
     "questions": 29,
     "passages": 8.4,
-    "tokens": 3200
+    "tokens": 3199
   },
   {
     "set": "crossref-hard",
@@ -321,7 +321,7 @@
     "recall": 1.0,
     "questions": 36,
     "passages": 7.6,
-    "tokens": 2834
+    "tokens": 2837
   },
   {
     "set": "crossref-docs",
@@ -345,10 +345,10 @@
     "set": "crossref-docs",
     "setup": "Generative AI",
     "way": "top 5 + links",
-    "recall": 0.714,
+    "recall": 0.81,
     "questions": 21,
     "passages": 9.2,
-    "tokens": 4061
+    "tokens": 4038
   },
   {
     "set": "crossref-docs, all documents",
@@ -372,10 +372,10 @@
     "set": "crossref-docs, all documents",
     "setup": "Generative AI",
     "way": "top 5 + links",
-    "recall": 0.762,
+    "recall": 0.857,
     "questions": 21,
     "passages": 9.3,
-    "tokens": 4023
+    "tokens": 4005
   },
   {
     "set": "main",
@@ -402,6 +402,6 @@
     "recall": 0.977,
     "questions": 129,
     "passages": 6.5,
-    "tokens": 2435
+    "tokens": 2433
   }
 ]

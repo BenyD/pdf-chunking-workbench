@@ -68,16 +68,31 @@ def search(c, fn: str, q: str, vec, strategy: str, doc: str, k: int) -> list[dic
                           order by h.rrf_score desc""", (q, v, strategy, doc, k, 0 if vec is None else 1)).fetchall()
 
 
+_NAMED = re.compile(r"\b(section|table|figure|fig\.?|annex|appendix|step|note)s?\s+(\d{1,3}(?:\.\d{1,3})*[A-Z]?|[A-Z])\b", re.I)
+
+
+def named(q: str) -> list[re.Pattern]:
+    """The sections, tables and figures a question names, as the search route matches them against link labels."""
+    words = {"fig": "figure", "fig.": "figure", "appendix": "annex"}
+    return [re.compile(rf"\b{words.get(m.group(1).lower(), m.group(1).lower())}\s+{re.escape(m.group(2))}(?![\w.])", re.I)
+            for m in _NAMED.finditer(q)]
+
+
 def expand(c, hits: list[dict], q: str = "", vec=None, which: str | None = None, extra: int = 5) -> list[dict]:
-    """Every passage the top hits link to, ranked against the question (rank_linked), the best `extra` kept."""
+    """Every passage the top hits link to, ranked against the question (rank_linked), the best `extra` kept. Links whose
+    label names a section, table or figure the question names come first, as in the search route."""
     have = {h["id"] for h in hits}
     ids = list(dict.fromkeys(l["id"] for h in hits for l in h["metadata"].get("links", []) if l.get("id") and l["id"] not in have))
     if not ids:
         return []
     v = None if vec is None else "[" + ",".join(f"{x:.6f}" for x in vec) + "]"
-    return c.execute("""select id::text as id, document_id::text as document_id, raw_text, page_start, page_end, metadata, token_count
-                          from rank_linked(%s::uuid[], %s, %s::vector, %s::vector, %s)""",
-                     (ids, q, v if which == "loc" else None, v if which == "api" else None, extra)).fetchall()
+    ranked = c.execute("""select id::text as id, document_id::text as document_id, raw_text, page_start, page_end, metadata, token_count
+                            from rank_linked(%s::uuid[], %s, %s::vector, %s::vector, %s)""",
+                       (ids, q, v if which == "loc" else None, v if which == "api" else None, len(ids))).fetchall()
+    labels = {l["id"]: l["label"] for h in hits for l in h["metadata"].get("links", []) if l.get("id")}
+    pats = named(q)
+    first = [r for r in ranked if any(p.search(labels.get(r["id"], "")) for p in pats)]
+    return (first + [r for r in ranked if r not in first])[:extra]
 
 
 def hit(rows: list[dict], q: dict) -> bool:
