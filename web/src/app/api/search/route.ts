@@ -39,6 +39,8 @@ export async function POST(req: Request) {
   const k = Math.min(Math.max(body.k ?? 8, 1), 20);
 
   const mode: Mode = body.mode && body.mode in MODES ? (body.mode as Mode) : aiEnabled ? "full" : "pure";
+  // "full" calls a paid embedding API; with generative AI switched off it is not served at all.
+  if (mode === "full" && !aiEnabled) return NextResponse.json({ error: "Generative AI is switched off." }, { status: 404 });
   const { strategy, vectors } = MODES[mode];
 
   const sb = supabaseAdmin();

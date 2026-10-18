@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
+import { aiEnabled } from "@/lib/flags";
 import { rateLimit } from "@/lib/ratelimit";
 
 const SYSTEM = `You answer questions about a reader's documents using only the numbered passages given.
@@ -14,6 +15,8 @@ type Passage = { n: number; text: string; document_name: string; page: number };
 export async function POST(req: Request) {
   const limited = rateLimit(req, "answer", 20, 60_000);
   if (limited) return limited;
+  // With generative AI switched off nothing here runs, whoever calls it.
+  if (!aiEnabled) return NextResponse.json({ error: "Written answers are switched off." }, { status: 404 });
   if (!process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "Answers are not configured." }, { status: 503 });
   const body = (await req.json().catch(() => ({}))) as { query?: string; passages?: Passage[] };
   const query = (body.query ?? "").trim().slice(0, 500);

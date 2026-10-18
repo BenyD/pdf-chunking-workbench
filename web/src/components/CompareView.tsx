@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/quartz/ui/table";
 import report from "@/data/comparison.json";
+import { aiEnabled } from "@/lib/flags";
 import type { Document, SearchResult } from "@/lib/types";
 import { api } from "@/lib/ui";
 import { chunkKind, typeLabel } from "./PageViewer";
@@ -29,6 +30,10 @@ const MODES: { mode: Mode; title: string; detail: string }[] = [
   { mode: "pure", title: "The app", detail: "The same passages, plus meaning search from a small open-source model on our own server. No API call, nothing generated." },
   { mode: "full", title: "With generative AI", detail: "An option, off by default: a model writes a context line per passage, describes figures and writes the answer." },
 ];
+
+/** The ways asked live. With generative AI switched off (lib/flags) its column is not asked at all, so no paid
+ * service is ever called from this page; its measured numbers stay in the table below. */
+const LIVE = aiEnabled ? MODES : MODES.filter((m) => m.mode !== "full");
 
 /** Which benchmark setup each live mode corresponds to. */
 const SETUP_OF: Record<Mode, string> = { keywords: "struct_kw", pure: "struct_local", full: "ctx_hyb" };
@@ -77,8 +82,8 @@ export function CompareView() {
     if (!q) return;
     setGeneration((g) => g + 1);
     setAsked(q); setErr(null); setAnswer(null);
-    setHits({ keywords: null, pure: null, full: null });
-    const results = await Promise.all(MODES.map(async ({ mode }) => {
+    setHits(Object.fromEntries(LIVE.map((m) => [m.mode, null])));
+    const results = await Promise.all(LIVE.map(async ({ mode }) => {
       try {
         const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 5, mode }) });
         setHits((h) => ({ ...h, [mode]: r.results }));
@@ -89,7 +94,7 @@ export function CompareView() {
       }
     }));
     const full = results.find(([m]) => m === "full")?.[1] ?? [];
-    if (!full.length) return;
+    if (!aiEnabled || !full.length) return;
     setAnswerBusy(true);
     try {
       const passages = full.slice(0, 5).map((h, i) => ({ n: i + 1, text: h.raw_text, document_name: docName(h), page: h.page_start }));
@@ -118,14 +123,14 @@ export function CompareView() {
         <PageHeaderRow>
           <PageHeaderContent>
             <PageHeaderTitle>Compare</PageHeaderTitle>
-            <PageHeaderDescription>What AI would add, measured. Ask one question three ways, then see how every chunking method scored on the same {data.questions} questions.</PageHeaderDescription>
+            <PageHeaderDescription>{aiEnabled ? "What AI would add, measured. Ask one question three ways" : "Keywords against the app, live. Ask one question both ways"}, then see how every chunking method scored on the same {data.questions} questions.</PageHeaderDescription>
           </PageHeaderContent>
         </PageHeaderRow>
       </PageHeader>
       {err && <Alert status="fail"><AlertTitle>A search failed</AlertTitle><AlertDescription>{err}</AlertDescription></Alert>}
 
       <section className="flex flex-col gap-4" aria-labelledby="ask-heading">
-        <h2 id="ask-heading" className="type-heading-sm">Ask it three ways</h2>
+        <h2 id="ask-heading" className="type-heading-sm">{aiEnabled ? "Ask it three ways" : "Ask it two ways"}</h2>
         <PromptInput
           label="Question"
           placeholder="Ask a question"
@@ -140,7 +145,7 @@ export function CompareView() {
             </Select>
           }
         />
-        {(presets.only.length > 0 || presets.both.length > 0) && (
+        {(presets.only.length > 0 || (aiEnabled && presets.both.length > 0)) && (
           <div className="flex flex-col gap-3">
             {presets.only.length > 0 && (
               <div className="flex flex-col gap-2">
@@ -148,7 +153,7 @@ export function CompareView() {
                 <ChipGroup aria-label="Questions keywords miss and the app finds">{presets.only.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
               </div>
             )}
-            {presets.both.length > 0 && (
+            {aiEnabled && presets.both.length > 0 && (
               <div className="flex flex-col gap-2">
                 <p className="type-label text-text-2">Only generative AI finds</p>
                 <ChipGroup aria-label="Questions only generative AI finds">{presets.both.map((q) => <ChipButton key={q.question} onClick={() => ask(q)}>{q.question}</ChipButton>)}</ChipGroup>
@@ -158,8 +163,8 @@ export function CompareView() {
         )}
 
         {asked && (
-          <div className="grid gap-4 lg:grid-cols-3">
-            {MODES.map(({ mode, title, detail }) => {
+          <div className={aiEnabled ? "grid gap-4 lg:grid-cols-3" : "grid gap-4 lg:grid-cols-2"}>
+            {LIVE.map(({ mode, title, detail }) => {
               const list = hits[mode];
               const s = byKey[SETUP_OF[mode]];
               return (
