@@ -339,9 +339,12 @@ function SourceRow({ r, n, selected, onSelect, onSelectLinked, selectedId }: { r
               </div>
             )}
             {/* Under the text rather than beside it; raised over the row's stretched link so it takes the click. */}
-            <div className="relative z-(--z-raised) w-fit">
-              <CollapsibleTrigger render={<Button variant="ghost" size="xs" />}>{open ? "Hide context" : "Show context"}</CollapsibleTrigger>
-            </div>
+            {/* A Bedrock passage lives in AWS, not here: there are no surroundings to open. */}
+            {!r.id.startsWith("bedrock-") && (
+              <div className="relative z-(--z-raised) w-fit">
+                <CollapsibleTrigger render={<Button variant="ghost" size="xs" />}>{open ? "Hide context" : "Show context"}</CollapsibleTrigger>
+              </div>
+            )}
           </ItemContent>
         </Item>
         <CollapsibleContent>
