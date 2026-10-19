@@ -18,7 +18,8 @@ Everything lives in **ap-south-1 (Mumbai)**, in the account the AWS CLI is signe
 | Knowledge base | `chunklab-hierarchical` | Titan Text Embeddings V2 (1024), S3 Vectors storage |
 | Data source | `pdfs` | the PDF bucket, **hierarchical chunking: 1,500-token parents, 300-token children, 60 overlap** (Bedrock's documented defaults), default parser |
 | IAM user | `chunklab-bedrock-app` | what the website uses: `bedrock:Retrieve` on this knowledge base only |
-| Access key for that user | in Vercel as `AWS_BEDROCK_ACCESS_KEY_ID` / `AWS_BEDROCK_SECRET_ACCESS_KEY` | never committed |
+| Access key for that user | in Vercel as `AWS_BEDROCK_ACCESS_KEY_ID` / `AWS_BEDROCK_SECRET_ACCESS_KEY` | never committed or printed |
+| Vercel settings | `NEXT_PUBLIC_BEDROCK=1`, `AWS_BEDROCK_KB_ID`, `AWS_BEDROCK_REGION` | turn the option on in Search |
 
 ## Set up
 
@@ -29,6 +30,19 @@ cd worker
 ../deploy/bedrock/setup.sh ../samples/work/bedrock
 uv run --with boto3 python ../scripts/bedrock_kb.py eval
 ```
+
+Then load the PDFs as 8-page parts, one a minute (about 100 minutes for the 14 documents):
+
+```bash
+.venv/bin/python ../scripts/bedrock_kb.py parts ../samples/work/bedrock ../samples/work/bedrock-parts
+aws s3 sync ../samples/work/bedrock-parts s3://chunklab-bedrock-src-<account>/ --region ap-south-1 --delete
+uv run --with boto3 --with "botocore[crt]" python ../scripts/bedrock_kb.py reingest
+```
+
+Why: this account may call Titan embeddings 60 times a minute in ap-south-1. Sent whole, Bedrock reported the
+ingestion COMPLETE but kept only the first pages of each long document (BNSS to page 33 of 297, Humira 13 of
+100; Humira alone, 60 of 100). Parts of 8 pages, a minute apart, stay under the quota. The cost: a Bedrock
+parent passage cannot run across two parts. A quota increase would let whole files go in.
 
 `setup.sh` can be run again; it reuses what exists and re-syncs the PDFs. The ids it made are written to
 `deploy/bedrock/state.env` (not committed).
@@ -45,8 +59,12 @@ uv run --with boto3 python ../scripts/bedrock_kb.py eval
 ```bash
 aws login
 deploy/bedrock/cleanup.sh
-cd web && vercel env rm AWS_BEDROCK_ACCESS_KEY_ID production && vercel env rm AWS_BEDROCK_SECRET_ACCESS_KEY production && vercel env rm AWS_BEDROCK_KB_ID production && vercel deploy --prod
+cd web && vercel deploy --prod
 ```
+
+`cleanup.sh` also removes the website settings from Vercel (`NEXT_PUBLIC_BEDROCK`, `AWS_BEDROCK_ACCESS_KEY_ID`,
+`AWS_BEDROCK_SECRET_ACCESS_KEY`, `AWS_BEDROCK_KB_ID`, `AWS_BEDROCK_REGION`); the deploy after it takes the option
+off the Search page.
 
 `cleanup.sh` deletes, in this order: the website user's access keys, its policy and the user; the data source
 and the knowledge base; the S3 Vectors index and vector bucket; the PDF bucket and every object in it; the

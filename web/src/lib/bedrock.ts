@@ -23,7 +23,9 @@ export async function bedrockRetrieve(query: string, doc: string | null, k: numb
   }));
   return (r.retrievalResults ?? []).map((h) => {
     const md = (h.metadata ?? {}) as Record<string, unknown>;
+    // the PDFs went in as 8-page parts (scripts/bedrock_kb.py): Bedrock's page is within the part, first_page places it
     const page = md["x-amz-bedrock-kb-document-page-number"];
-    return { doc: String(md.doc ?? ""), text: h.content?.text ?? "", page: typeof page === "number" ? page : page ? Number(page) : null, score: h.score ?? 0 };
+    const first = Number(md.first_page ?? 1);
+    return { doc: String(md.doc ?? ""), text: h.content?.text ?? "", page: page == null ? null : first - 1 + Number(page), score: h.score ?? 0 };
   });
 }

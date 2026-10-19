@@ -36,4 +36,7 @@ rm -f "$(dirname "$0")/state.env"
 echo "== Anything left with the tag:"
 aws resourcegroupstaggingapi get-resources --region $R --tag-filters Key=project,Values=chunklab-bedrock --query 'ResourceTagMappingList[].ResourceARN' --output text
 aws iam get-role --role-name $ROLE >/dev/null 2>&1 && echo "role still there"; aws iam get-user --user-name $APPUSER >/dev/null 2>&1 && echo "user still there"
-echo "Also remove AWS_BEDROCK_* from Vercel: cd web && vercel env rm AWS_BEDROCK_ACCESS_KEY_ID production (and _SECRET_ACCESS_KEY, _KB_ID), then redeploy."
+echo "== Website settings in Vercel"
+cd "$(dirname "$0")/../../web" && for v in NEXT_PUBLIC_BEDROCK AWS_BEDROCK_ACCESS_KEY_ID AWS_BEDROCK_SECRET_ACCESS_KEY AWS_BEDROCK_KB_ID AWS_BEDROCK_REGION; do
+  vercel env rm "$v" production --yes >/dev/null 2>&1 && echo "removed $v"; done
+echo "Now deploy the website again (cd web && vercel deploy --prod) so the Bedrock option disappears."
