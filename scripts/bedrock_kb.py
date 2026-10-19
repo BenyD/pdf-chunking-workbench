@@ -87,18 +87,22 @@ def evaluate(ks: tuple[int, ...] = (5,)) -> None:
                 rank = i + 1
                 break
         tokens += sum(len(h["content"].get("text", "")) // 4 for h in hits[:5])
-        rows.append({"doc": q["doc"], "question": q["question"], "rank": rank})
+        # Bedrock gives one page per passage, though a 1,500-token parent can span several: also counted on the
+        # words alone, so a parent that holds the answer but is labelled with its child's page is not a miss
+        loose = next((i + 1 for i, h in enumerate(hits) if norm(q["must_contain"]) in norm(h["content"].get("text", ""))), None)
+        rows.append({"doc": q["doc"], "question": q["question"], "rank": rank, "rank_words_only": loose})
         per_doc.setdefault(q["doc"], []).append(rank or 0)
     n = len(rows)
     found = sum(1 for r in rows if r["rank"] and r["rank"] <= 5)
     mrr = sum(1 / r["rank"] for r in rows if r["rank"] and r["rank"] <= 5) / n
-    report = {"date": time.strftime("%Y-%m-%d"), "setup": "Amazon Bedrock knowledge base, hierarchical chunking 1500/300/60, Titan Text Embeddings V2, S3 Vectors",
+    loose_found = sum(1 for r in rows if r["rank_words_only"] and r["rank_words_only"] <= 5)
+    report = {"recall_at_5_words_only": round(loose_found / n, 3), "date": time.strftime("%Y-%m-%d"), "setup": "Amazon Bedrock knowledge base, hierarchical chunking 1500/300/60, Titan Text Embeddings V2, S3 Vectors",
               "questions": n, "recall_at_5": round(found / n, 3), "mrr": round(mrr, 3), "tokens_read_top5": round(tokens / n),
               "by_document": {d: round(sum(1 for x in v if 0 < x <= 5) / len(v), 3) for d, v in sorted(per_doc.items())},
               "per_question": rows, "seconds": round(time.time() - t0)}
     OUT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n")
     print(f"{n} questions: right passage in the top five {found} ({found / n:.1%}), MRR {mrr:.3f}, "
-          f"about {report['tokens_read_top5']} tokens read; {report['seconds']}s")
+          f"about {report['tokens_read_top5']} tokens read; {report['seconds']}s; on the words alone {loose_found} ({loose_found / n:.1%})")
     for d, v in report["by_document"].items():
         print(f"  {d[:44]:44} {v:.0%}")
 

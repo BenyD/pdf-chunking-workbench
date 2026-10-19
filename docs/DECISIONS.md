@@ -1946,3 +1946,45 @@ callout test set is still 28 of 28. Real-document set: 14 of 17.
 OCR as text, so a scanned drawing without the PDF text layer is not yet
 found. Part names come from "<words> <number>" in the text: a list such as
 "upper and lower punches 20, 22" names only the last.
+
+## 36. Amazon Bedrock's hierarchical chunking, run for real
+
+**Why.** The interviewers asked for Bedrock's hierarchical chunking. Section 22 imitated its settings in
+our own pipeline (87 to 89%); this is the real service, on the same 129 questions.
+
+**Setup** (`deploy/bedrock/`, everything in ap-south-1, tagged `project=chunklab-bedrock`, removed by
+`cleanup.sh`): a Bedrock knowledge base with its hierarchical chunking at the documented defaults (1,500-token
+parents, 300-token children, 60 overlap), the default parser, Titan Text Embeddings V2 (1024) and S3 Vectors.
+A search matches children and returns their parents; each question is asked inside its own document (a
+metadata filter), as ours is.
+
+**What went wrong first.** This account may call Titan embeddings 60 times a minute in ap-south-1. The first
+ingestion reported COMPLETE with 244 pieces: the first pages of each long document only (BNSS to page 33 of
+297). Humira alone still stopped at page 60 of 100. The PDFs now go in as 8-page parts a minute apart, each
+with its document's name and first page (`scripts/bedrock_kb.py parts`, `reingest`): 2,348 pieces covering
+every page. A parent can no longer cross an 8-page edge; a quota increase would remove that. The scanned
+bill fails either way: the default parser has no OCR.
+
+**Result** (2026-10-20, `scripts/bedrock_kb.py eval`, `scripts/benchmarks/bedrock.json`):
+
+| | ours (no AI, local model) | Bedrock hierarchical |
+|---|---|---|
+| Right passage in the top five, page checked | 122 of 129 (94.6%) | 84 (65.1%) |
+| The answer's words in the top five, page not checked | 122 (94.6%) | 108 (83.7%) |
+| Text read per question (top five) | about 1,480 tokens | about 3,100 |
+| A search | 0.4 to 0.6 s, $0 | 0.3 to 0.4 s, a fraction of a cent |
+| Loading the 14 documents | minutes, $0 | 100 minutes at this quota, cents |
+
+Bedrock reports one page per passage although a parent can span pages, so the page-checked figure is unfair
+to it; the words-only figure is the fair one. Ours is the same either way because each passage carries its
+own page range. Ours here is 94.6% rather than section 22's 93%: the Hindi change of section 31 came after.
+
+By document (words only would raise most): the price schedule (33%, rows cut mid-row by token count), the
+tablet press manual (0%: its answers are figure keys, which a text-only parser does not tie to the figure),
+the QC report (44%, the photo labels), Humira (46%), WHO (58%). The acts do well (BNSS 78%, BNS 87%): long
+running prose is what hierarchical chunking is built for.
+
+**What to say.** Bedrock is the managed option and fast to search; on these documents it finds the answer
+less often and hands back about twice the text, and it does nothing for scans, table rows or figure labels.
+Bedrock also takes custom chunking through a Lambda function, so our chunker could feed a Bedrock knowledge
+base if they want to stay on AWS.
