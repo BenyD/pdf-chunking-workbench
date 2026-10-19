@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton, SkeletonSwap, SkeletonText } from "@/components/quartz/ui/skeleton";
 import { Status } from "@/components/quartz/ui/status";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/quartz/ui/tooltip";
-import { aiEnabled } from "@/lib/flags";
+import { aiEnabled, bedrockEnabled } from "@/lib/flags";
 import { SAMPLES } from "@/lib/samples";
 import type { Chunk, Document, LinkedPassage, SearchResult } from "@/lib/types";
 import { api, publicAsset } from "@/lib/ui";
@@ -48,6 +48,7 @@ export function SearchView() {
   const kicked = useRef(new Set<string>());               // documents asked for questions in this session
   const [hits, setHits] = useState<Hit[] | null>(null);
   const [selected, setSelected] = useState<string | null>(null);   // the source whose page shows on the right
+  const [method, setMethod] = useState<"ours" | "bedrock">("ours");    // whose chunking answers (bedrockEnabled only)
   const [answer, setAnswer] = useState<string | null>(null);
   const [answerBusy, setAnswerBusy] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -88,7 +89,7 @@ export function SearchView() {
     setBusy(true); setErr(null); setAsked(q); setAnswer(null); setHits(null);
     let found: Hit[] = [];
     try {
-      const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 8 }) });
+      const r = await api<{ results: Hit[] }>("/api/search", { method: "POST", body: JSON.stringify({ query: q, document_id: scope, k: 8, method }) });
       found = r.results; setHits(found); setSelected(found[0]?.id ?? null);
     } catch (e) { setErr(String(e)); setHits([]); } finally { setBusy(false); }
     if (!found.length || !aiEnabled) return;
@@ -272,10 +273,18 @@ export function SearchView() {
           onSubmit={(v: PromptValue) => run(v.text)}
           maxLength={500}
           tools={
-            <Select items={docItems} value={docId ?? ALL} onValueChange={(v) => setDocId(v === ALL || v === null ? null : v)}>
-              <SelectTrigger size="sm" aria-label="Search in"><SelectValue /></SelectTrigger>
-              <SelectContent side="top">{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
-            </Select>
+            <>
+              {bedrockEnabled && (
+                <Select items={METHODS} value={method} onValueChange={(v) => setMethod(v === "bedrock" ? "bedrock" : "ours")}>
+                  <SelectTrigger size="sm" aria-label="Chunking"><SelectValue /></SelectTrigger>
+                  <SelectContent side="top">{METHODS.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+                </Select>
+              )}
+              <Select items={docItems} value={docId ?? ALL} onValueChange={(v) => setDocId(v === ALL || v === null ? null : v)}>
+                <SelectTrigger size="sm" aria-label="Search in"><SelectValue /></SelectTrigger>
+                <SelectContent side="top">{docItems.map((it) => <SelectItem key={it.value} value={it.value}>{it.label}</SelectItem>)}</SelectContent>
+              </Select>
+            </>
           }
         />
       </div>
@@ -284,6 +293,9 @@ export function SearchView() {
 }
 
 /** One passage the answer rests on: where it is, what it says, and its surroundings on request. */
+/** Whose chunking answers the search: ours, or Amazon Bedrock's hierarchical chunking for comparison. */
+const METHODS = [{ value: "ours", label: "Our chunking" }, { value: "bedrock", label: "AWS Bedrock (hierarchical)" }];
+
 /** How a result leads to a linked passage, in the words a reader would use. */
 function linkLabel(l: LinkedPassage): string {
   if (l.kind === "key") return "Its key";

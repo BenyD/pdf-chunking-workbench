@@ -8,3 +8,10 @@ export const formsEnabled = process.env.NEXT_PUBLIC_FORMS === "1";
  * descriptions and a written answer.
  */
 export const aiEnabled = process.env.NEXT_PUBLIC_AI === "1";
+
+/**
+ * A search through Amazon Bedrock's own hierarchical chunking (deploy/bedrock), shown beside ours for comparison
+ * when NEXT_PUBLIC_BEDROCK=1 and the AWS_BEDROCK_* server variables are set. It is a paid AWS service; cleanup
+ * removes the variables and the option goes with them.
+ */
+export const bedrockEnabled = process.env.NEXT_PUBLIC_BEDROCK === "1";

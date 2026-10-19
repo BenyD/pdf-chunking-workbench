@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { embedQuery, embedQueryLocal } from "@/lib/embed";
-import { aiEnabled } from "@/lib/flags";
+import { bedrockConfigured, bedrockRetrieve } from "@/lib/bedrock";
+import { aiEnabled, bedrockEnabled } from "@/lib/flags";
 import { rateLimit } from "@/lib/ratelimit";
 import { publicUrl, supabaseAdmin } from "@/lib/supabase";
 
@@ -33,10 +34,12 @@ function namedTargets(query: string): RegExp[] {
 export async function POST(req: Request) {
   const limited = rateLimit(req, "search", 30, 60_000);
   if (limited) return limited;
-  const body = (await req.json().catch(() => ({}))) as { query?: string; document_id?: string | null; k?: number; mode?: string };
+  const body = (await req.json().catch(() => ({}))) as { query?: string; document_id?: string | null; k?: number; mode?: string; method?: string };
   const query = (body.query ?? "").trim().slice(0, 500);
   if (!query) return NextResponse.json({ error: "Type a question first." }, { status: 400 });
   const k = Math.min(Math.max(body.k ?? 8, 1), 20);
+
+  if (body.method === "bedrock") return bedrockSearch(query, body.document_id ?? null, k);
 
   const mode: Mode = body.mode && body.mode in MODES ? (body.mode as Mode) : aiEnabled ? "full" : "pure";
   // "full" calls a paid embedding API; with generative AI switched off it is not served at all.
@@ -115,4 +118,26 @@ export async function POST(req: Request) {
   }
   for (const l of linkedAll) l.document_name = names.get(l.document_id as string) ?? "";
   return NextResponse.json({ query, mode, embedded: embedding !== null, results });
+}
+
+/** The same question through Amazon Bedrock's hierarchical chunking (deploy/bedrock): its passages, matched to our
+ * documents by file name so each shows on its page. Bedrock gives no position on the page, so nothing is outlined. */
+async function bedrockSearch(query: string, documentId: string | null, k: number) {
+  if (!bedrockEnabled || !bedrockConfigured()) return NextResponse.json({ error: "The Bedrock comparison is not set up." }, { status: 404 });
+  const sb = supabaseAdmin();
+  const { data: docs } = await sb.from("documents").select("id,name");
+  const byName = new Map((docs ?? []).map((d) => [d.name as string, d.id as string]));
+  const name = documentId ? (docs ?? []).find((d) => d.id === documentId)?.name ?? null : null;
+  let hits;
+  try { hits = await bedrockRetrieve(query, name, Math.min(k, 10)); } catch { return NextResponse.json({ error: "Bedrock search is unavailable right now." }, { status: 502 }); }
+  const results = hits.filter((h) => byName.has(h.doc)).map((h, i) => {
+    const id = byName.get(h.doc)!;
+    const page = h.page ?? 1;
+    return {
+      id: `bedrock-${i}`, document_id: id, document_name: h.doc, chunk_type: "text", raw_text: h.text, context: null,
+      page_start: page, page_end: page, bboxes: [], metadata: {}, strategy: "bedrock-hierarchical", rrf_score: h.score,
+      page_image_url: publicUrl(`documents/${id}/pages/${page}.png`),
+    };
+  });
+  return NextResponse.json({ query, mode: "bedrock", embedded: true, results });
 }
