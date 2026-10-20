@@ -1988,3 +1988,42 @@ running prose is what hierarchical chunking is built for.
 less often and hands back about twice the text, and it does nothing for scans, table rows or figure labels.
 Bedrock also takes custom chunking through a Lambda function, so our chunker could feed a Bedrock knowledge
 base if they want to stay on AWS.
+
+## 37. Ravi's two documents
+
+**What he sent.** A 66-slide deck in two talks, "Powder Blending" and "Blend Uniformity" (Bozzone, 2001), and
+the IPA's "Cleaning Methodology and Validation" guide (97 pages). His asks: the photos on pages 43 to 45 of
+the IPA guide, and, separately, extracting tables while keeping their context. Both are in `samples/ravi/`
+(not committed); 15 questions written by hand from their text are in `scripts/benchmarks/ravi-docs.json`.
+
+**What broke, and the fixes.**
+- Words glued together ("Thelocationsselectedforcleaningagent") in 110 of the guide's 543 passages: its
+  spaces are spans of their own in another font, and lines were built from non-blank spans only. Spaces now
+  join the text; Wingdings bullets (U+F076) become "•" and its arrow "→". No sample PDF has a glued word left.
+- The photos' arrow labels name swab locations by code ("Inside Retarding Chamber (FC3, FD3, FM2)"), and a
+  table two pages earlier lists each code with the location and why it is swabbed. `legend.bind_codes`: a code
+  on a figure that a table holds as a cell of its own ties the figure to that row, both ways, and the figure's
+  passage gains "FC3 = Inside the retarding chamber (For Active Pharmaceutical Ingredient); ...".
+- Rows such as "For cleaning agent" head the rows under them: a row with only its first cell filled, in a table
+  of three columns or more, is a group heading, and every row under it starts with it.
+- Ruled tables drawn as forms (`tables._tidy`): a column empty from top to bottom is dropped; a title line over
+  the real column names becomes the table's title ("Equipment: Fluid Bed Dryer (FBD) · FBD group: 500 – 800 L ·
+  Cleaning SOP/Checklist No: SOP-ABC-XX"); a second header line under spanning headings is joined to it
+  ("Production — Observation (Yes/No/NA)"); an unnamed column that only continues the cell on its left is folded
+  into it; a "table" whose header cell runs to hundreds of characters is dropped. The guide's cleaning
+  checklist now reads as one table over pages 77 to 82 instead of seven. The benchmark documents' tables are
+  unchanged, cell for cell.
+- Every slide of the deck sits on a picture of the slide template, and each slide became one "figure". An
+  image over half the page with text written across it is now a background: left out before figures are
+  found, so the slides' own drawings (the blenders, the angle-of-repose sketches) are 25 figures of their own.
+- Searching inside one document ranked by meaning only what was left of the vector index's 40 nearest
+  passages across the whole library (migration 20261021000000): the index now reads 200 and keeps scanning
+  when the filters leave too few (pgvector's iterative scan).
+
+**Result.** IPA guide 8 of 8, including every question on the photos and the location table; the deck 4 of 7
+(its tables are typed on the slides, not drawn as tables, and are not found as tables). The 129-question
+benchmark after processing every document again: 121 of 129 (93.8%), one below the morning's 122; one
+rifaximin label was corrected ("0.004per cent" had been copied from the glued text).
+
+**Not covered.** Tables typed on slides without rules; a chart's values (the angle-of-repose curve) are only
+its axis labels.

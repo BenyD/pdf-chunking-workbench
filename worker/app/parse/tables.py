@@ -95,7 +95,16 @@ def find_ruled_tables(page: pymupdf.Page) -> list[TableBlock]:
         else:
             header = data[0]
             rows = data[1:]
-        rows = [r for r in rows if any(r) and not _is_numbered_header(r)]
+        row_objs = list(t.rows)
+        if (t.header is None or not t.header.external) and row_objs:
+            row_objs = row_objs[1:]
+        pairs = [(r, tuple(o.bbox)) for r, o in zip(rows, row_objs)] if len(row_objs) >= len(rows) else [(r, None) for r in rows]
+        tidied = _tidy(header, pairs)
+        if tidied is None:
+            continue
+        header, pairs, title = tidied
+        pairs = [(r, b) for r, b in pairs if any(r) and not _is_numbered_header(r)]
+        rows = [r for r, _ in pairs]
         if not rows:
             continue
         # Reject "tables" that are really a boxed paragraph: 1 non-empty cell per row
@@ -103,17 +112,55 @@ def find_ruled_tables(page: pymupdf.Page) -> list[TableBlock]:
             continue
         pno = page.number + 1
         bbox = (rect.x0, rect.y0, rect.x1, rect.y1)
-        tb = TableBlock(page=pno, bbox=bbox, header=header, rows=rows, bboxes=[(pno, bbox)])
-        row_objs = list(t.rows)
-        if t.header is not None and not t.header.external and row_objs:
-            row_objs = row_objs[1:]
-        tb.row_bboxes = [tuple(r.bbox) for r in row_objs][: len(rows)]   # type: ignore[attr-defined]
+        tb = TableBlock(page=pno, bbox=bbox, header=header, rows=rows, bboxes=[(pno, bbox)], caption=title)
+        tb.row_bboxes = [b for _, b in pairs if b is not None][: len(rows)]   # type: ignore[attr-defined]
         tb.row_pages = [pno] * len(rows)                                  # type: ignore[attr-defined]
         # PyMuPDF always names the first row the header; on a continuation page
         # that row is data (a date, a long cell) and the merge pass puts it back
         tb.has_header_text = any(header) and _looks_like_header(header)   # type: ignore[attr-defined]
         out.append(tb)
     return out
+
+
+def _tidy(header: list[str], pairs: list[tuple[list[str], tuple | None]]):
+    """Clean-up of a ruled table as a form or checklist draws it. Returns (header, rows, title), or None to drop it.
+    - A header cell of several hundred characters means the finder took a whole page of text for one table.
+    - A column empty from top to bottom (boxed fields in one row stretch every row) is dropped.
+    - A first line that is the form's title ("Equipment: Fluid Bed Dryer | FBD group: 500 - 800 L | Cleaning SOP
+      No: SOP-ABC-XX"), with the real column names in the row under it, becomes the table's title.
+    - A second header line under spanning headings ("Production" over "Observation (Yes/No/NA)"), starting with
+      an empty cell and with every entry under a named heading, is joined to the line above it.
+    - An unnamed column whose text only ever continues the cell on its left (a step's boxed fields: "Bowl No. 01
+      ID" then "Bowl No. 02 ID") is folded into that cell, so the checklist's pages line up and merge."""
+    if any(len(h or "") > 300 for h in header):
+        return None
+    n = len(header)
+    keep = [i for i in range(n) if header[i] or any(i < len(r) and r[i] for r, _ in pairs)]
+    if len(keep) < n:
+        header = [header[i] for i in keep]
+        pairs = [([r[i] if i < len(r) else "" for i in keep], b) for r, b in pairs]
+    title = None
+    if pairs and any(not h for h in header) and all(pairs[0][0]) and _looks_like_header(pairs[0][0]):
+        title = " · ".join(h for h in header if h)
+        header, pairs = pairs[0][0], pairs[1:]
+    if len(pairs) > 1:
+        sub = pairs[0][0]
+        filled = [c for c in sub if c]
+        if len(filled) >= 2 and len(filled) < len(sub) and not sub[0] \
+                and not any(re.search(r"\d", c) for c in filled) \
+                and all(header[i] for i, c in enumerate(sub) if c):
+            header = [f"{h} \u2014 {c}" if c else h for h, c in zip(header, sub)]
+            pairs = pairs[1:]
+    for i in range(len(header) - 1, 0, -1):
+        if header[i] or not header[i - 1]:
+            continue
+        used = [r for r, _ in pairs if i < len(r) and r[i]]
+        if used and all(r[i - 1] for r in used):
+            for r in used:
+                r[i - 1] = f"{r[i - 1]} {r[i]}"
+            header = header[:i] + header[i + 1:]
+            pairs = [(r[:i] + r[i + 1:], b) for r, b in pairs]
+    return header, pairs, title
 
 
 # ---------------------------------------------------------------------------

@@ -41,7 +41,11 @@ def extract_lines(page: pymupdf.Page) -> tuple[list[Line], list[tuple[BBox, list
             spans = [s for s in l["spans"] if s["text"].strip()]
             if not spans:
                 continue
-            text = "".join(s["text"] for s in spans).strip()
+            # Every span joins the text, spaces included: some PDFs set each space as a span of its own (another
+            # font), and leaving those out glued the words ("Thelocationsselectedforcleaningagent"). A Wingdings
+            # bullet arrives as a private-use character (U+F076); it is written as the bullet it is.
+            text = "".join(("→" if s["text"].strip() == "\uf0e0" else "•") if "wingding" in s["font"].lower() and s["text"].strip() and all("\uf000" <= ch <= "\uf8ff" for ch in s["text"].strip())
+                           else s["text"] for s in l["spans"]).strip()
             size = max(s["size"] for s in spans)
             bold = any((s["flags"] & 16) or "bold" in s["font"].lower() for s in spans)
             ln = Line(text, tuple(l["bbox"]), round(size, 1), bold)

@@ -34,3 +34,4 @@ scripts/benchmarks/gap-cache.sqlite
 
 # public PDFs downloaded for testing (FDA, WHO, EP, manufacturers): not ours to redistribute
 samples/real-test/
+samples/ravi/

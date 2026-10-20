@@ -27,16 +27,18 @@ def call(base: str, path: str, body: dict | None = None) -> dict:
         return json.load(r)
 
 
-def main(base: str) -> None:
-    qs = json.loads((ROOT / "scripts" / "benchmarks" / "real-docs.json").read_text())["questions"]
+def main(base: str, file: str) -> None:
+    qs = json.loads((ROOT / "scripts" / "benchmarks" / file).read_text())["questions"]
     ids = {d["name"]: d["id"] for d in call(base, "/api/documents")["documents"]}
     tally = {"top 5": 0, "linked": 0, "missed": 0}
     for q in qs:
         time.sleep(2.1)                                  # the search route allows 30 a minute
         res = call(base, "/api/search", {"query": q["question"], "document_id": ids[q["doc"]], "mode": "pure"})["results"]
         want, doc = norm(q["must_contain"]), ids[q.get("answer_doc", q["doc"])]
-        rank = next((i + 1 for i, r in enumerate(res[:5]) if r["document_id"] == doc and want in norm(r["raw_text"])), None)
-        link = next((l for r in res[:5] for l in r.get("linked") or [] if l["document_id"] == doc and want in norm(l["raw_text"])), None)
+        also = norm(q.get("also", ""))                    # a second phrase the same passage must hold, for a short answer
+        ok = lambda t: want in norm(t) and also in norm(t)
+        rank = next((i + 1 for i, r in enumerate(res[:5]) if r["document_id"] == doc and ok(r["raw_text"])), None)
+        link = next((l for r in res[:5] for l in r.get("linked") or [] if l["document_id"] == doc and ok(l["raw_text"])), None)
         where = f"top 5 (#{rank})" if rank else f"linked: {link['label']}" if link else "missed"
         tally["top 5" if rank else "linked" if link else "missed"] += 1
         print(f"  {where:28} {q['kind']:24} {q['question'][:80]}")
@@ -47,4 +49,6 @@ def main(base: str) -> None:
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="http://localhost:3001")
-    main(ap.parse_args().base)
+    ap.add_argument("--file", default="real-docs.json", help="the question set in scripts/benchmarks")
+    a = ap.parse_args()
+    main(a.base, a.file)

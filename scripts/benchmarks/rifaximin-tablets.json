@@ -40,7 +40,7 @@
     },
     {
       "question": "What is the concentration of the rifaximin IPRS reference solution used in the assay of Rifaximin Tablets in the draft IP monograph?",
-      "must_contain": "0.004per cent w/v",
+      "must_contain": "0.004 per cent w/v",
       "expected_page": 3,
       "answer": "The reference solution is a 0.004 per cent w/v solution of rifaximin IPRS in the mobile phase.",
       "chunk_type": "text"

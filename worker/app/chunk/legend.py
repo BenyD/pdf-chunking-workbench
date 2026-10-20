@@ -186,6 +186,57 @@ def bind_all(chunks: list[ChunkDraft]) -> int:
     return n
 
 
+_ID = re.compile(r"\b([A-Z]{1,4}\d{1,3}(?:\s?-\s?[A-Z0-9]{1,2})?)\b")
+
+
+def _norm_id(t: str) -> str:
+    return re.sub(r"\s+", "", t).upper()
+
+
+def bind_codes(chunks: list[ChunkDraft]) -> int:
+    """A photo labelled with location codes ("Inside Retarding Chamber (FC3, FD3, FM2)") and a table whose ID
+    column lists those codes, with what each location is and why it is sampled: the photo's passage gets
+    "FC3 = Inside the retarding chamber (For Active Pharmaceutical Ingredient)" for each code it carries, and key
+    links to those rows, both ways. A code counts only when a table cell holds that code and nothing else.
+    Returns how many figures were bound."""
+    rows: dict[str, ChunkDraft] = {}
+    for c in chunks:
+        if c.chunk_type != "table_row":
+            continue
+        cells = c.metadata.get("resolved_cells") or c.metadata.get("cells") or []
+        for cell in cells:
+            if cell and _ID.fullmatch(cell.strip()):
+                rows.setdefault(_norm_id(cell), c)
+    if not rows:
+        return 0
+    made = 0
+    for f in chunks:
+        if f.chunk_type != "figure":
+            continue
+        codes = list(dict.fromkeys(_norm_id(m.group(1)) for l in f.metadata.get("labels") or [] for m in _ID.finditer(l)))
+        hits = [(k, rows[k]) for k in codes if k in rows]
+        if not hits:
+            continue
+        lines = []
+        for k, r in hits:
+            cells = [x for x in (r.metadata.get("resolved_cells") or r.metadata.get("cells") or []) if x and x.strip()]
+            name = next((x.strip() for x in cells if _norm_id(x) != k), "")
+            group = r.metadata.get("group")
+            lines.append(f"{k} = {name}" + (f" ({group})" if group else ""))
+        pages = sorted({r.page_start for _, r in hits})
+        f.raw_text += f"\nLocations, from the table on page {', '.join(map(str, pages))}: " + "; ".join(lines)
+        f.metadata["codes"] = [k for k, _ in hits]
+        links = f.metadata.setdefault("links", [])
+        for k, r in hits[:12]:
+            if not any(l.get("id") == r.id for l in links):
+                links.append({"id": r.id, "kind": "key", "label": k, "dir": "out", "page": r.page_start, "type": r.chunk_type})
+            rl = r.metadata.setdefault("links", [])
+            if not any(l.get("id") == f.id for l in rl):
+                rl.append({"id": f.id, "kind": "key", "label": f"photo on page {f.page_start}", "dir": "in", "page": f.page_start, "type": "figure"})
+        made += 1
+    return made
+
+
 _PART = re.compile(r"\b((?:[a-z][a-z\-]*\s+){0,2}[a-z][a-z\-]{2,})\s+(\d{2,3})\b")
 _NOT_PART = {"claim", "claims", "page", "pages", "section", "figure", "fig", "line", "lines", "column", "step", "table",
              "note", "item", "about", "than", "least", "most", "only", "and", "or", "of", "to", "from", "between"}

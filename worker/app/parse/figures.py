@@ -54,9 +54,18 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
     rects: list[pymupdf.Rect] = []
     image_rects: list[pymupdf.Rect] = []
     solid_rects: list[pymupdf.Rect] = []
+    def written_over(r: pymupdf.Rect) -> float:
+        return sum(max(0.0, min(l.bbox[2], r.x1) - max(l.bbox[0], r.x0)) * max(0.0, min(l.bbox[3], r.y1) - max(l.bbox[1], r.y0))
+                   for l in lines if pymupdf.Rect(l.bbox).intersects(r)) / max(r.get_area(), 1.0)
+
     for info in page.get_image_info():
         r = pymupdf.Rect(info["bbox"]) & page.rect
         if r.is_empty or r.get_area() < 0.004 * area or excluded(r):
+            continue
+        # A slide's background: an image filling half the page or more with the slide's text written over it.
+        # It is a template, not a figure; left out before clustering so the slide's own drawings and charts
+        # still form figures of their own.
+        if r.get_area() > 0.5 * area and written_over(r) > 0.08:
             continue
         rects.append(r)
         image_rects.append(r)

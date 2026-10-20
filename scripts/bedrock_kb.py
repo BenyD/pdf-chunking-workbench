@@ -176,6 +176,23 @@ def reingest(only: list[str]) -> None:
 
 
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["questions"]:
+        # a hand-written set (scripts/benchmarks/<file>): doc, question, must_contain, optional also
+        import boto3
+        st = dict(l.split("=", 1) for l in STATE.read_text().split())
+        rt = boto3.client("bedrock-agent-runtime", region_name=st["REGION"])
+        qs = json.loads((ROOT / "scripts" / "benchmarks" / sys.argv[2]).read_text())["questions"]
+        found = 0
+        for q in qs:
+            hits = rt.retrieve(knowledgeBaseId=st["KB_ID"], retrievalQuery={"text": q["question"]},
+                               retrievalConfiguration={"vectorSearchConfiguration": {"numberOfResults": 5,
+                                   "filter": {"equals": {"key": "doc", "value": q["doc"]}}}})["retrievalResults"]
+            want, also = norm(q["must_contain"]), norm(q.get("also", ""))
+            rank = next((i + 1 for i, h in enumerate(hits) if want in norm(h["content"].get("text", "")) and also in norm(h["content"].get("text", ""))), None)
+            found += rank is not None
+            print(f"  {'top 5 (#' + str(rank) + ')' if rank else 'missed':12} {q.get('kind', ''):18} {q['question'][:80]}")
+        print(f"\n{len(qs)} questions: {found} in the top five")
+        sys.exit()
     if sys.argv[1:2] == ["parts"]:
         export_parts(sys.argv[2], sys.argv[3])
         sys.exit()

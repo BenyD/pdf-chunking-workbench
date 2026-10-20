@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 from ..config import settings
 from ..parse.model import FigureBlock, PageLayout, TableBlock, TextBlock, frac, union
 from ..parse.tables import resolve_ditto, row_to_text, to_markdown
-from .legend import bind_all, name_drawings
+from .legend import bind_all, bind_codes, name_drawings
 from .references import link_all
 from .model import ChunkDraft, link_sequence
 from .tokens import count
@@ -95,6 +95,7 @@ def chunk_structural(layouts: list[PageLayout], doc_title: str, max_tokens: int 
                 chunks.append(_figure_chunk(block, crumbs.text(), dims, all_text_blocks))
     flush(final=True)
     bind_all(chunks)          # a figure's bare labels (A, B, 1, 2) tied to the key that explains them, wherever it is
+    bind_codes(chunks)        # a photo's location codes (FC3, FD3) tied to the table rows that list them
     name_drawings(chunks)     # a drawing sheet's hand-lettered numbers, named from the text ("28 upper pressure roller")
     link_sequence(chunks)
     link_all(chunks)          # "see Table 2", "(5.1)", "unit 117": links to where the rest of the answer is
@@ -194,6 +195,19 @@ def _table_chunks(tb: TableBlock, crumbs: _Crumbs, dims: dict) -> list[ChunkDraf
     if cur:
         parts.append(cur)
 
+    # A row with only its first cell filled, in a table of three columns or more, heads the rows under it:
+    # "For cleaning agent" over FD1 to FD13. Each row under it carries that heading, so a row read alone still
+    # says which group it belongs to, and the heading row is not a passage of its own.
+    groups: list[str | None] = []
+    group = None
+    for r in rows:
+        filled = [c for c in r if c and c.strip()]
+        if len(header) >= 3 and len(filled) == 1 and r[0] and r[0].strip():
+            group = r[0].strip().rstrip(".:")
+            groups.append("HEAD")
+        else:
+            groups.append(group)
+
     out: list[ChunkDraft] = []
     for pi, idxs in enumerate(parts):
         part_rows = [rows[i] for i in idxs]
@@ -214,17 +228,20 @@ def _table_chunks(tb: TableBlock, crumbs: _Crumbs, dims: dict) -> list[ChunkDraf
         )
         out.append(table_chunk)
         for i in idxs:
+            if groups[i] == "HEAD":
+                continue
             rb = _bboxes_for_rows(tb, [i], row_bboxes, dims)
             out.append(ChunkDraft(
                 chunk_type="table_row",
-                raw_text=row_to_text(header, resolved[i]),
+                raw_text=(f"{groups[i]}. " if groups[i] else "") + row_to_text(header, resolved[i]),
                 context=f"{breadcrumb} > {caption} > row {i+1}",
                 page_start=rb[0]["page"],
                 page_end=rb[-1]["page"],
                 bboxes=rb,
                 parent_id=table_chunk.id,
                 metadata={"breadcrumb": breadcrumb, "caption": caption, "header": header,
-                          "row_index": i, "cells": rows[i], "resolved_cells": resolved[i]},
+                          "row_index": i, "cells": rows[i], "resolved_cells": resolved[i],
+                          **({"group": groups[i]} if groups[i] else {})},
             ))
     return out
 

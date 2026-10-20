@@ -1,0 +1,96 @@
+{
+  "written": "2026-10-20, by hand from the two files Ravi sent, before any was searched",
+  "questions": [
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "photo + table",
+      "question": "Why is the inside of the retarding chamber swabbed for API?",
+      "must_contain": "inner surface of retarding chamber coming in direct contact with API"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "photo + table",
+      "question": "What location does swab FD8 refer to?",
+      "must_contain": "Discharge port with valve of bowl"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "photo",
+      "question": "Where is the sampling port FC7 on the fluid bed equipment?",
+      "must_contain": "Sampling Port (FC7)"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "table group",
+      "question": "Which locations are swabbed for microbial testing?",
+      "must_contain": "FM1"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "table",
+      "question": "Why is the gasket of the bowl chosen as a swab location?",
+      "must_contain": "Representative materials of construction (rubber or silicone)"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "text",
+      "question": "In what order should multiple swab samples be taken?",
+      "must_contain": "Bioburden samples (as it is most sensitive to contamination)"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "table",
+      "question": "What is the total RPN for Indomethacin Capsules 25mg?",
+      "must_contain": "60",
+      "also": "Indomethacin Capsules 25mg"
+    },
+    {
+      "doc": "ipa-cleaning-validation.pdf",
+      "kind": "text",
+      "question": "What does temperature do in cleaning?",
+      "must_contain": "directly determines the cleaning efficiency"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "diagram",
+      "question": "At what shell tip speed should rotating shell blenders be run?",
+      "must_contain": "approximately 100 m/min"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "slide table",
+      "question": "What is the typical RPM for a 2000 L blender?",
+      "must_contain": "8–12"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "slide table",
+      "question": "What is the SDPI for a sample size of 10?",
+      "must_contain": "3.84"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "chart",
+      "question": "Do smaller particles have a higher or lower angle of repose?",
+      "must_contain": "higher angle"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "text",
+      "question": "What sample size should be pulled during development?",
+      "must_contain": "1-3x Unit Dose"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "text",
+      "question": "What fraction of the blender volume is usually the working volume?",
+      "must_contain": "60% (±10%)"
+    },
+    {
+      "doc": "bozzonemay31.pdf",
+      "kind": "lettered diagram",
+      "question": "Where is sample A taken in the V-blender?",
+      "must_contain": "Left-Left-Top"
+    }
+  ]
+}
