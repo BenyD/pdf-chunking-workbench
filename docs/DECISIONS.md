@@ -2044,3 +2044,17 @@ characters the contents lines of section 29 came back (3 to 11 in the top five),
 
 **Not covered.** A chart's values (the angle-of-repose curve) are only its axis labels; a slide's sentence under
 its title is a short passage of its own.
+
+**Bedrock on the same two files** (2026-10-23, loaded as 8-page parts like the others, `bedrock_kb.py questions`).
+Its 1,500-token parents are a few slides or about two pages, so the answer's words are almost always somewhere in
+what it returns:
+
+| Ravi's 15 questions | Ours | AWS Bedrock hierarchical |
+|---|---|---|
+| The answer's words in the top five | 13 (14 with a linked photo) | 15 |
+| Text returned per question | about 940 tokens | about 3,300 tokens |
+| Its page for the answer is the answer's page | the passage's own page | 4 of 15 |
+
+So Bedrock "finds" more only by returning 3.5 times the text and pointing at the wrong page eleven times in
+fifteen (a parent carries the page of its first child). Judged as where on which page the answer is, ours is
+ahead; judged as "is it somewhere in what came back", Bedrock is one question ahead on these two files.
