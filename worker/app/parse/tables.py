@@ -163,6 +163,74 @@ def _tidy(header: list[str], pairs: list[tuple[list[str], tuple | None]]):
     return header, pairs, title
 
 
+def grid_table(lines: list[Line], page: int, bbox: tuple) -> "TableBlock | None":
+    """A table typed on a slide or drawn as shaded cells, with no rules: its text lines make a grid. Lines are
+    grouped into rows by height and into columns by where they sit (left edge or centre, whichever groups better);
+    at least 3 rows below the header, 2 to 8 columns, and 60% of the rows with every column filled. Anything less
+    regular (diagram labels, a bulleted list) is not a table. A single line above the grid is its title."""
+    if len(lines) < 8:
+        return None
+    med = statistics.median(l.bbox[3] - l.bbox[1] for l in lines)
+    rows: list[list[Line]] = []
+    for l in sorted(lines, key=lambda l: (l.bbox[1] + l.bbox[3]) / 2):
+        cy = (l.bbox[1] + l.bbox[3]) / 2
+        if rows and abs(cy - statistics.mean((m.bbox[1] + m.bbox[3]) / 2 for m in rows[-1])) <= 0.55 * med:
+            rows[-1].append(l)
+        else:
+            rows.append([l])
+    title = None
+    if len(rows) > 1 and len(rows[0]) == 1 and len(rows[1]) >= 2:
+        title, rows = rows[0][0], rows[1:]
+
+    def columns(key) -> list[float] | None:
+        xs = sorted(key(l) for r in rows for l in r)
+        cuts = [(a + b) / 2 for a, b in zip(xs, xs[1:]) if b - a > 1.5 * med]
+        return cuts if 1 <= len(cuts) <= 7 else None
+
+    best = None
+    for key in (lambda l: l.bbox[0], lambda l: (l.bbox[0] + l.bbox[2]) / 2):
+        cuts = columns(key)
+        if not cuts:
+            continue
+        n = len(cuts) + 1
+        grid = []
+        for r in rows:
+            cells = [[] for _ in range(n)]
+            for l in sorted(r, key=lambda l: l.bbox[0]):
+                cells[sum(key(l) > c for c in cuts)].append(l)
+            grid.append(cells)
+        full = sum(all(c for c in cells) for cells in grid)
+        crowded = sum(any(len(c) > 1 for c in cells) for cells in grid)
+        score = full - crowded
+        if best is None or score > best[0]:
+            best = (score, n, grid)
+    if best is None:
+        return None
+    _, n, grid = best
+    if len(grid) < 4 or sum(all(c for c in cells) for cells in grid) < 0.6 * len(grid):
+        return None
+    texts = [[" ".join(l.text for l in c) for c in cells] for cells in grid]
+    header, body = texts[0], texts[1:]
+    if not all(header) or not _looks_like_header(header) or any(re.fullmatch(r"\d+(\.\d+)*\.?", h.strip()) for h in header):
+        return None                                      # empty or non-header cells, or a bare number in the header (a contents page, a numbered list)
+    if sum(1 for r in texts if r[0].strip() in {"•", "–", "-", "‣", "·", "▪", "*"}) >= 0.5 * len(texts):
+        return None                                      # a bulleted list, not a table
+    # a units line under the headings ("(L)", "(Kg)", "(%)") belongs to them: "Working Capacity (L)"
+    if body and all(re.fullmatch(r"\(.*\)", c.strip()) for c in body[0] if c.strip()) and any(body[0]):
+        header = [f"{h} {c}".strip() for h, c in zip(header, body[0])]
+        body = body[1:]
+        grid = grid[:1] + grid[2:]
+    if len(body) < 3:
+        return None
+    tb = TableBlock(page=page, bbox=bbox, header=header, rows=body, bboxes=[(page, bbox)],
+                    caption=title.text if title else None)
+    tb.row_bboxes = [(min(l.bbox[0] for c in cells for l in c), min(l.bbox[1] for c in cells for l in c),
+                      max(l.bbox[2] for c in cells for l in c), max(l.bbox[3] for c in cells for l in c)) for cells in grid[1:]]   # type: ignore[attr-defined]
+    tb.row_pages = [page] * len(body)                      # type: ignore[attr-defined]
+    tb.has_header_text = True                              # type: ignore[attr-defined]
+    return tb
+
+
 # ---------------------------------------------------------------------------
 # 2. aligned (ruling-free) tables
 # ---------------------------------------------------------------------------

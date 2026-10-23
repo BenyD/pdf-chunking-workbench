@@ -14,6 +14,7 @@ import pymupdf
 
 from ..config import settings
 from .model import BBox, FigureBlock, Line
+from .tables import grid_table
 
 _CAPTION = re.compile(r"^\s*(fig(?:ure)?\.?|image|photo(?:graph)?|plate|diagram|exhibit|chart|illustration)\s*\.?\s*([A-Za-z]?\d+(?:\.\d+)?)?", re.I)
 
@@ -54,9 +55,9 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
     rects: list[pymupdf.Rect] = []
     image_rects: list[pymupdf.Rect] = []
     solid_rects: list[pymupdf.Rect] = []
-    def written_over(r: pymupdf.Rect) -> float:
-        return sum(max(0.0, min(l.bbox[2], r.x1) - max(l.bbox[0], r.x0)) * max(0.0, min(l.bbox[3], r.y1) - max(l.bbox[1], r.y0))
-                   for l in lines if pymupdf.Rect(l.bbox).intersects(r)) / max(r.get_area(), 1.0)
+    def written_over(r: pymupdf.Rect) -> int:
+        """Characters of text lying inside the rectangle: a slide's words over its template picture."""
+        return sum(len(l.text) for l in lines if r.contains(pymupdf.Rect(l.bbox) + (-2, -2, 2, 2)))
 
     for info in page.get_image_info():
         r = pymupdf.Rect(info["bbox"]) & page.rect
@@ -65,7 +66,9 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
         # A slide's background: an image filling half the page or more with the slide's text written over it.
         # It is a template, not a figure; left out before clustering so the slide's own drawings and charts
         # still form figures of their own.
-        if r.get_area() > 0.5 * area and written_over(r) > 0.08:
+        if (info.get("width", 99) <= 4 or info.get("height", 99) <= 4) and r.get_area() > 0.05 * area:
+            continue                                        # a one-pixel strip stretched into a gradient: decoration
+        if r.get_area() > 0.25 * area and written_over(r) > 60:
             continue
         rects.append(r)
         image_rects.append(r)
@@ -114,6 +117,14 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
         labels = [l for l in lines if pymupdf.Rect(l.bbox).intersects(grown) and (l.bbox[2] - l.bbox[0]) < 0.6 * W]
         for l in labels:
             c |= pymupdf.Rect(l.bbox)
+        # Text laid out as a grid inside the drawing, on a slide or over shaded cells with no rules, is a table
+        grid = grid_table(labels, page.number + 1, (c.x0, c.y0, c.x1, c.y1)) if len(labels) >= 8 else None
+        if grid is not None:
+            fb = FigureBlock(page=page.number + 1, bbox=grid.bbox, image_png=b"", caption=None, labels=[], figure_number=None)
+            fb.as_table = grid                              # type: ignore[attr-defined]
+            fb.consumed_lines = set(id(l) for l in labels)  # type: ignore[attr-defined]
+            figs.append(fb)
+            continue
         caption, number, cap_lines = _find_caption(lines, c)
         clip = pymupdf.Rect(max(0, c.x0 - 4), max(0, c.y0 - 4), min(W, c.x1 + 4), min(H, c.y1 + 4))
         png = page.get_pixmap(clip=clip, dpi=settings.figure_dpi, alpha=False).tobytes("png")
@@ -128,6 +139,26 @@ def detect_figures(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -
         fb.consumed_lines = set(id(l) for l in labels) | set(id(l) for l in cap_lines)  # type: ignore[attr-defined]
         figs.append(fb)
     return figs
+
+
+def shaded_grid_tables(page: pymupdf.Page, lines: list[Line], exclude: list[BBox]) -> list:
+    """A table that has no ruling the ruled-table finder reads (a slide's cell shapes, one-point rectangles used as
+    rules, shaded boxes): its words are short and sit in rows and columns. The short lines of the page, those a
+    cell could hold, are tried as a grid (tables.grid_table); long prose lines and the slide's title are left out
+    by being long. At most one per page. Returns the tables found, with the lines they used as consumed_lines."""
+    W = page.rect.width
+    ex = [pymupdf.Rect(e) for e in exclude]
+    short = [l for l in lines if len(l.text) <= 32 and (l.bbox[2] - l.bbox[0]) < 0.3 * W
+             and not any(pymupdf.Rect(l.bbox).intersects(e) for e in ex)]
+    if len(short) < 10:
+        return []
+    top = min(l.bbox[1] for l in short)
+    bbox = (min(l.bbox[0] for l in short), top, max(l.bbox[2] for l in short), max(l.bbox[3] for l in short))
+    tb = grid_table(short, page.number + 1, bbox)
+    if tb is None:
+        return []
+    tb.consumed_lines = set(id(l) for l in short)            # type: ignore[attr-defined]
+    return [tb]
 
 
 def _drawing_sheet(page: pymupdf.Page, lines: list[Line]) -> list[FigureBlock]:

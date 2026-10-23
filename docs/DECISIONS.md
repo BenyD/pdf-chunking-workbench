@@ -2025,5 +2025,22 @@ the IPA guide, and, separately, extracting tables while keeping their context. B
 benchmark after processing every document again: 121 of 129 (93.8%), one below the morning's 122; one
 rifaximin label was corrected ("0.004per cent" had been copied from the glued text).
 
-**Not covered.** Tables typed on slides without rules; a chart's values (the angle-of-repose curve) are only
-its axis labels.
+**Slides, found afterwards (same day).** His deck's pages are stored turned 90 degrees (a landscape slide saved
+as a portrait page): PyMuPDF reports text, drawings and images in the unturned page's coordinates, so rows read
+as columns, tables were not found, and every box the app drew over those pages was in the wrong place. Parsing
+now works on a copy with the turn removed (`remove_rotation`; the page looks the same). On it:
+- a table drawn with shapes or one-point rectangles for rules, which no ruling finder reads, is found from its
+  words (`tables.grid_table`: short lines grouped into rows by height and columns by position; at least four
+  rows, 60% of them full, a header that is no bare number or bullet; a units line under the headings joins
+  them: "Working Capacity (L)"). The deck's blender table, its SDPI table and its three batch tables are tables;
+- a one-pixel image stretched into a gradient, and an image over a quarter of the page with a slide's words
+  written across it, are backgrounds, not figures.
+
+**Result, after all of it.** Ravi's 15 questions: 14 (13 in the top five, 1 under a result as a linked photo);
+the IPA guide 8 of 8. The 17 questions of section 34: 14. The 129-question benchmark: 121 (93.8%). The one
+miss left on his deck is "Keep shell tip speed constant at approximately 100 m/min", a 70-character sentence
+under a slide title: the prior of section 29 scores a text passage under 200 characters lower, and at 100
+characters the contents lines of section 29 came back (3 to 11 in the top five), so 200 stays.
+
+**Not covered.** A chart's values (the angle-of-repose curve) are only its axis labels; a slide's sentence under
+its title is a short passage of its own.

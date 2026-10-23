@@ -17,7 +17,7 @@ from typing import Callable
 import pymupdf
 
 from ..config import settings
-from .figures import detect_figures
+from .figures import detect_figures, shaded_grid_tables
 from .model import BBox, Line, PageLayout, TableBlock, TextBlock
 from .ocr import looks_garbled, looks_scanned, ocr_page
 from .tables import find_aligned_tables, find_ruled_tables, merge_continuations, numbered_header_ids
@@ -124,7 +124,22 @@ class DocStats:
         return l.size < self.body_size * 0.92 and (l.bbox[0] < self.body_left - 15 or l.bbox[0] > self.body_right + 4)
 
 
+def _upright(doc: pymupdf.Document) -> pymupdf.Document:
+    """A copy with every page's rotation applied (PyMuPDF's remove_rotation: the page looks the same, its
+    coordinates match what is shown). A slide deck saved from PowerPoint stores landscape slides as portrait pages
+    turned 90 degrees; text, drawings and images then come out in the unturned page's coordinates, sideways, so
+    rows read as columns, tables were not found and boxes were drawn in the wrong place on the page image."""
+    if not any(pg.rotation for pg in doc):
+        return doc
+    out = pymupdf.open(stream=doc.tobytes(), filetype="pdf")
+    for pg in out:
+        if pg.rotation:
+            pg.remove_rotation()
+    return out
+
+
 def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] | None = None) -> list[PageLayout]:
+    doc = _upright(doc)
     # ---- pass 1
     raw: list[tuple[list[Line], list[tuple[BBox, list[Line]]]]] = []
     for page in doc:
@@ -174,11 +189,18 @@ def parse_document(doc: pymupdf.Document, progress: Callable[[int, int], None] |
         # ruled-table and figure detection read the PDF's own text and drawings, which
         # an OCR'd page does not trust; the whitespace table detector runs on the OCR lines
         tables = find_ruled_tables(page) if not ocr_applied else []
+        if not tables and not ocr_applied and not is_toc:
+            tables = shaded_grid_tables(page, content, [])          # a table drawn with shapes: found before figures
         running = [t for t in tables if stats.is_running_box(t.bbox, lines, H)]
         tables = [t for t in tables if t not in running]
         excl = [t.bbox for t in tables] + [t.bbox for t in running]      # a running header box is left out, text and all
         figures = detect_figures(page, content, excl) if not ocr_applied else []
         excl += [f.bbox for f in figures]
+        slide_tables = [f.as_table for f in figures if getattr(f, "as_table", None) is not None]   # a grid drawn as a "figure"
+        for st in slide_tables:
+            st.consumed_lines = next(f.consumed_lines for f in figures if getattr(f, "as_table", None) is st)   # type: ignore[attr-defined]
+        figures = [f for f in figures if getattr(f, "as_table", None) is None]
+        tables = tables + slide_tables
         if not tables and not is_toc:
             tables = find_aligned_tables(page, content, excl, prior=prior_model)
             excl += [t.bbox for t in tables]
