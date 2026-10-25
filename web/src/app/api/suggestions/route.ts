@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-import { aiEnabled } from "@/lib/flags";
-import { SAMPLES } from "@/lib/samples";
 import { supabaseAdmin } from "@/lib/supabase";
 
 /**
- * Question suggestions for the search page. With generative AI on, per document they come from the questions a
- * model wrote at ingest. With it off, nothing is generated: the built-in samples carry a few fixed questions each,
- * and an uploaded document has none. For "all documents", a mix across them.
+ * Question suggestions for the search page: the ones stored with each document at ingest, written by a model when
+ * generative AI is on and otherwise built from the document's own headings, captions and codes (worker/app/chunk/
+ * suggest.py). Nothing is fixed in the app. For "all documents", a mix across them.
  */
 export async function GET(req: Request) {
   const docId = new URL(req.url).searchParams.get("document_id");
@@ -18,15 +16,13 @@ export async function GET(req: Request) {
   const lists = (data ?? []).map((d) => ({
     id: d.id,
     name: (d.name as string).replace(/\.pdf$/i, ""),
-    questions: aiEnabled
-      ? (((d.stats as { suggestions?: string[] })?.suggestions) ?? []).filter((s) => typeof s === "string")
-      : SAMPLES.find((x) => x.key === d.sample_key)?.questions ?? [],
+    questions: (((d.stats as { suggestions?: string[] })?.suggestions) ?? []).filter((s) => typeof s === "string"),
   })).filter((l) => l.questions.length);
   const out: { text: string; document_id: string; document_name: string }[] = [];
   if (docId) {
     for (const t of lists[0]?.questions ?? []) out.push({ text: t, document_id: lists[0].id, document_name: lists[0].name });
   } else {
-    // round-robin so every document contributes; the sample bills ask near-identical questions, so skip repeats
+    // round-robin so every document contributes; skip repeats
     const seen = new Set<string>();
     for (let i = 0; out.length < 8 && lists.some((l) => l.questions[i]); i++) {
       for (const l of lists) {

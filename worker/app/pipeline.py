@@ -22,6 +22,7 @@ from . import db, storage
 from .chunk.contextual import chunk_contextual
 from .chunk.doclinks import Doc, code_in, key, link_library, mentions, same_document
 from .chunk.model import ChunkDraft
+from .chunk.suggest import from_structure
 from .chunk.structural import chunk_structural
 from .config import settings
 from .llm import local, voyage
@@ -90,7 +91,9 @@ def ingest(document_id: str) -> None:
         stats["llm"] = llm_usage
         if code:
             stats["code"] = code                          # how other documents cite this one (chunk/doclinks.py)
-        stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)])
+        # a model writes them when generative AI is on; otherwise they are built from the document's own headings,
+        # captions and codes (chunk/suggest.py), so every upload has some
+        stats["suggestions"] = suggest_for(document_id, title, [c.raw_text for c in _spread(chunks)]) or from_structure(chunks, title)
         stats["embedding_model"] = (settings.local_embedding_model + " (local)" if settings.pure
                                     else settings.embedding_model if not settings.fake_embeddings else "fake (dev)")
         stats["parse_seconds"] = round(time.time() - t0, 1)
@@ -154,8 +157,9 @@ def suggest_existing(document_id: str) -> None:
     row = db.get_document(document_id)
     if not row:
         return
+    title = row["name"].rsplit(".", 1)[0]
     excerpts = [r["raw_text"] for r in db.sample_chunks(document_id)]
-    qs = suggest_for(document_id, row["name"].rsplit(".", 1)[0], excerpts)
+    qs = suggest_for(document_id, title, excerpts) or from_structure([ChunkDraft.from_row(r) for r in db.chunk_rows(document_id, STRATEGY)], title)
     db.merge_stats(document_id, {"suggestions": qs})
 
 

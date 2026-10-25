@@ -2058,3 +2058,31 @@ what it returns:
 So Bedrock "finds" more only by returning 3.5 times the text and pointing at the wrong page eleven times in
 fifteen (a parent carries the page of its first child). Judged as where on which page the answer is, ours is
 ahead; judged as "is it somewhere in what came back", Bedrock is one question ahead on these two files.
+
+## 38. Suggestions from the document's own structure, and a Search page that is not blank
+
+**Why.** The questions on the Search page were typed into `samples.ts` for the built-in samples; an uploaded file,
+Ravi's included, showed none, and the page said "Nothing asked yet".
+
+**Decision.** `worker/app/chunk/suggest.py`, rules only, at ingest (stored in each document's `stats.suggestions`,
+where a model's questions went when generative AI is on): a question per heading ("What does the section on
+Reserve samples say?"), per figure or table caption ("What does Figure 4 (Turret assembly, front view) show?"),
+and for a big table a lookup of its first code ("What is the entry for F-14321?"). Eight at most, three kinds
+mixed, spread over the pages, no duplicates. Generic headings (Purpose, Scope, Contents), banners, bullets,
+wrapped titles and the first heading of a document (its title) are skipped. Nothing is built from a number or
+a claim, so a suggestion cannot say something the document does not.
+`scripts/backfill_suggestions.py [--rest]` fills documents already stored. The built-in questions are deleted
+and the suggestions route reads only what is stored.
+
+Written first, they stripped the first letter of words like "Conclusion" (the numbering rule took the C as a
+roman numeral): the numbering is now a number or numeral followed by its delimiter only.
+
+The Search page's empty state: how many documents and passages there are, a row of documents to search in, topics
+to start from (full questions for one document; topic chips with the document's name across all), and four
+lines on how to ask (a code, a clause, a table value, a figure label). A document with no headings or captions,
+like the NPPA notices and the bills, shows the hints and nothing else.
+
+**Found on the way.** The box drawn around a table passage was one row off for a table that has a "(1) (2) (3)"
+numbering row (the NPPA price table: its box started at the numbering row and ended above the last row). Fixed
+earlier the same day when rows and their boxes were paired before the numbering row is dropped; documents
+processed before that keep the old boxes until they are processed again.

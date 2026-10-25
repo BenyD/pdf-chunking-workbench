@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/quartz/ui/aler
 import { Badge } from "@/components/quartz/ui/badge";
 import { Button } from "@/components/quartz/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/quartz/ui/card";
-import { ChipButton, ChipGroup } from "@/components/quartz/ui/chip";
+import { Chip, ChipButton, ChipGroup } from "@/components/quartz/ui/chip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/quartz/ui/collapsible";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/quartz/ui/empty-state";
 import { Item, ItemContent, ItemDescription, ItemGroup, ItemLink, ItemTitle } from "@/components/quartz/ui/item";
@@ -120,12 +120,7 @@ export function SearchView() {
       id: `${h.id}:${j}`, type: h.chunk_type, box: b, selected: h.id === current.id, label: `${label}, ${typeLabel[h.chunk_type]} passage`,
     }))));
   }, [hits, linkedAll, current]);
-  // Suggestions grouped by the document they were written for, in the order they arrive.
-  const groups = (suggestions ?? []).reduce<{ id: string; name: string; items: Suggestion[] }[]>((acc, s) => {
-    const g = acc.find((x) => x.id === s.document_id);
-    if (g) g.items.push(s); else acc.push({ id: s.document_id, name: s.document_name.replace(/\.pdf$/i, ""), items: [s] });
-    return acc;
-  }, []);
+  const passageCount = (docs ?? []).reduce((n, d) => n + (Number((d.stats as { chunks?: number })?.chunks) || 0), 0);
 
   const header = (
     <PageHeader size="sm">
@@ -134,7 +129,7 @@ export function SearchView() {
           <PageHeaderTitle>Search</PageHeaderTitle>
           <PageHeaderDescription>{aiEnabled
             ? "Ask a question and get an answer with its sources. Pick a question below or type your own."
-            : "Ask a question and see the passages that answer it, each on its page. Pick a question below or type your own."}</PageHeaderDescription>
+            : "Ask a question and see the passages that answer it, each on its page."}</PageHeaderDescription>
         </PageHeaderContent>
       </PageHeaderRow>
     </PageHeader>
@@ -174,28 +169,64 @@ export function SearchView() {
         {!asked && (
           <Empty aria-labelledby="ask-title" className="before:border-dashed">
             <EmptyHeader>
-              <EmptyTitle id="ask-title">Nothing asked yet</EmptyTitle>
-              <EmptyDescription>{docId ? "Pick a question this document can answer, or type your own below." : "Pick a question, or type your own below. Each one searches the document it was written for."}</EmptyDescription>
+              <EmptyTitle id="ask-title">Ask your documents</EmptyTitle>
+              <EmptyDescription>
+                {docs === null ? "Loading your documents." : `${docs.length} ${docs.length === 1 ? "document" : "documents"}, ${passageCount.toLocaleString("en-US")} passages. You get the document's own passages, each shown on its page.`}
+              </EmptyDescription>
             </EmptyHeader>
             <EmptyContent className="max-w-full">
+              {docs && docs.length > 1 && (
+                <div className="flex w-full min-w-0 flex-col gap-2">
+                  <p className="type-body-sm text-text-2">Search in</p>
+                  <ChipGroup aria-label="Search in" className="flex-nowrap overflow-x-auto pb-1 [scrollbar-width:thin]">
+                    <Chip pressed={docId === null} onPressedChange={() => setDocId(null)}>All documents</Chip>
+                    {docs.map((d) => <Chip key={d.id} pressed={docId === d.id} onPressedChange={() => setDocId(docId === d.id ? null : d.id)}>{d.name.replace(/\.pdf$/i, "")}</Chip>)}
+                  </ChipGroup>
+                </div>
+              )}
               <SkeletonSwap
                 loading={suggestions === null || docs === null}
                 label="Loading suggestions"
                 className="flex w-full flex-col gap-4"
                 fallback={<div className="flex w-full flex-col gap-4">{Array.from({ length: 3 }, (_, i) => <div key={i} className="flex flex-col gap-2"><SkeletonText type="body-sm" className="w-40" /><div className="flex gap-1"><Skeleton className="h-(--control-sm) w-72" /><Skeleton className="h-(--control-sm) w-56" /></div></div>)}</div>}
               >
-                {groups.map((g) => (
-                  <div key={g.id} className="flex min-w-0 flex-col gap-2">
-                    {!docId && <p className="type-body-sm text-text-2">{g.name}</p>}
-                    {/* Each question is a chip; on a phone the row scrolls sideways so no question is cut short. */}
-                    <ChipGroup aria-label={`Questions for ${g.name}`} className="max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]">
-                      {g.items.map((s) => <ChipButton key={s.text} onClick={() => ask(s)}>{s.text}</ChipButton>)}
-                    </ChipGroup>
-                  </div>
-                ))}
+                {docId ? (
+                  (suggestions?.length ?? 0) > 0 && (
+                    <div className="flex w-full min-w-0 flex-col gap-2">
+                      <p className="type-body-sm text-text-2">Topics in this document</p>
+                      {/* Each question is a chip; on a phone the row scrolls sideways so no question is cut short. */}
+                      <ChipGroup aria-label="Topics in this document" className="max-sm:flex-nowrap max-sm:overflow-x-auto max-sm:[scrollbar-width:none]">
+                        {(suggestions ?? []).map((s) => <ChipButton key={s.text} onClick={() => ask(s)}>{s.text}</ChipButton>)}
+                      </ChipGroup>
+                    </div>
+                  )
+                ) : (
+                  (suggestions?.length ?? 0) > 0 && (
+                    <div className="flex w-full min-w-0 flex-col gap-2">
+                      <p className="type-body-sm text-text-2">Topics to start from, taken from the documents&apos; own headings, tables and figures</p>
+                      <ChipGroup aria-label="Topics to start from">
+                        {(suggestions ?? []).map((s) => (
+                          <ChipButton key={`${s.document_id}:${s.text}`} onClick={() => ask(s)} title={`${s.document_name}: ${s.text}`}>
+                            {topicOf(s.text)}<span className="max-w-40 truncate text-text-2">{s.document_name}</span>
+                          </ChipButton>
+                        ))}
+                      </ChipGroup>
+                    </div>
+                  )
+                )}
                 {writing && <Status status="running" live>Writing a few questions this document can answer</Status>}
-                {!writing && suggestions?.length === 0 && <p className="type-body text-text-2">{aiEnabled ? "No questions could be written for this document yet. Type your own below." : "Type a question below."}</p>}
+                {!writing && suggestions?.length === 0 && docId && <p className="type-body-sm text-text-2">This document has no headings or captions to suggest topics from. Ask about anything in it below.</p>}
               </SkeletonSwap>
+              <ItemGroup className="w-full" aria-label="Ways to ask">
+                {WAYS.map((w) => (
+                  <Item key={w.title} variant="outline" size="sm">
+                    <ItemContent>
+                      <ItemTitle>{w.title}</ItemTitle>
+                      <ItemDescription>{w.text}</ItemDescription>
+                    </ItemContent>
+                  </Item>
+                ))}
+              </ItemGroup>
             </EmptyContent>
           </Empty>
         )}
@@ -293,6 +324,22 @@ export function SearchView() {
 }
 
 /** One passage the answer rests on: where it is, what it says, and its surroundings on request. */
+/** A suggestion's subject as a short label: "What does the section on Cleaning say?" is "Cleaning". */
+function topicOf(q: string): string {
+  const m = /^What does the section on (.+) say\?$/.exec(q) ?? /^What does (.+?) (?:show|list)\?$/.exec(q);
+  if (m) return m[1];
+  const e = /^What is the entry for (.+)\?$/.exec(q);
+  return e ? `Entry ${e[1]}` : q;
+}
+
+/** What the search is good at, said once as ways to ask; none of it depends on which documents are loaded. */
+const WAYS = [
+  { title: "A code or a number", text: "An exact code, batch or invoice number: the row that holds it comes first." },
+  { title: "A section or a clause", text: "Name it and its text comes up on its page, with the passages it points to." },
+  { title: "A value in a table", text: "A price, limit or date: every table row keeps its column names." },
+  { title: "A label on a figure", text: "A lettered arrow or part number: the figure comes with the key that explains it." },
+];
+
 /** Whose chunking answers the search: ours, or Amazon Bedrock's hierarchical chunking for comparison. */
 const METHODS = [{ value: "ours", label: "Our chunking" }, { value: "bedrock", label: "AWS Bedrock (hierarchical)" }];
 
